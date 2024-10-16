@@ -1,3 +1,4 @@
+import { ProducaoService } from '../../../../services/produto/producao.service';
 import { RotacaoMoendaPainelProducao } from './../../../../models/industria/painel/painel-producao/rotacaoMoendaPainelproducao';
 import { RotacaoMoendaPainelProducaoService } from './../../../../services/rotacao-moenda/rotacao-moenda-painel-producao.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
@@ -14,6 +15,8 @@ import { TabViewModule } from 'primeng/tabview';
 import { AccordionModule } from 'primeng/accordion';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
+import { Producao } from '../../../../models/producao/producao';
+import { ProdutosPorUeComponent } from "../../../producao/produtos-por-ue/produtos-por-ue.component";
 
 const documentStyle = getComputedStyle(document.documentElement);
 
@@ -21,9 +24,7 @@ const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondar
 const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
 
-const visaoRotacao = 'rotacao';
-const visaoDesempenho = 'desempenho';
-const visaoProducao = 'producao';
+
 
 
 @Component({
@@ -37,14 +38,20 @@ const visaoProducao = 'producao';
     PanelModule,
     ChartModule,
     DividerModule,
-    TableModule
-  ],
+    TableModule,
+    ProdutosPorUeComponent
+],
   templateUrl: './painel-producao.component.html',
   styleUrl: './painel-producao.component.scss'
 })
 export class PainelProducaoComponent implements OnInit {
 
   @ViewChild("meuCanvas", { static: false }) elemento!: ElementRef;
+
+  visaoRotacao = 'rotacao';
+  visaoDesempenho = 'desempenho';
+  visaoProducao = 'producao';
+
   colorsResponsavel = new Map<string, string>();
   colorsResponsavelHover = new Map<string, string>();
   rotacoesMoenda: RotacaoMoendaPainelProducao[] = [];
@@ -83,12 +90,16 @@ export class PainelProducaoComponent implements OnInit {
   chartStackedBarRotacaoHistOptions: any;
 
 
-  visaoSelecionada: string = visaoRotacao;
+  visaoSelecionada: string = this.visaoRotacao;
+
+
+  producaoDia:Producao[]=[];
 
   constructor(
     private ueService: UnidadeEmpresaService,
     private errorHandleService: ErrorHandleService,
-    private rotacaoPainelProducaoService: RotacaoMoendaPainelProducaoService
+    private rotacaoPainelProducaoService: RotacaoMoendaPainelProducaoService,
+    private producaoService: ProducaoService,
   ) { }
 
   ngOnInit(): void {
@@ -127,13 +138,23 @@ export class PainelProducaoComponent implements OnInit {
   }
 
   clickRotacao() {
-    this.visaoSelecionada = visaoRotacao;
+    this.visaoSelecionada = this.visaoRotacao;
   }
-  clickProducao() {
-    this.visaoSelecionada = visaoProducao;
+
+  async clickProducao() {
+    await this.producaoService.listarProducao()
+    .then( response => {
+      this.producaoDia = response;
+      console.log(this.producaoDia);
+    })
+    .catch(error=> {
+      this.errorHandleService.handle(error)
+    })
+
+    this.visaoSelecionada = this.visaoProducao;
   }
   clickDesempenho() {
-    this.visaoSelecionada = visaoDesempenho;
+    this.visaoSelecionada = this.visaoDesempenho;
   }
 
   carregarColorsResponsavel() {

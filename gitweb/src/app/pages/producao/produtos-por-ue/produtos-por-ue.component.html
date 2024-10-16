@@ -1,0 +1,18 @@
+<p-table [value]="produtos " [tableStyle]="{ 'min-width': '50rem' }">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Produto</th>
+      @for (ue of unidades; track $index) {
+      <th style="text-align: center;">{{ue.id}}</th>
+      }
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-produto>
+    <tr>
+      <td>{{produto.produtoDescricao}} ({{produto.produtoUnidade}})</td>
+      @for (ue of unidades; track $index) {
+      <td style="text-align: right;">{{retornarQuantidade(ue.id!,produto.produtoCodigo!) | number:'0.1-1'}}</td>
+      }
+    </tr>
+  </ng-template>
+</p-table>

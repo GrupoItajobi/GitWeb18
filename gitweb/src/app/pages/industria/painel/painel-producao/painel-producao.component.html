@@ -29,8 +29,7 @@
       <div class="card" (click)="clickDesempenho()">
         <div class=" flex flex-col">
           <div>
-            <img title="Indicador" src="/assets/layout/img/sistema/indicador-chave-de-desempenho.png"
-              width="50px;" />
+            <img title="Indicador" src="/assets/layout/img/sistema/indicador-chave-de-desempenho.png" width="50px;" />
           </div>
           <div>
             <span>Desempenho</span>
@@ -40,7 +39,7 @@
     </div>
   </div>
 
-  @if(visaoSelecionada==='rotacao') {
+  @if(visaoSelecionada===visaoRotacao) {
   <p-panel [toggleable]="true">
     <ng-template pTemplate="header">
       <div class="flex align-items-center gap-2">
@@ -147,6 +146,31 @@
         </p-panel>
       </p-accordionTab>
     </p-accordion>
+  </p-panel>
+  } @else if(visaoSelecionada===visaoDesempenho) {
+  <p-panel [toggleable]="true">
+    <ng-template pTemplate="header">
+      <div class="flex align-items-center gap-2">
+        <span class="font-bold">
+          Desempenho
+        </span>
+      </div>
+    </ng-template>
+  </p-panel>
+  } @else if(visaoSelecionada===visaoProducao) {
+  <p-panel [toggleable]="true">
+    <ng-template pTemplate="header">
+      <div class="flex align-items-center gap-2">
+        <span class="font-bold">
+          Produção
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="content">
+      <span class="font-bold">
+        <app-produtos-por-ue [unidades]="unidades" [producao]="producaoDia"></app-produtos-por-ue>
+      </span>
+    </ng-template>
   </p-panel>
   }
 </div>
