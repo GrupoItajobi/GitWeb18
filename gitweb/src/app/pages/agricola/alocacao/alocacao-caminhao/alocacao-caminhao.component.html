@@ -1,0 +1,71 @@
+<app-unidades (selecionouUnidade)="selecionouUnidade($event)"></app-unidades>
+
+<p-panel header="Alocação" [toggleable]="true">
+  <label for="name">Equipamento: </label>
+  <input id="name" type="text" [formControl]="codigoEquipamento">
+  <button style="width: 5rem;" type="button" (click)="buscarEquipamento()"><i class="fa-solid fa-search"></i>
+    Buscar</button>
+  <div class="flex" style="width: 150px;" pDraggable (onDragStart)="dragStart('tagCaminhaParaFila')"
+    (onDragEnd)="dragEnd()">
+
+    <img class="grow" src="{{iconeCarretaOK}}" style="width: 20px; pointer-events: none;" />
+    <img class="grow" src="{{iconeCarretaOK}}" style="width: 20px; pointer-events: none;" />
+    <img class="grow" src="{{icone()}}" style="width: 20px; pointer-events: none;" />
+  </div>
+</p-panel>
+
+
+<p-panel header="Frentes de Carregamento" [toggleable]="true">
+  <div class="grid grid-cols-10 gap-3">
+    @for (frente of frentesCarregamento; track $index) {
+    <div>
+      <div class="div3d">
+        <div class="card-container" pDroppable (onDrop)="onDropFrente(frente.frente)">
+
+          <a class="card card-allocation flex flex-column">
+            <div> Frente: {{frente.frente}}</div>
+            <div> FA: {{frente.fa}}</div>
+
+            <div> Cnj: {{frente.tempoCarregamentoMinutos}} Min</div>
+            <div> Ida: {{frente.tempoIdaMinutos}} Min</div>
+            <div> Bate: {{frente.tempoBateMinutos}} Min</div>
+            <div> Volta: {{frente.tempoVoltaMinutos}} Min</div>
+            <div> Total: {{ frente.tempoIdaMinutos! + frente.tempoBateMinutos! + frente.tempoVoltaMinutos!}} Min</div>
+
+          </a>
+
+        </div>
+      </div>
+
+
+
+      <div class="div3d">
+        <div class="card-container" pDroppable (onDrop)="onDropVoltando(frente.frente)">
+          <div> <img class="grow" src="{{iconeCaminhaoOK}}" style="width: 20px; pointer-events: none;" /> Voltando <i
+              class="fas fa-arrow-down"></i></div>
+          <a class="card card-allocation flex flex-column">
+
+            @for (item of caminhaoVoltando; track $index) {
+            <div style="font-size: .5rem;">
+
+              <span>{{item.dataInicio | date:'dd/MM HH:mm'}}</span>
+              <span> - </span>
+              <span>{{item.codigoEquipamento}}</span>
+            </div>
+            }
+          </a>
+        </div>
+      </div>
+    </div>
+    }
+
+
+  </div>
+</p-panel>
+<p-panel header="Pátio" [toggleable]="true">
+
+</p-panel>
+
+<p-panel header="Fluxo Moagem" [toggleable]="true">
+
+</p-panel>

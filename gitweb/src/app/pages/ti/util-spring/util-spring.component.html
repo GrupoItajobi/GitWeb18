@@ -1,0 +1,33 @@
+<form [formGroup]="form">
+  <div class="grid ml-3">
+    <div class="col-span-2 hover:col-span-6 mt-1">
+      <div class="flex flex-row">
+        <div>
+          <label for="tableId">Table</label>
+          <input id="tableId" type="text" style="width: 20rem;" formControlName="table">
+        </div>
+        <div>
+          <label for="classeId">Classe</label>
+          <input id="classeId" type="text" style="width: 20rem;" formControlName="classe">
+        </div>
+      </div>
+      <div class="flex flex-row">
+        <button type="button" (click)="gerarEntity()" value="Gerar">Gerar Entity</button>
+        <button type="button" (click)="gerarRepository()" value="Gerar">Gerar Repository</button>
+        <button type="button" (click)="gerarService()" value="Gerar">Gerar Service</button>
+        <button type="button" (click)="gerarResponseDto()" value="Gerar">Gerar ResponseDto</button>
+        <button type="button" (click)="gerarCrudDto()" value="Gerar">Gerar CrudDto</button>
+        <button type="button" (click)="gerarMapper()" value="Gerar">Gerar Mapper</button>
+        <button pButton type="button" (click)="gerarController()" value="Gerar">Gerar Controller</button>
+
+
+      </div>
+    </div>
+
+    <div class="col-span-4">
+      <textarea id="float-input" rows="25" cols="150" pInputTextarea formControlName="script">
+      </textarea>
+
+    </div>
+  </div>
+</form>

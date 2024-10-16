@@ -1,0 +1,13 @@
+<p-sidebar [(visible)]="sidebarVisible" (onHide)="onHide()" [style]="{width: '15rem'}" styleClass="w-50rem">
+  <ng-template pTemplate="header">
+    <div>
+      <img src="/assets/layout/img/logo/logo.png" style="width: 15rem !important;" />
+    </div>
+  </ng-template>
+  <ng-template pTemplate="content">
+    <p-panelMenu [model]="items" [style]="{width:'15rem'}"></p-panelMenu>
+  </ng-template>
+  <ng-template pTemplate="footer">
+
+  </ng-template>
+</p-sidebar>

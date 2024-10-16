@@ -1,0 +1,77 @@
+<div class="containerCabec1 ml-2 mr align-items-center justify-content-between" >
+
+  <div class="text-center" >
+    <form [formGroup]="form">
+
+      <div class="flex">
+        <div class="flex-auto mt-2">
+          <label>Nº Ordem Retirada</label>
+          <input type="number" pattern="\d*" [style]="{'text-align': 'center','width':'5rem'}"
+            formControlName="nrOrdemRetirada" placeholder="Nº Ordem" />
+          <button type="button" (click)="buscarOrdemRetirada()"><i class="fa fa-search"></i> Buscar</button>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-1 mt-3">
+        <div class="flex-none">
+          <label>Sequencia: </label>
+          <input style="text-align: center;" type="text" size="3" formControlName="sequencia">
+        </div>
+        <div class="flex-none">
+          <label>Tipo Produto: </label>
+          <input style="text-align: center;" type="text" size="15" formControlName="produto">
+        </div>
+        <div class="flex-none">
+          <label>Descrição: </label>
+          <input type="text" size="40" formControlName="produtoDescricao">
+        </div>
+        <div class="flex-none">
+          <label>Motorista: </label>
+          <input type="text" size="40" formControlName="motoristaNome">
+        </div>
+        <div class="flex-initial">
+          <label>Placa: </label>
+          <input style="text-align: center;" size="8" type="text" formControlName="caminhaoPlaca">
+        </div>
+        @if (this.ordemCarregamentoSelecionado.sequencia) {
+
+
+        <div class="flex-initial">
+          <p-selectButton [options]="pontoCarregamentoOptions" formControlName="pontoCarregamento"
+            (onChange)='selecionouPonto($event)' optionLabel="name" optionValue="value">
+            <ng-template let-item pTemplate>
+              <span style="min-width: 4rem; font-weight: bold; font-size: .5rem;">{{item.name}}</span>
+            </ng-template>
+          </p-selectButton>
+        </div>
+        <div class="flex-initial">
+          <label>Qtde [ {{ordemCarregamentoSelecionado.tipoEquipamentoDescricao}} ] : </label>
+          <input class="text-center" type="number" min="1" formControlName="quantidadeEquipamento" style="width: 4rem;">
+          {{tempoEstimado}}
+        </div>
+        <div class="flex-initial">
+          <label>Inicio: </label>
+          <input type="datetime-local" formControlName="dataInicio" style="width: 9rem;">
+          <button style="width: 5rem;" type="button" (click)="startCarregamento()"><i class="fa-solid fa-stopwatch"></i>
+            Iniciar</button>
+        </div>
+        <div class="flex-initial">
+          <label>Final: </label>
+          <input type="datetime-local" formControlName="dataFim" style="width: 9rem;">
+          <button style="width: 5rem;" [disabled]="!ordemCarregamentoSelecionado.dataInicio" type="button" (click)="stopCarregamento()"><i
+              class="fa-solid fa-flag-checkered"></i> Finalizar</button>
+        </div>
+
+        <div class="flex-initial mt-4 mb-4">
+          @if(form.valid) {
+          <button style="width: 10rem;" type="button" (click)="salvar()"><i class="fa-solid fa-cloud-arrow-up"></i>
+            Salvar</button>
+          }
+
+        </div>
+        }
+      </div>
+
+    </form>
+  </div>
+</div>

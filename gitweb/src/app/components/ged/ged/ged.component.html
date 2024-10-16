@@ -1,0 +1,67 @@
+@if(visualizarGed) {
+
+
+
+<div>
+  <app-menu-crud [habilitarBotaoUpload]="habilitarBotaoUpload" (clickUpload)="clickUpload($event)"></app-menu-crud>
+</div>
+
+<div class="containerCabec" style="padding: 10px;">
+
+  <p-table [value]="geds" [dataKey]="id">
+    <ng-template pTemplate="body" let-ged let-expanded="expanded">
+      <tr>
+        <td>
+          <p-button type="button" pRipple [pRowToggler]="ged" [text]="true" [rounded]="true" [plain]="true"
+            [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+        </td>
+        <td>{{ ged.tabelaIdTitulo }}</td>
+
+      </tr>
+    </ng-template>
+
+
+
+  </p-table>
+</div>
+
+
+
+
+
+
+<div style="width: 80% !important;">
+  <p-dialog [(visible)]="visualizarUpload" (clickUpload)="clickUpload($event)" [maximizable]="true" (onHide)="onHide()"
+    [modal]="true" (onShow)="listarArquivosDisponiveis()">
+
+    <ng-template pTemplate="header">
+      <span>Título</span>
+      <span>{{tabelaNome}} {{tabelaId}} {{tabelaIdTitulo}}</span>
+    </ng-template>
+
+    <div class="containerCabec" style="padding: 10px;">
+      <span>Upload [pdf, jpg, png, xlsx]</span>
+
+      <p-fileUpload name="files"
+        url="{{url}}?tabelaNome={{fileInfo!.tabelaNome}}&tabelaId={{fileInfo!.tabelaId}}&tabelaIdTitulo={{fileInfo!.tabelaIdTitulo}}"
+        (onUpload)="onUpload($event)" [multiple]="multiple" accept="image/*,.pdf,.xlsx,.xls,.docx, .doc"
+        [maxFileSize]="10000000">
+
+        <ng-template pTemplate="content">
+          @if(files.length) {
+          <ul>
+            @for (file of files; track $index) {
+            <li>{{ file.name }} - {{ file.size }} bytes</li>
+            }
+          </ul>
+          }
+        </ng-template>
+
+      </p-fileUpload>
+    </div>
+
+
+    <ng-template pTemplate="content"></ng-template>
+  </p-dialog>
+</div>
+}

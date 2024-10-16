@@ -1,0 +1,69 @@
+<div  style="margin-left: 10px;">
+
+  <div class="grid grid-cols-1 md:grid-cols-8 gap-1 m-1" >
+    <div class="col-span-2">
+      <p-table [value]="menuGestao" dataKey="id" selectionMode="single" [(selection)]="menuGestaoSelected"
+        (onRowSelect)="onRowSelectGestao($event)" (onRowUnselect)="onRowUnselectGestao($event)">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Gestão</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-gestao let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="gestao">
+            <td>{{gestao.descricao}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <div class="col-span-2">
+      <p-table [value]="menuModulo" dataKey="id" selectionMode="single" [(selection)]="menuModuloSelected"
+        (onRowSelect)="onRowSelectModulo($event)" (onRowUnselect)="onRowUnselectModulo($event)">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Módulo</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-modulo let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="modulo">
+            <td>{{modulo.descricao}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <div class="col-span-1">
+      <p-table [value]="menuTipo"  dataKey="id" selectionMode="single"
+        [(selection)]="menuTipoSelected" (onRowSelect)="onRowSelectTipo($event)"
+        (onRowUnselect)="onRowUnselectTipo($event)">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Tipo</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-tipo let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="tipo">
+            <td>{{tipo.descricao}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <div class="col-span-2">
+      <p-table [value]="menuApp"  dataKey="id" selectionMode="single"
+        [(selection)]="menuAppSelected" (onRowSelect)="onRowSelectApp($event)"
+        (onRowUnselect)="onRowUnselectApp($event)">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>App</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-app let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="app">
+            <td>{{app.descricao}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>

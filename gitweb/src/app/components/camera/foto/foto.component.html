@@ -1,0 +1,41 @@
+<!-- <p-dialog header="Foto" [modal]="true" [(visible)]="visible" [maximizable]="true" [style]="{ 'width': '{{dialogWidth}}','height':'{{dialogHeigth}}' }"> -->
+
+<div class="card flex justify-content-center">
+  <p-sidebar [(visible)]="visible" [fullScreen]="true">
+
+    <div class="flex justify-center justify-items-center">
+      <div>
+
+        <form [formGroup]="form">
+          <p-selectButton [disabled]="showFoto" (onChange)="selecionouDevice($event)" [options]="devices" formControlName="cameraSelection"
+            optionLabel="label" optionValue="deviceId" />
+        </form>
+        <br>
+        <div [ngStyle]="{'display': !showFoto ? 'block' : 'none'}">
+          <div class="flex flex-col justify-center">
+
+            <div class="flex flex-row justify-between">
+              <i (click)="tirarFoto()" style="font-size: 3rem !important;" class="fas fa-camera text-green-600"></i>
+              <i (click)="close()" style="font-size: 3rem !important;" class="far fa-window-close"></i>
+            </div>
+            <video #video width="1280" height="960" [autoplay]="true"></video>
+          </div>
+        </div>
+
+        <div [ngStyle]="{'display': showFoto ? 'block' : 'none'}">
+          <div class="flex flex-col justify-center">
+            <div class="flex flex-row justify-between">
+              <i (click)="enviarFoto()" style="font-size: 3rem !important;" class="far fa-save text-sky-600"></i>
+              <i (click)="cancelarFoto()" style="font-size: 3rem !important;" class="fas fa-undo-alt text-red-400"></i>
+              <i (click)="close()" style="font-size: 3rem !important;" class="far fa-window-close"></i>
+
+            </div>
+            <canvas #canvas width="1280" height="960"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </p-sidebar>
+</div>
+<!-- </p-dialog> -->

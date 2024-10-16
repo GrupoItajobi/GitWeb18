@@ -1,0 +1,34 @@
+
+
+.simbolo {
+  width: 128px;
+  height: 80px;
+  margin-top: 0px;
+  margin-left: 5px;
+  background: var(--background-logo);
+  border-radius: 5px 60% 0px 60%;
+  box-shadow: 3px 3px 3px grey, 3px 0px 1px 0px black;
+}
+
+.simbolo img {
+  margin-left: 15px !important;
+  margin-top: 6px;
+  border: 100px;
+  height: 70px;
+}
+
+.p-button.p-button-warning:enabled:hover,
+.p-buttonset.p-button-warning > .p-button:enabled:hover,
+.p-splitbutton.p-button-warning > .p-button:enabled:hover {
+  background: var(--background-top) !important;
+}
+.p-button.p-button-outlined {
+  color: white !important;
+}
+.button-menu-left {
+  font-weight: bold;
+  color: var(--color-logo-600) !important;
+  position: fixed;
+  top: 80px;
+  border-radius: 10px;
+}

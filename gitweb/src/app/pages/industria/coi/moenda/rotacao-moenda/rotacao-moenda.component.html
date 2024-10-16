@@ -1,0 +1,106 @@
+<app-unidades (selecionouUnidade)="selecionouUnidade($event)"></app-unidades>
+<div class="content-center text-center">
+  <div class="containerCabec1 " style="min-height: 2rem;">
+    <label style="font-size: 2rem;">Moenda</label>
+    <p-selectButton (onOptionClick)="onChangeMoenda()" [options]="moendaOptions" [formControl]="moendaOptionsSel"
+      optionLabel="label" optionValue="value" />
+
+    <button type="button" [disabled]="!moendaOptionsSel.value" (click)="adicionarAlteracao()"><i
+        class="fas fa-plus"></i>Adicionar Alteração</button>
+
+  </div>
+
+  <p-table [value]="rotacaoMoenda" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="text-align: center;" colspan="3">Data</th>
+        <th style="text-align: center;" colspan="2">Rotação</th>
+        <th style="text-align: center;" colspan="2">Evento</th>
+        <th style="text-align: center;" rowspan="2">Observação</th>
+        <th style="text-align: center; width: 2rem;" rowspan="2">Edit</th>
+
+      </tr>
+      <tr>
+        <th style="width: 9rem; text-align: center;">Início</th>
+        <th style="width: 9rem; text-align: center;">Final</th>
+        <th style="width: 9rem; text-align: center;">Prev.Retorno</th>
+        <th style="width: 4rem; text-align: center;">Ideal</th>
+        <th style="width: 4rem; text-align: center;">Atual</th>
+        <th>Descricao</th>
+        <th>Responsável</th>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rotacao>
+      <tr>
+        <td style="text-align: center;"> {{ rotacao.dataInicio | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+        <td style="text-align: center;">{{ rotacao.dataFim | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+        <td style="text-align: center;">{{ rotacao.dataPrevistaRetorno | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+        <td style="text-align: right;">{{ rotacao.rotacaoIdeal | number:'0.0-0' }}</td>
+        <td style="text-align: right;">{{ rotacao.rotacaoAtual | number:'0.0-0' }}
+          @if (rotacao.rotacaoIdeal < rotacao.rotacaoAtual) { <i class="fas fa-arrow-up"
+            style="color: rgb(11, 216, 52);"> </i>
+            } @else if (rotacao.rotacaoIdeal > rotacao.rotacaoAtual) {
+            <i class="fas fa-arrow-down" style="color: rgb(245, 110, 26);"> </i>
+            } @else {<i class="fas fa-check"></i>}
+        </td>
+        <td>{{ rotacao.evento.descricao }}</td>
+        <td>{{ rotacao.evento.responsavel.descricao}}</td>
+        <td>{{ rotacao.observacao }}</td>
+        <td style="text-align: center;"><i class="fas fa-edit" style="color: orange;" (click)="edit(rotacao)"></i></td>
+
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+
+<p-dialog header="Alteração de Rotação" (onHide)="onHideDialog()" [modal]="true" [(visible)]="dialogVisible"
+  [style]="{ width: '50rem' }" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [maximizable]="true">
+
+  <ng-template pTemplate="header">
+    <span>Alteração de Rotação</span>
+  </ng-template>
+
+
+  <ng-template pTemplate="content">
+    <div>
+      <h1>{{mapMoendas.get(this.moendaOptionsSel.value!)?.descricao}}</h1>
+      <form [formGroup]="form">
+
+        <label for="dataInicio">Data Início</label>
+        <input id="dataInicio" type="datetime-local" formControlName="dataInicio" />
+        <button type="button"  (click)="horaInicio()"><i class="far fa-clock"></i></button>
+
+        <label for="prevRetorno">Previsão Retorno</label>
+        <input id="prevRetorno" type="datetime-local" formControlName="dataPrevistaRetorno" />
+        <button type="button"  (click)="horaPrevista()"><i class="far fa-clock"></i></button>
+
+
+        <label for="rotacaoAtual">Rotação Atual</label>
+        <input id="rotacaoAtual" type="number" min="0" max="9999" formControlName="rotacaoAtual" />
+
+        <label for="obs">Observação</label>
+        <input id="obs" type="text" formControlName="observacao" />
+
+        <label for="evento">Evento</label>
+        <input id="evento" type="number" formControlName="eventoCode" />
+        <button type="button" value="Evento" (click)="lovEvento()"><i class="fas fa-search"></i></button>
+        <input id="eventoDescricao" [disabled]="disableInput" type="text" formControlName="eventoDescricao" />
+
+      </form>
+
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button title="Salvar" label="Salvar" pButton pRipple (click)="salvar()" pTooltip="Salvar"
+      class="p-button-success" icon="pi pi-save" [disabled]="!form.valid" [loading]="saving"></p-button>
+    <p-button title="Fechar" label="Sair" pButton pRipple (click)="fecharDialog()" pTooltip="Sair"
+      class="p-button-secondary" icon="pi pi-arrow-right"></p-button>
+  </ng-template>
+
+</p-dialog>
+
+<app-lov-moenda-evento [dialogVisible]="lovMoendaVisible"
+  (selecionouEvento)="selecionouEventoMoenda($event)"></app-lov-moenda-evento>

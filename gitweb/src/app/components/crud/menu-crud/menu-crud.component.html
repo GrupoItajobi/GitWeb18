@@ -1,0 +1,20 @@
+<div class="containerCabec" style="margin-top: 1rem;">
+
+  <div class="grid" style="margin-top: -20px;">
+    <div class="col-12" style="text-align: right;">
+      <button title="Novo/Limpar" pButton pRipple (click)="adicionar()" [disabled]="!habilitarBotaoAdicionar"
+        class="p-button-info" pTooltip="Novo/Limpar" icon="pi pi-plus-circle"></button>
+
+      <button title="Upload" pButton pRipple (click)="upload()" [disabled]="!habilitarBotaoUpload"
+        pTooltip="Upload/Download Arquivos" class="p-button-warning" icon="pi pi-cloud-upload"></button>
+
+      <button title="Excluir" pButton pButton pRipple [disabled]="!habilitarBotaoExcluir" pTooltip="Excluir"
+        (click)="confirmDelete($event)" class="p-button-danger" icon="pi pi-trash"></button>
+
+      <button title="Salvar" [disabled]="!habilitarBotaoSalvar" pButton pRipple (click)="salvar()" pTooltip="Salvar"
+        class="p-button-success" icon="pi pi-save"></button>
+
+    </div>
+  </div>
+</div>
+<p-confirmDialog />

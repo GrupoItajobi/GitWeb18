@@ -1,0 +1,624 @@
+<app-unidades (selecionouUnidade)="selecionouUnidade($event)"></app-unidades>
+
+<div class="flex flex-col items-center">
+
+  <div class="w-full">
+    {{ue}}
+    @if (ue) {
+    <p-blockUI [target]="loadingCarregamento" [blocked]="blockedPanel">
+      <i class="pi pi-lock" style="font-size: 3rem"></i>
+    </p-blockUI>
+
+
+
+    <p-panel #loadingCarregamento header="" [toggleable]="true">
+      <div class="grid grid-rows-1 md:grid-cols-6 pt-2 justify-items-center">
+
+        <div class="md:col-span-1">
+          @if(temPermissaoService.adicionar(ue)) {
+          <div class="card-container" pDraggable (onDragStart)="dragStart('tagCaminhaParaFila')"
+            (onDragEnd)="dragEnd()">
+            <img [loading]="loading" src="{{iconeCaminhaoOK}}" style="width: 50px; pointer-events: none;" />
+          </div>
+          }
+        </div>
+
+        <div class="md:col-span-4">
+          <div class="text-center">
+            <span style="font-size: .75rem;">Selecione o Produto</span>
+            <p-selectButton [options]="opcoesProduto" [(ngModel)]="produtoSelecionado" (onChange)="selecionouProduto()"
+              optionLabel="name" optionValue="value">
+              <ng-template let-item pTemplate>
+                <span style="width: 4rem; font-weight: bold; font-size: .5rem;">{{item.name}}</span>
+                <p-badge [style]="{'width': '15rem;','font-size':'.5rem'}" value="{{item.quantidade}} "
+                  severity="success"></p-badge>
+              </ng-template>
+            </p-selectButton>
+
+          </div>
+
+        </div>
+
+        <div class="md:col-span-1">
+          <div class="text-center">
+            <span style="font-size: .5rem;">Info</span>
+            <p-selectButton [options]="opcaoInfo" [(ngModel)]="opcaoInfoSelecionada" (onChange)="selecionouOpcaoInfo()"
+              optionLabel="name" optionValue="value">
+              <ng-template let-item pTemplate>
+                <span style="width: 3rem; font-size: .5rem;">{{item.name}}</span>
+              </ng-template>
+            </p-selectButton>
+          </div>
+        </div>
+
+      </div>
+      <div class="grid grid-rows-1 md:grid-cols-1 pt-2 justify-items-center">
+        <div class="md:col-span-1">
+          <div class="text-center">
+            <span style="font-size: .75rem;">Info Produtos</span>
+            <p-selectButton [options]="opcoesProdutoDetalhe" [(ngModel)]="produtoDetalheSelecionado" optionLabel="name"
+              optionValue="value" (onChange)="selecionouOpcaoProdutoDetalhe()">
+              <ng-template let-item pTemplate>
+                <span style="width: 8rem; font-size: .5rem;">{{item.name}}</span>
+                <p-badge [style]="{width: '15rem;'}" value="{{item.quantidade}} " severity="success"></p-badge>
+              </ng-template>
+            </p-selectButton>
+          </div>
+        </div>
+      </div>
+    </p-panel>
+    }
+  </div>
+  @if (ue && produtoDetalheSelecionado && temPermissaoService.temTag('consultarEstoque')) {
+  <div class="w-full">
+    <p-panel #loadingCarregamento header="Saldo Estoque" [toggleable]="true">
+      <div>
+        <p-table [value]="estoquePorArmazemTanque!" [tableStyle]="{ 'min-width': '10rem' }">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Empresa</th>
+              <th>Retirar Empresa</th>
+              <th>Depósito</th>
+              <th>Descrição</th>
+              <th>Local</th>
+              <th>Produto</th>
+              <th>Descrição</th>
+              <th>Un</th>
+              <th>Atual</th>
+              <th>Comprometido</th>
+              <th>Disponível</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-product>
+            <tr>
+              <td>{{ product.codigoEmpresa }}</td>
+              <td>{{ product.codigoEmpresaLocalRetirada }}</td>
+              <td>{{ product.codigoDeposito }}</td>
+              <td>{{ product.descricaoDeposito }}</td>
+              <td>{{ product.localArmazenamento }}</td>
+              <td>{{ product.codigoProduto }}</td>
+              <td>{{ product.descricaoProduto }}</td>
+              <td>{{ product.unidadeProduto }}</td>
+              <td style="text-align: right;">{{ product.quantidade | number:'1.3-3' }}</td>
+              <td></td>
+              <td></td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="footer">
+            <tr>
+              <td colspan="8" class="text-right">Total</td>
+              <td style="text-align: right; padding-right: .5rem;"> {{quantidadeTotalEstoque | number: '1.3-3'}}</td>
+              <td style="text-align: right; padding-right: .5rem;"> {{saldoComprometido(produtoDetalheSelecionado)|
+                number:
+                '1.3-3'}}</td>
+              <td style="text-align: right; padding-right: .5rem;"> {{saldoSimulado(produtoDetalheSelecionado)| number:
+                '1.3-3'}}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-panel>
+  </div>
+  }
+  <!--   Ciclos -->
+
+  <div class="w-full">
+    <p-panel header="Aguardando Fila [ {{cicloFila?.length}} ]" [toggleable]="true">
+      <div class="grid">
+        <div class="col-fixed" style="width: 3rem;">
+          <div class="flex">
+            <div class="flex">
+              @if (cicloFila!.length>0) {
+              <p-badge value="{{cicloFila?.length}}" badgeSize="large" severity="success"></p-badge>
+              }
+            </div>
+            <div class="flex">
+              @if(intervalId && temPermissaoService.adicionar(ue)) {
+              <div class="box-drop box-drop-item" pDroppable (onDrop)="onDropCreate()">
+                <div>
+                  <img style="width: 60px !important; height: 60px !important;" [src]="iconeCaminhaoDeCarga"
+                    title="Arraste aqui para Incluir Carregamento." width="60">
+                  <label>Fila</label>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-row flex-wrap">
+          @for (item of cicloFila; track $index) {
+          <div class="flex">
+            <app-caminhao-carregamento pDroppable (onDrop)="onDropCarregamento($index,'FILA',cicloFila!)" pDraggable
+              (onDragStart)="onDragStartCarregamento($index,'FILA',item)" (onDragEnd)="dragEnd()" [infoFull]="infoFull"
+              [posicao]="$index+1" [ciclo]="item" [temPermissaoParaExcluir]="temPermissaoService.excluir(ue)"
+              [temPermissaoParaEditar]="temPermissaoService.editar(ue)"
+              [temPermissaoParaBloquear]="temPermissaoService.temTag('editarBloqueio',ue)"
+              (selecionouCarregamento)="selecionouCarregamento($event)"></app-caminhao-carregamento>
+          </div>
+          }
+        </div>
+      </div>
+    </p-panel>
+
+  </div>
+  <div class="w-full"><p-panel header="Balança Entrada [ {{cicloBalEntrada?.length}} ]" [toggleable]="true">
+      <div class="grid">
+        <div class="col-fixed" style="width: 3rem;">
+          <div class="flex">
+            @if (cicloBalEntrada!.length>0) {
+            <p-badge value="{{cicloBalEntrada?.length}}" badgeSize="large" severity="success"></p-badge>
+            }
+          </div>
+        </div>
+
+        <div class="col-10">
+          <div class="grid">
+            @for (item of cicloBalEntrada; track $index) {
+            <div class="flex">
+              <app-caminhao-carregamento pDraggable (onDragStart)="dragStartCT(item)" (onDragEnd)="dragEnd()"
+                [infoFull]="infoFull" [posicao]="$index+1" [ciclo]="item"
+                [temPermissaoParaExcluir]="temPermissaoService.excluir(ue)"
+                [temPermissaoParaEditar]="temPermissaoService.editar(ue)"
+                [temPermissaoParaBloquear]="temPermissaoService.temTag('editarBloqueio',ue)"
+                (selecionouCarregamento)="selecionouCarregamento($event)"></app-caminhao-carregamento>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </p-panel>
+  </div>
+
+  <div class="w-full mt-5  mb-5">
+    <p-panel header="Carregamento (Em Desenvolvimento tudo em Carregamento)" [toggleable]="true">
+
+
+
+      <div class="w-full">
+        <p-panel header="Fila de Carregamento [ {{cicloFilaCarregamento?.length}} ]" [toggleable]="true">
+          <div class="grid">
+            <div class="col-fixed" style="width: 3rem;">
+              <div class="flex">
+                <div class="flex">
+                  @if (cicloFilaCarregamento!.length>0) {
+                  <p-badge value="{{cicloFilaCarregamento?.length}}" badgeSize="large" severity="success"></p-badge>
+                  }
+                </div>
+
+              </div>
+            </div>
+
+            <div class="flex flex-row flex-wrap">
+
+              @for (item of cicloFilaCarregamento; track $index) {
+              <div class="flex">
+                <app-caminhao-carregamento pDraggable (onDragStart)="dragStartCT(item)" (onDragEnd)="dragEnd()"
+                  [infoFull]="infoFull" [posicao]="$index+1" [ciclo]="item"
+                  [temPermissaoParaExcluir]="temPermissaoService.excluir(ue)"
+                  [temPermissaoParaEditar]="temPermissaoService.editar(ue)"
+                  [temPermissaoParaBloquear]="temPermissaoService.temTag('editarBloqueio')"
+                  [temPermissaoParaBloquear]="temPermissaoService.temTag('editarBloqueio',ue)"
+                  (selecionouCarregamento)="selecionouCarregamento($event)"></app-caminhao-carregamento>
+              </div>
+              }
+            </div>
+          </div>
+        </p-panel>
+      </div>
+
+      <div class="w-full">
+        <p-panel header="Em Carregamento [ {{cicloEmCarregamento?.length}} ]" [toggleable]="true">
+          <div class="grid">
+            <div class="col-fixed" style="width: 3rem;">
+              <div class="flex">
+                <div class="flex">
+                  @if (cicloEmCarregamento!.length>0) {
+                  <p-badge value="{{cicloEmCarregamento?.length}}" badgeSize="large" severity="success"></p-badge>
+                  }
+                </div>
+
+              </div>
+            </div>
+
+            <div class="flex flex-row flex-wrap">
+
+              @for (item of cicloEmCarregamento; track $index) {
+              <div class="flex">
+                <app-caminhao-carregamento pDraggable (onDragStart)="dragStartCT(item)" (onDragEnd)="dragEnd()"
+                  [infoFull]="infoFull" [posicao]="$index+1" [ciclo]="item"
+                  [temPermissaoParaExcluir]="temPermissaoService.excluir(ue)"
+                  [temPermissaoParaEditar]="temPermissaoService.editar(ue)"
+                  [temPermissaoParaBloquear]="temPermissaoService.temTag('editarBloqueio')"
+                  [temPermissaoParaBloquear]="temPermissaoService.temTag('editarBloqueio',ue)"
+                  (selecionouCarregamento)="selecionouCarregamento($event)"></app-caminhao-carregamento>
+              </div>
+              }
+            </div>
+          </div>
+        </p-panel>
+      </div>
+
+
+      <div class="w-full">
+        <p-panel header="Carregamento Liberado [ {{cicloLiberadoCarregamento?.length}} ]" [toggleable]="true">
+          <div class="grid">
+            <div class="col-fixed" style="width: 3rem;">
+              <div class="flex">
+                <div class="flex">
+                  @if (cicloLiberadoCarregamento!.length>0) {
+                  <p-badge value="{{cicloLiberadoCarregamento?.length}}" badgeSize="large" severity="success"></p-badge>
+                  }
+                </div>
+
+              </div>
+            </div>
+
+            <div class="flex flex-row flex-wrap">
+
+              @for (item of cicloLiberadoCarregamento; track $index) {
+              <div class="flex">
+                <app-caminhao-carregamento pDraggable (onDragStart)="dragStartCT(item)" (onDragEnd)="dragEnd()"
+                  [infoFull]="infoFull" [posicao]="$index+1" [ciclo]="item"
+                  [temPermissaoParaExcluir]="temPermissaoService.excluir(ue)"
+                  [temPermissaoParaEditar]="temPermissaoService.editar(ue)"
+                  [temPermissaoParaBloquear]="temPermissaoService.temTag('editarBloqueio')"
+                  [temPermissaoParaBloquear]="temPermissaoService.temTag('editarBloqueio',ue)"
+                  (selecionouCarregamento)="selecionouCarregamento($event)"></app-caminhao-carregamento>
+              </div>
+              }
+            </div>
+          </div>
+        </p-panel>
+      </div>
+    </p-panel>
+  </div>
+
+  <div class="w-full"><p-panel header="Balança Saída [ {{cicloBalSaida?.length}} ]" [toggleable]="true">
+      <div class="grid">
+        <div class="col-fixed" style="width: 3rem;">
+          <div class="flex">
+            @if (cicloBalSaida!.length>0) {
+            <p-badge value="{{cicloBalSaida?.length}}" badgeSize="large" severity="success"></p-badge>
+            }
+          </div>
+        </div>
+
+        <div class="col-10">
+          <div class="grid">
+            @for (item of cicloBalSaida; track $index) {
+            <div class="flex">
+              <app-caminhao-carregamento pDraggable (onDragStart)="dragStartCT(item)" (onDragEnd)="dragEnd()"
+                [infoFull]="infoFull" [posicao]="$index+1" [ciclo]="item"
+                [temPermissaoParaExcluir]="temPermissaoService.excluir(ue)"
+                [temPermissaoParaEditar]="temPermissaoService.editar(ue)"
+                [temPermissaoParaBloquear]="temPermissaoService.temTag('editarBloqueio',ue)"
+                (selecionouCarregamento)="selecionouCarregamento($event)"></app-caminhao-carregamento>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </p-panel></div>
+
+  <!--
+  <div class="w-full"><p-panel header="Expedição [ {{cicloDigExpedicao?.length}} ]" [toggleable]="true">
+      <div class="grid">
+        <div class="col-fixed" style="width: 3rem;">
+          <div class="flex">
+            @if (cicloDigExpedicao!.length>0) {
+            <p-badge value="{{cicloDigExpedicao?.length}}" badgeSize="large" severity="success"></p-badge>
+            }
+          </div>
+        </div>
+
+        <div class="col-10">
+          <div class="grid">
+            @for (item of cicloDigExpedicao; track $index) {
+            <div class="flex">
+              <app-caminhao-carregamento pDraggable (onDragStart)="dragStartCT(item)" (onDragEnd)="dragEnd()"
+                [infoFull]="infoFull" [posicao]="$index+1" [ciclo]="item"
+                [temPermissaoParaExcluir]="temPermissaoService.excluir(ue)"
+                [temPermissaoParaEditar]="temPermissaoService.editar(ue)"
+                [temPermissaoParaBloquear]="temPermissaoService.temTag('editarBloqueio',ue)"
+                (selecionouCarregamento)="selecionouCarregamento($event)"></app-caminhao-carregamento>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </p-panel></div>
+
+    -->
+  <div class="w-full"><p-panel header="Aguardando Emissão de NF [ {{cicloNF?.length}} ]" [toggleable]="true">
+      <div class="grid">
+        <div class="col-fixed" style="width: 3rem;">
+          <div class="flex">
+            @if (cicloNF!.length>0) {
+            <p-badge value="{{cicloNF?.length}}" badgeSize="large" severity="success"></p-badge>
+            }
+          </div>
+        </div>
+
+        <div class="col-10">
+          <div class="col-span-11 flex flex-row flex-wrap">
+            @for (item of cicloNF; track $index) {
+            <div class="flex">
+              <app-caminhao-carregamento pDraggable (onDragStart)="dragStartCT(item)" (onDragEnd)="dragEnd()"
+                [infoFull]="infoFull" [posicao]="$index+1" [ciclo]="item"
+                [temPermissaoParaExcluir]="temPermissaoService.excluir(ue)"
+                [temPermissaoParaEditar]="temPermissaoService.editar(ue)"
+                [temPermissaoParaBloquear]="temPermissaoService.temTag('editarBloqueio',ue)"
+                (selecionouCarregamento)="selecionouCarregamento($event)"></app-caminhao-carregamento>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </p-panel></div>
+  <div class="w-full"><p-blockUI [target]="savingSaida" [blocked]="blockedPanelSaida">
+      <i class="pi pi-lock" style="font-size: 3rem"></i>
+    </p-blockUI>
+    <p-panel #savingSaida header="Aguardando CTE [ {{cicloCT?.length}} ]" [toggleable]="true">
+      <div class="grid">
+        <div class="col-fixed" style="width: 3rem;">
+          <div class="flex">
+            @if (cicloCT!.length>0) {
+            <p-badge value="{{cicloCT?.length}}" badgeSize="large" severity="success"></p-badge>
+            }
+          </div>
+        </div>
+
+        <div class="flex flex-row flex-wrap">
+          @for (item of cicloCT; track $index) {
+          <div class="flex">
+            <app-caminhao-carregamento pDraggable (onDragStart)="dragStartCT(item)" (onDragEnd)="dragEnd()"
+              [infoFull]="infoFull" [posicao]="$index+1" [ciclo]="item"
+              [temPermissaoParaExcluir]="temPermissaoService.excluir(ue)"
+              [temPermissaoParaEditar]="temPermissaoService.editar(ue)"
+              [temPermissaoParaBloquear]="temPermissaoService.temTag('editarBloqueio',ue)"
+              (selecionouCarregamento)="selecionouCarregamento($event)"></app-caminhao-carregamento>
+          </div>
+          }
+        </div>
+      </div>
+    </p-panel>
+  </div>
+  <div class="w-full"><p-panel header="Portaria Saída [ {{cicloSaida?.length}} ]" [toggleable]="true">
+
+    </p-panel>
+    <div class="grid nested-grid">
+      <div class="col-fixed" style="width: 3rem;">
+        @if (cicloSaida!.length>0) {
+        <p-badge value="{{cicloSaida?.length}}" badgeSize="large" severity="success"></p-badge>
+        }
+      </div>
+      <div class="col-1">
+        @if(intervalId && temPermissaoService.encerrar(ue)) {
+        <div class="box-drop box-drop-item" pDroppable (onDrop)="onDropSaida()"
+          style="width: 200px !important; height: 200px !important;">
+          <img [src]="iconeDestino" title="Arraste aqui para Liberar Carregamento!" width="70">
+          <span style="font-weight: bold; font-size: 2rem;">Saída</span>
+        </div>
+        }
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+
+
+<!--         -->
+
+
+<p-dialog id="dialogEncerrarCiclo" header="Encerrar Ciclo" [(visible)]="visibleEncerrarCiclo"
+  [style]="{ width: '40rem' }" [modal]="true" (onHide)="onHideDialogEncerrarCicloCreate()">
+
+  <ng-template pTemplate="header">
+    <span class="text-xl font-bold">Encerrar Ciclo</span>
+  </ng-template>
+
+  <div class="grid" style="margin: 5px;">
+    <div class="col-12">
+      <div class="field grid">
+        <label for="motivoEncerramento" class="col-fixed" style="width: 7rem">Motivo do Encerramento</label>
+        <div class="col">
+          <input pInputText oninput="this.value = this.value.toUpperCase()" id="motivoEncerramento"
+            style="width: 25rem;" type="text" [(ngModel)]="motivoEncerramento" placeholder="Motivo" />
+        </div>
+      </div>
+
+    </div>
+    <div class="col-12">
+      <p-divider></p-divider>
+    </div>
+
+    <div class="col-12">
+
+      <button title="Salvar" label="Salvar" pButton pRipple (click)="salvarEncerramentoCiclo()" pTooltip="Salvar"
+        class="p-button-success" icon="pi pi-save" [disabled]="motivoEncerramento?.length!<10"
+        [loading]="saving"></button>
+      <button title="Fechar" label="Sair" pButton pRipple (click)="fecharDialogEncerrarCiclo()" pTooltip="Salvar"
+        class="p-button-secondary" icon="pi pi-arrow-right"></button>
+    </div>
+
+  </div>
+
+</p-dialog>
+
+
+<p-dialog id="dialogCreateCarregamento" header="Cadastrar Caminhão" [(visible)]="visibleCreateOrdem"
+  [style]="{ width: '50rem'}" [modal]="true" (onHide)="onHideDialogCreate()">
+  <ng-template pTemplate="header">
+    <span class="text-xl font-bold">[ {{carregamentoEdicao.produto}} ]</span>
+  </ng-template>
+  <div style="width: 95%;">
+
+    <form [formGroup]="formAddCarregamento">
+      <div class="grid grid-cols-1 ml-1">
+        <div class="flex mt-4">
+          <div class="flex-none w-20">
+            <span>Nº Retirada</span>
+          </div>
+          <div class="flex-auto font-extrabold">
+            @if(crud!="C") {
+            <p-inputNumber [style]="{'text-align': 'center'}" size="5" inputId="ordemretirada"
+              formControlName="nrOrdemRetirada" placeholder="Nº Ordem"></p-inputNumber>
+            }
+
+          </div>
+
+          <div class="flex-auto">
+            <p-selectButton [options]="opcoesTipoVenda" formControlName="tipoVenda" optionLabel="name"
+              optionValue="value"></p-selectButton>
+          </div>
+        </div>
+
+        <div class="flex mt-3">
+
+        </div>
+
+        <div class="flex mt-3">
+          <div class="flex-none w-1">
+            <span>C.P.F.</span>
+          </div>
+          <div class="flex-none w-36">
+            <p-inputMask [style]="{'text-align': 'center'}" id="motoristaCPF" mask="999.999.999-99"
+              formControlName="motoristaCPF" placeholder="999.999.999-99"></p-inputMask>
+          </div>
+          <div class="flex-none w-20">
+            <span class="col-fixed">Motorista</span>
+          </div>
+          <div class="flex-auto">
+            <input pInputText oninput="this.value = this.value.toUpperCase()" id="motoristaNome" style="width: 20rem;"
+              type="text" formControlName="motoristaNome" placeholder="Nome Motorista" />
+          </div>
+        </div>
+
+        <div class="flex mt-3">
+
+          <div class="flex-none w-2">
+            <span>Placa Caminhão</span>
+          </div>
+          <div class="flex-none w-2">
+            <p-inputMask [style]="{'text-align': 'center'}" size="7" mask="aaa-9*99"
+              formControlName="caminhaoPlaca"></p-inputMask>
+          </div>
+
+          <div class="flex-none w-2">
+            <span>Transportadora</span>
+          </div>
+          <div class="flex-auto w-5">
+            <input pInputText oninput="this.value = this.value.toUpperCase()" id="transportadora" style="width: 20rem;"
+              type="text" formControlName="transportadora" placeholder="Transportadora" />
+
+          </div>
+        </div>
+
+        <div class="flex mt-3">
+
+          <div class="flex-none w-2">
+            <span>Cliente</span>
+          </div>
+          <div class="flex-none w-2">
+            <input pInputText oninput="this.value = this.value.toUpperCase()" id="clienteNome" style="width: 20rem;"
+              type="text" formControlName="clienteNome" placeholder="Nome Cliente" />
+          </div>
+
+
+        </div>
+
+        @if(crud!="C") {
+        <div class="flex mt-3">
+
+          <div class="flex-none w-1">
+            <span>Litragem</span>
+          </div>
+          <div class="flex-none w-2">
+            <p-inputNumber [style]="{'text-align': 'center'}" size="7" mode="decimal" [minFractionDigits]="2"
+              inputId="quantidadeVolume" formControlName="quantidadeVolume"></p-inputNumber>
+          </div>
+          <div class="flex-none w-2">
+            <span>Temperatura</span>
+          </div>
+          <div class="flex-none w-2">
+            <p-inputNumber [style]="{'text-align': 'center'}" size="7" mode="decimal" [minFractionDigits]="1"
+              inputId="temperatura" formControlName="temperatura" placeholder="Temperatura"></p-inputNumber>
+          </div>
+        </div>
+        }
+      </div>
+
+    </form>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button title="Salvar" label="Salvar" pButton pRipple (click)="salvarCrudCarregamento()" pTooltip="Salvar"
+      class="p-button-success" icon="pi pi-save" [disabled]="disableButtonSave" [loading]="saving"></p-button>
+    <p-button title="Fechar" label="Sair" pButton pRipple (click)="fecharDialogCreateCarregamento()" pTooltip="Salvar"
+      class="p-button-secondary" icon="pi pi-arrow-right"></p-button>
+  </ng-template>
+</p-dialog>
+
+
+<p-dialog id="dialogEditCiclo" header="Editar Ciclo" [(visible)]="visibleEditCiclo" [style]="{ width: '40rem' }"
+  [modal]="true" (onHide)="onHideDialogEditCiclo()">
+
+  <ng-template pTemplate="header">
+    <span class="text-xl font-bold">Editar Ciclo</span>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+
+    <button title="Salvar" label="Salvar" pButton pRipple (click)="salvarCiclo()" pTooltip="Salvar"
+      class="p-button-success" icon="pi pi-save" [disabled]="true" [loading]="saving" style="color:white"></button>
+    <button title="Fechar" label="Sair" pButton pRipple (click)="fecharDialogEditCiclo()" pTooltip="Salvar"
+      class="p-button-secondary" style="color:white" icon="pi pi-arrow-right"></button>
+  </ng-template>
+</p-dialog>
+
+
+
+<p-dialog id="dialogEditBloqueio" header="Editar Bloqueio" [(visible)]="visibleEditBloqueio"
+  [style]="{ width: '40rem' }" [modal]="true" (onHide)="onHideDialogEditBloqueio()">
+
+  <ng-template pTemplate="header">
+    <span class="text-xl font-bold">Editar Bloqueio</span>
+  </ng-template>
+
+  <label for="motivoBloqueio" class="col-fixed" style="width: 7rem">Motivo do Bloqueio</label>
+  <div class="col">
+    <input pInputText oninput="this.value = this.value.toUpperCase()" id="motivoEncerramento" style="width: 25rem;"
+      type="text" [(ngModel)]="motivoBloqueio" placeholder="Motivo Bloqueio" />
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button title="Salvar" label="Salvar" pButton pRipple (click)="salvarBloqueio()" pTooltip="Salvar"
+      class="p-button-success" icon="pi pi-save" [loading]="saving" style="color:white"></button>
+    <button title="Fechar" label="Sair" pButton pRipple (click)="fecharDialogEditBloqueio()" pTooltip="Salvar"
+      class="p-button-secondary" style="color:white" icon="pi pi-arrow-right"></button>
+  </ng-template>
+</p-dialog>
+<p-toast></p-toast>

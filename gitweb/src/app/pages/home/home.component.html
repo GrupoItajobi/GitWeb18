@@ -1,0 +1,67 @@
+<div class="grid grid-cols-1 mt-5 md:grid-cols-12 justify-center justify-items-center">
+  <div class="col-span-2 justify-center justify-items-center">
+    <div class="grid grid-flow-row auto-rows-max">
+      <!-- <div class="card-container">
+        <div (click)="menuAprovacao()">
+          <img title="Aprovações" src="/assets/layout/img/sistema/aprovacao.png" width="80px;" />
+          <h1 style="color: black;">Aprovações</h1>
+        </div>
+      </div> -->
+      <div class="card-container">
+        <div class="card" (click)="painelMoagem()">
+          <img title="Painel Moagem" src="/assets/layout/img/sistema/industria.png" width="50px;" />
+        </div>
+      </div>
+      <!-- <div class="card-container">
+        <div class="card" (click)="painelCarregamento()">
+          <img title="Painel Carregamento" src="/assets/layout/img/sistema/entrega-rapida.png" width="80px;" />
+        </div>
+      </div> -->
+
+
+      <div class="card-container">
+        <div class="card">
+          <img title="CS" src="/assets/layout/img/sistema/cs.png" width="50px;" />
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="col-span-8">
+    <p-galleria [value]="images" [autoPlay]="true" [circular]="true" [showItemNavigators]="true" [showThumbnails]="true"
+      [numVisible]="6" [responsiveOptions]="responsiveOptions" [containerStyle]="{ 'max-width': '750px;' }">
+      <ng-template pTemplate="item" let-item>
+        <img [src]="item.itemImageSrc" style="width:40rem; height:20rem; display: block" />
+      </ng-template>
+      <ng-template pTemplate="thumbnail" let-item>
+        <div class="grid grid-nogutter justify-content-center">
+          <img [src]="item.thumbnailImageSrc" style="width: 100px; height: 50px;  display: block" />
+        </div>
+      </ng-template>
+    </p-galleria>
+  </div>
+
+  <div class="col-span-2">
+    <div class="grid grid-flow-row auto-rows-max">
+      <div class="card-container">
+        <div class="card" (click)="painelMoagem()">
+          <img title="Cardápio" src="/assets/layout/img/sistema/bandeja-de-comida.png" width="50px;" />
+        </div>
+      </div>
+
+      <div class="card-container">
+        <div class="card" (click)="painelMoagem()">
+          <img title="Aniversário" src="/assets/layout/img/sistema/bolo-de-aniversario.png" width="50px;" />
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<app-unidades (selecionouUnidade)="selecionouUnidade($event)"></app-unidades>
+
+<p-toast></p-toast>

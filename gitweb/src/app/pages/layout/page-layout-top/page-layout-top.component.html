@@ -1,0 +1,109 @@
+<div class="flex flex-nowrap h-36  bg-header-primary text-white py-4">
+  <div class="w-2 hidden md:block">
+    <div class="simbolo " (click)="home() ">
+      <div class="image">
+        <img src="/assets/layout/img/logo/logo.png" />
+      </div>
+    </div>
+  </div>
+
+  <div class="w-2/12 text-left ml-5">
+    <div class="grid-flow-row">
+      <div class="flex flex-row" (click)="sidebarVisible = true">
+        @if(authService.usuarioLogado().login) {
+        <i class="pi pi-map-marker" style="font-size: 1.2rem; color: var(--color-logo-600) !important;"></i>
+
+        <i class="hidden md:block"
+          style="padding-left: 10px;  font-size: 1rem; color: var(--color-logo-600) !important;">GEF </i>
+        }
+      </div>
+      @if(authService.usuarioLogado().login) {
+      <div class="flex flex-row" (click)="clickMenu.toggle($event)">
+
+        <i class="pi pi-list" style="font-size: 1.2rem; color: var(--color-logo-600) !important;"> </i>
+        <p-overlayPanel id="clickMenu" #clickMenu [style]="{'width': '70%'}" [showCloseIcon]="true">
+          <ng-template pTemplate="content">
+            <app-menu (selecionouApp)="click($event)"></app-menu>
+          </ng-template>
+        </p-overlayPanel>
+        <i class="hidden md:block"
+          style="padding-left: 10px; font-size: 1rem; color: var(--color-logo-600) !important;">Menu</i>
+
+      </div>
+      }
+    </div>
+  </div>
+  <div class="w-7/12 text-center">
+    <div class="grid grid-rows-3 grid-flow-col gap-1">
+      <div class="row-span-2 w-full">
+        <span class="md:font-extrabold  md:text-2xl ">
+          [{{empresaService.empresaHeader.grupoCodigo}}.{{empresaService.empresaHeader.empresaCodigo}}.{{empresaService.empresaHeader.filialCodigo}}]
+          {{empresaService.empresaHeader.filialNome}}
+        </span>
+
+      </div>
+      <div class="row-span-1 w-full">
+        <span class="md:font-semibold md:text-xl">
+          {{url.aplicacao.titulo}}
+        </span>
+      </div>
+    </div>
+
+  </div>
+  <div class="w-3/12">
+    <div class="grid grid-rows-3 gap-1">
+      <div class="row-span-1">
+        <div class="flex flex-row gap-2" (click)="home()" title="Home">
+          <i class="pi pi-home" style="font-size: 1.5rem; color: var(--color-logo-600);"></i>
+          <label class="hidden md:block">Home</label>
+        </div>
+      </div>
+      <div class="row-span-1">
+        @if(!authService.usuarioLogado().login) {
+        <div class="flex flex-row" (click)="login()" title="Clique para Login">
+          <i class="pi pi-user" style="font-size: 1.5rem; color: orange;"></i>
+          <label class="hidden md:block">Clique para Login </label>
+        </div>
+        }
+        @if(authService.usuarioLogado().login) {
+        <div class="flex flex-row" title="Clique para Logout">
+          <i class="pi pi-user" style="font-size: 1.5rem; color: var(--color-logo-600);"
+            (click)="opUser.toggle($event)"></i>
+          <label class="hidden md:block">{{authService.usuarioLogado().nome}}</label>
+          <p-overlayPanel #opUser>
+            <ng-template pTemplate="content">
+              <ul style="list-style-type: none ">
+                <li>
+                  <div class="card-container">
+                    <div class="card" (click)="logout()">
+                      <img title="Logout" src="/assets/layout/img/sistema/logout.png" width="50px;" />
+                      Logout
+                    </div>
+                  </div>
+                </li>
+
+                <li>
+                  <div class="card-container">
+                    <div class="card" (click)="alterarSenha()">
+                      <img title="Alterar" src="/assets/layout/img/sistema/reset-password.png" width="50px;" />
+                      Alterar
+                    </div>
+                  </div>
+                </li>
+              </ul>
+
+            </ng-template>
+          </p-overlayPanel>
+        </div>
+        }
+      </div>
+      <div class="flex flex-row row-span-1">
+        <label class="hidden md:block" style="color: var(--color-logo-600)">{{dataAtual| date:"dd/MM/yyyy HH:mm:ss"}}</label>
+        <label class="hidden md:block">&nbsp;{{url.role}}</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-sidebar [sidebarVisible]="sidebarVisible" (eventSidebarClose)="eventSidebarClose($event)"></app-sidebar>
+<app-alterar-senha-page [visible]="dialogAlterarSenha" [login]="authService.usuarioLogado().login!" (eventCloseDialog)="eventCloseDialog($event)"></app-alterar-senha-page>

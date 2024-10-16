@@ -1,0 +1,152 @@
+<div class="w-full content-center">
+  <div class=" flex flex-row  justify-center">
+    <div class="card-container" disabled="true">
+      <div class="card card-allocation" (click)="clickRotacao()">
+        <div class=" flex flex-col">
+          <div>
+            <img title="Rotação Moenda" src="/assets/layout/img/sistema/industria.png" width="50px;" />
+          </div>
+          <div>
+            <span>Rotação</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-container">
+      <div class="card" (click)="clickProducao()">
+        <div class=" flex flex-col">
+          <div>
+            <img title="Rotação Moenda" src="/assets/layout/img/sistema/cana-de-acucar-bico-combustivel.png"
+              width="50px;" />
+          </div>
+          <div>
+            <span>Produção</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-container">
+      <div class="card" (click)="clickDesempenho()">
+        <div class=" flex flex-col">
+          <div>
+            <img title="Indicador" src="/assets/layout/img/sistema/indicador-chave-de-desempenho.png"
+              width="50px;" />
+          </div>
+          <div>
+            <span>Desempenho</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if(visaoSelecionada==='rotacao') {
+  <p-panel [toggleable]="true">
+    <ng-template pTemplate="header">
+      <div class="flex align-items-center gap-2">
+        <span class="font-bold">
+          Rotação de Moenda
+        </span>
+      </div>
+    </ng-template>
+    <p-chart type="bar" [data]="chartStackedBarRotacaoAtualData" [options]="chartStackedBarRotacaoAtualOptions" />
+
+    <app-unidades (selecionouUnidade)="selecionouUnidade($event)"></app-unidades>
+
+    <p-accordion [activeIndex]="0" class="mt-4">
+
+      <p-accordionTab header="Rotação Moenda Unidade :{{ueSelecionada}}" class="mt-1">
+        <p-chart type="pie" [data]="mapGraficoDisponibilidade.get(ueSelecionada)" [options]="dispMoendaOptions"
+          width="80vw" height="30vh" />
+
+        <p-panel [toggleable]="true">
+          <ng-template pTemplate="header">
+            <div class="flex align-items-center gap-2">
+              <span class="font-bold">
+                Histórico de Rotação
+              </span>
+            </div>
+          </ng-template>
+          <p-chart type="bar" [data]="mapGraficoStackedRotacaoHist.get(ueSelecionada)"
+            [options]="chartStackedBarRotacaoHistOptions" />
+        </p-panel>
+        <p-divider></p-divider>
+        <p-panel [toggleable]="true">
+          <ng-template pTemplate="header">
+            <div class="flex align-items-center gap-2">
+              <span class="font-bold">
+                Rotação de Moenda Unidade :{{ueSelecionada}}
+              </span>
+            </div>
+          </ng-template>
+          <p-tabView class="mt-4">
+            @for (item of mapUeMoendas.get(ueSelecionada); track $index) {
+            <p-tabPanel header="{{item}}" class="mt-4">
+
+              <p-chart type="line" [data]="mapGraficoRotacao.get((ueSelecionada+':'+item))"
+                [options]="rotacaoMoendaOptions" width="90vw" height="30vh" />
+
+              <p-divider></p-divider>
+              <p-panel [toggleable]="true">
+                <ng-template pTemplate="header">
+                  <div class="flex align-items-center gap-2">
+                    <span class="font-bold">
+                      Histórico Unidade :{{ueSelecionada}}
+                    </span>
+                  </div>
+                </ng-template>
+
+                <p-table [value]="mapRotacaoAlteracao.get(ueSelecionada)?.get(item)!"
+                  [tableStyle]="{ 'min-width': '50rem' }">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th style="text-align: center;" colspan="2">Data</th>
+                      <th style="text-align: center;" colspan="3">Rotação</th>
+                      <th style="text-align: center;" colspan="3">Evento</th>
+                      <th style="text-align: center;" rowspan="2" style="width: 7rem;">Previsão</th>
+                      <th rowspan="2">Observação</th>
+                    </tr>
+                    <tr>
+                      <th style="width: 7rem; text-align: center;">Início</th>
+                      <th style="width: 7rem; text-align: center;">Fim</th>
+                      <th style="width: 4rem; text-align: center;">Ideal</th>
+                      <th style="text-align: center;" colspan="2">Atual</th>
+                      <th style="width: 2rem; text-align: center;">Code</th>
+                      <th style="width: 10rem;">Descrição</th>
+                      <th style="width: 10rem;">Responsável</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-rotacao>
+                    <tr>
+                      <td style="text-align: center;">{{ rotacao.dataInicio | date:'dd/MM/yyyy HH:mm'}}</td>
+                      <td style="text-align: center;">{{ rotacao.dataFim | date:'dd/MM/yyyy HH:mm'}}</td>
+                      <td style="text-align: right; width: 4rem;">{{ rotacao.rotacaoIdeal | number:'0.0-1' }}</td>
+                      <td style="text-align: right; width: 4rem;">{{ rotacao.rotacaoAtual | number:'0.0-1' }}</td>
+                      @if (rotacao.rotacaoIdeal < rotacao.rotacaoAtual) { <td style="text-align: center; width: 1rem;">
+                        <i class="fas fa-arrow-up" style="color: rgb(11, 216, 52);"> </i></td>
+                        } @else if (rotacao.rotacaoIdeal > rotacao.rotacaoAtual) {
+                        <td style="text-align: center; width: 1rem;"><i class="fas fa-arrow-down"
+                            style="color: rgb(245, 110, 26);"> </i></td>
+                        } @else {
+                        <td style="text-align: center; width: 1rem;"><i class="fas fa-check"></i></td>
+                        }
+                        <td style="text-align: center;">{{ rotacao.eventoCode }}</td>
+                        <td>{{ rotacao.eventoDescricao }}</td>
+                        <td>{{ rotacao.responsavelDescricao }}</td>
+                        <td style="text-align: center;">{{ rotacao.dataPrevistaRetorno | date:'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{ rotacao.observacao}}</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </p-panel>
+            </p-tabPanel>
+            }
+
+          </p-tabView>
+
+        </p-panel>
+      </p-accordionTab>
+    </p-accordion>
+  </p-panel>
+  }
+</div>

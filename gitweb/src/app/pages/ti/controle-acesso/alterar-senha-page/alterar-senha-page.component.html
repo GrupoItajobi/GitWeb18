@@ -1,0 +1,55 @@
+<p-dialog id="dialogAlterarSenha" header="Alterar Senha" [(visible)]="visible" [style]="{ width: '35rem' }"
+  [modal]="true" (onHide)="onHideDialog()">
+
+  <ng-template pTemplate="header">
+    <span class="text-xl font-bold">Alterar Senha</span>
+  </ng-template>
+  <form [formGroup]="form">
+    <div style="margin: 10px;">
+      <div class="card">
+        <div class="grid" style="margin: 5px;">
+          <div class="col-12">
+
+            <div class="field grid">
+              <label for="login" class="col-fixed" style="width: 7rem">Login</label>
+              <div class="col">
+                <span>{{form.value.login}}</span>
+              </div>
+            </div>
+            <div class="field grid">
+              <label for="oldPass" class="col-fixed" style="width: 7rem">Senha Antiga</label>
+              <div class="col">
+                <input type="password" id="oldPass" formControlName="oldPassword" />
+              </div>
+            </div>
+
+            <div class="field grid">
+              <label for="newPass" class="col-fixed" style="width: 7rem">Senha Nova</label>
+              <div class="col">
+                <input type="password" id="oldPass" formControlName="newPassword" />
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+      <div class="field grid justify-content-center">
+        <div class="card-container">
+          <div class="card" (click)="alterarSenha()">
+            <img title="Confirmar" src="/assets/layout/img/sistema/choice.png" width="70px;" />
+          </div>
+
+        </div>
+      </div>
+      <div class="field grid justify-content-center">
+        <span>Confirmar</span>
+      </div>
+    </div>
+  </form>
+
+</p-dialog>
+<!-- <p-toast></p-toast> -->
+
+
+
