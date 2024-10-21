@@ -1,3 +1,4 @@
+import { SolicitacaoHeComponent } from './pages/rh/hora-extra/solicitacao-he/solicitacao-he.component';
 import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -27,6 +28,8 @@ export const routes: Routes = [
   { path: "faturamento/checklist", component: CheckListComponent, canActivate: [GuardService] },
 
   { path: "agricola/alocacao/caminhao-frente", component: AlocacaoCaminhaoComponent, canActivate: [GuardService] },
+
+  { path: "rh/hora-extra/solicitacao-he", component: SolicitacaoHeComponent, canActivate: [GuardService] },
 
 
 
