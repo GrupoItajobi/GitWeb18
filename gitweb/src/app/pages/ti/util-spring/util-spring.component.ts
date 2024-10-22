@@ -32,9 +32,19 @@ export class UtilSpringComponent implements OnInit {
   }
 
   initClasse() {
-    let classe = this.form.value.classe;
+    let classe:string = this.form.value.classe;
+    let isEntity:boolean=true;
+    if (classe.substring(0,2).toUpperCase() ==="V_") {
+      isEntity=false;
+      classe = classe.substring(2);
+    }
     classe = initcap(classe.replaceAll('_',' ')).replaceAll(' ', '');
+
     this.entity = classe + "Entity";
+    if (!isEntity) {
+      this.entity = classe + "View";
+    }
+
     this.repository = classe + "Repository";
     this.service = classe + "Service";
     this.controller = classe + "Controller";
@@ -71,7 +81,7 @@ export class UtilSpringComponent implements OnInit {
     this.initClasse();
     let script: string = '@Repository\n';
     script += 'public interface ' + this.repository + ' extends JpaRepository<' + this.entity + ', String> {\n'
-    script += '\n\n}'
+    script += '\n}'
     this.form.patchValue({
       script: script
     })
