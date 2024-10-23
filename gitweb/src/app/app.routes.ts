@@ -16,11 +16,14 @@ import { FotoComponent } from './components/camera/foto/foto.component';
 import { AlocacaoCaminhaoComponent } from './pages/agricola/alocacao/alocacao-caminhao/alocacao-caminhao.component';
 import { RotacaoMoendaComponent } from './pages/industria/coi/moenda/rotacao-moenda/rotacao-moenda.component';
 import { PainelProducaoComponent } from './pages/industria/painel/painel-producao/painel-producao.component';
+import { PainelAprovacaoComponent } from './pages/painel/painel-aprovacao/painel-aprovacao.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: "home", component: HomeComponent },
   { path: "login", component: LoginComponent },
+
+  { path: "painel-aprovacao", component: PainelAprovacaoComponent },
 
   { path: "faturamento/painel-carreg-produto", component: CarregamentoProdutoComponent, canActivate: [GuardService] },
   { path: "faturamento/ordem-carregamento", component: OrdemCarregamentoComponent, canActivate: [GuardService] },

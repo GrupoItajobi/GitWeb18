@@ -79,12 +79,12 @@ export class HomeComponent implements OnInit {
   }
   menuAprovacao() {
     console.log('menuAprovacao');
-    /*
+
     if (!this.authService.isLogged()) {
       this.toastMessageService.showInfoMsg("Usuário não conectado!");
     } else {
-      this.router.navigate(['/aprovacao/menu']);
+      this.router.navigate(['/painel-aprovacao']);
     }
-    */
+
   }
 }

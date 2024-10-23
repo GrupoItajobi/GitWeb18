@@ -1,5 +1,5 @@
-<div class="grid grid-cols-1 mt-5 md:grid-cols-12 justify-center justify-items-center">
-  <div class="col-span-2 justify-center justify-items-center">
+<div class="grid grid-cols-1 md:grid-cols-12 justify-center justify-items-center">
+  <div class="col-span-2 justify-center justify-items-center mt-10">
     <div class="grid grid-flow-row auto-rows-max">
       <!-- <div class="card-container">
         <div (click)="menuAprovacao()">
@@ -7,6 +7,12 @@
           <h1 style="color: black;">Aprovações</h1>
         </div>
       </div> -->
+
+      <div class="card-container">
+        <div class="card" (click)="menuAprovacao()">
+          <img title="Aprovação" src="/assets/layout/img/sistema/aprovacao.png" width="50px;" />
+        </div>
+      </div>
       <div class="card-container">
         <div class="card" (click)="painelMoagem()">
           <img title="Painel Moagem" src="/assets/layout/img/sistema/industria.png" width="50px;" />
@@ -29,7 +35,7 @@
 
   </div>
 
-  <div class="col-span-8">
+  <div class="col-span-8 mt-10">
     <p-galleria [value]="images" [autoPlay]="true" [circular]="true" [showItemNavigators]="true" [showThumbnails]="true"
       [numVisible]="6" [responsiveOptions]="responsiveOptions" [containerStyle]="{ 'max-width': '750px;' }">
       <ng-template pTemplate="item" let-item>
@@ -43,7 +49,7 @@
     </p-galleria>
   </div>
 
-  <div class="col-span-2">
+  <div class="col-span-2 mt-10">
     <div class="grid grid-flow-row auto-rows-max">
       <div class="card-container">
         <div class="card" (click)="painelMoagem()">
