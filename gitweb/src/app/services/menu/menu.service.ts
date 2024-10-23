@@ -80,9 +80,10 @@ export class MenuService implements OnInit {
   async preencherMenuTipo() {
     this.menuTipo$ = [
       { id: 'M', descricao: "Manutenção" },
+      { id: 'D', descricao: "Digitação" },
       { id: 'P', descricao: "Processo" },
       { id: 'C', descricao: "Consulta" },
-      // {id:'I',descricao:"Interface"},
+      { id: 'I', descricao: "Interface"},
     ];
   }
   async preencherMenuApp() {
