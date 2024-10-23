@@ -1,0 +1,20 @@
+<ng-template pTemplate="content">
+    <div >
+      <p-table [value]="solicitante" selectionMode="single" [(selection)]="eventoSelecionado" dataKey="code"
+        (onRowSelect)="onRowSelect($event)" [tableStyle]="{'min-width': '40rem'}">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="text-align: center; width: 3rem;">Code</th>
+            <th>Descrição</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-evento>
+          <tr [pSelectableRow]="evento">
+            <td style="text-align: center;">{{evento.code}}</td>
+            <td>{{evento.descricao}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+    </div>
+  </ng-template>

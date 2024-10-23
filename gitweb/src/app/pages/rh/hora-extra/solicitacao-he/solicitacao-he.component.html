@@ -1,1 +1,148 @@
-<p>solicitacao-he works!</p>
+<div class="content-center text-center">
+<div class="content-center text-center" >
+    <button class="m-1" type="button" (click)="adicionarAlteracao()"><i
+        class="fas fa-plus"></i>Solicitar Hora Extra</button>
+</div>
+
+<div class="flex-col items-center content-center w-full" >
+
+    <!-- Table -->
+    <p-table [value]="solicitacoes" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+            <tr class="w-12">
+                <th class="w-4">Nome</th>
+                <th class="w-3">Departamento</th>
+                <th class="w-1">Cód Motivo</th>
+                <th class="w-3">Descrição</th>
+                <th class="w-3">Solicitante</th>
+            </tr>
+        </ng-template>
+        
+        <ng-template  pTemplate="body" let-usuario>
+            <tr class="w-12">
+                <td class="w-4">{{ usuario.funcionarioNome }}</td>
+                <td class="w-3">{{ usuario.departamentoDescricao }}</td>
+                <td class="w-1">{{ usuario.motivoCodigo }}</td>
+                <td class="w-3">{{ usuario.motivoDescricao }}</td>
+                <td class="w-3">{{ usuario.usuarioNome }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+</div>
+
+<p-dialog header="Solicitar Hora Extra" [modal]="true" [(visible)]="dialogVisible" class="max-w-lg text-center"> 
+
+    <ng-template pTemplate="content">
+        <form [formGroup]="form">
+
+        <div class="flex flex-col-12 gap-4 align-items-center mb-4 ">
+            
+            <!-- CÓDIGO FUNCIONÁRIO -->
+                    <div class="flex flex-col w-2">
+                        <label for="funcionarioCodigo" class="w-full">Cód. funcionário</label>
+                        <input
+                            pInputText
+                            id="funcionarioCodigo"
+                            class="w-full mt-2"
+                            type="number"
+                            formControlName="funcionarioCodigo"
+                            aria-describedby="Cód. Funcionário"
+                            
+                            />
+                    </div>                      
+
+            <!-- NOME FUNCIONÁRIO -->
+                        <div class=" flex flex-col w-8">
+                            <label for="funcionarioNome" class="w-full">Nome funcionário</label>
+                            <input
+                            pInputText
+                            id="funcionarioNome"
+                            class="w-full mt-3"
+                            type="text"
+                            formControlName="funcionarioNome"
+                            aria-describedby="Nome Funcionário"
+                            readonly
+                            />
+                        </div>
+
+              <!-- QUANTIDADE HORAS  -->
+                <div class="flex flex-col w-2">
+                    <label for="dia" class="w-full">Quantidade horas</label>
+                    <input
+                        pInputText
+                        id="dia"
+                        class="w-full mt-2"
+                        type="number"
+                        formControlName="dia"
+                        aria-describedby="Dia"
+                        />
+                </div>
+
+        </div>
+
+        <div class="flex flex-col-12 gap-4 align-items-center mb-4 ">
+
+             <!-- CÓDIGO MOTIVO -->
+            <div class="flex flex-col w-2">
+                <label for="motivoCodigo" class="w-full">Cód motivo</label>
+                <input 
+                    pInputText 
+                    id="motivoCodigo" 
+                    class="w-full mt-1"
+                    type="number"
+                    formControlName="motivoCodigo"
+                    aria-describedby="Cód motivo" 
+                    />               
+            </div>
+            
+             <!-- DESCRIÇÃO MOTIVO -->
+             <div class="flex flex-col w-5">
+                <label for="motivoDescricao" class="w-full">Motivo descrição</label>
+                <input 
+                    pInputText 
+                    id="motivoDescricao" 
+                    class="w-full mt-1"
+                    type="text"
+                    formControlName="motivoDescricao"
+                    aria-describedby="Motivo descrição" 
+                    />               
+            </div>
+
+            <!-- OBSERVAÇÃO -->
+            <div class="flex flex-col w-5">
+                <label for="motivoDescricao" class="w-full">Observação</label>
+                <input 
+                    pInputText 
+                    id="observacao" 
+                    class="w-full"
+                    type="text"
+                    formControlName="observacao"
+                    aria-describedby="Observação" 
+                    />               
+            </div>
+
+        </div>
+        <div class="flex flex-col-12 gap-4 align-items-center mb-4 ">
+
+            <div class="flex flex-col w-3">
+                <label for="dataHoraExtra" class="w-full">Data Início</label>
+                <input id="dataHoraExtra" class="w-full" type="date" formControlName="dataHoraExtra" />
+            </div>
+           
+        </div>                  
+
+    </form>
+</ng-template>
+
+<ng-template pTemplate="footer">
+    <p-button title="Salvar" label="Salvar" pButton pRipple (click)="salvar()" pTooltip="Salvar"
+      class="p-button-success" icon="pi pi-save" [disabled]="!form.valid" [loading]="saving"></p-button>
+    <p-button title="Fechar" label="Sair" pButton pRipple (click)="fecharDialog()" pTooltip="Sair"
+      class="p-button-secondary" icon="pi pi-arrow-right"></p-button>
+  </ng-template>
+
+</p-dialog>
+
+<app-lov-funcionario-solicitante-he [dialogVisible]="lovMoendaVisible"
+(selecionouEvento)="selecionouEventoHe($event)"></app-lov-funcionario-solicitante-he>
