@@ -17,6 +17,7 @@ import { AlocacaoCaminhaoComponent } from './pages/agricola/alocacao/alocacao-ca
 import { RotacaoMoendaComponent } from './pages/industria/coi/moenda/rotacao-moenda/rotacao-moenda.component';
 import { PainelProducaoComponent } from './pages/industria/painel/painel-producao/painel-producao.component';
 import { PainelAprovacaoComponent } from './pages/painel/painel-aprovacao/painel-aprovacao.component';
+import { AprovacaoSolicitacaoHeComponent } from './pages/rh/hora-extra/aprovacao-solicitacao-he/aprovacao-solicitacao-he.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -24,6 +25,7 @@ export const routes: Routes = [
   { path: "login", component: LoginComponent },
 
   { path: "painel-aprovacao", component: PainelAprovacaoComponent },
+
 
   { path: "faturamento/painel-carreg-produto", component: CarregamentoProdutoComponent, canActivate: [GuardService] },
   { path: "faturamento/ordem-carregamento", component: OrdemCarregamentoComponent, canActivate: [GuardService] },
@@ -33,7 +35,7 @@ export const routes: Routes = [
   { path: "agricola/alocacao/caminhao-frente", component: AlocacaoCaminhaoComponent, canActivate: [GuardService] },
 
   { path: "rh/hora-extra/solicitacao-he", component: SolicitacaoHeComponent, canActivate: [GuardService] },
-
+  { path: "rh/hora-extra/aprovacao-solicitacao-he", component: AprovacaoSolicitacaoHeComponent, canActivate: [GuardService] },
 
 
   { path: "industria/rotacao-moenda/rotacao-moenda", component: RotacaoMoendaComponent, canActivate: [GuardService] },
