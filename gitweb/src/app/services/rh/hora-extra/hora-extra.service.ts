@@ -13,7 +13,7 @@ import { SolicitacaoHoraExtraIncluir } from '../../../models/rh/hora-extra/solic
 export class HoraExtraService implements OnInit {
 
   url: string;
-  
+
   constructor(private http: HttpClient) {
     this.url = environment.apiUrl + 'GIt-api/solicitacao-he';
   }
@@ -47,6 +47,34 @@ export class HoraExtraService implements OnInit {
 
     return await firstValueFrom(
       this.http.get<FuncionarioPorSolicitanteHe[]>(`${this.url}/funcionarios-por-solicitante`, { headers }))
+      .then(response => {
+        return response;
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
+  async solicitacaoPorAprovador(): Promise<FuncionarioPorSolicitanteHe[]> {
+    const headers = new HttpHeaders()
+      .append('Content-Type', 'application/json');
+
+    return await firstValueFrom(
+      this.http.get<FuncionarioPorSolicitanteHe[]>(`${this.url}/por-aprovador`, { headers }))
+      .then(response => {
+        return response;
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
+  async countSolicitacaoPorAprovador(): Promise<number> {
+    const headers = new HttpHeaders()
+      .append('Content-Type', 'application/json');
+
+    return await firstValueFrom(
+      this.http.get<number>(`${this.url}/por-aprovador/count`, { headers }))
       .then(response => {
         return response;
       })

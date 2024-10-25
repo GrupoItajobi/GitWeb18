@@ -1,11 +1,31 @@
-<div class="grid grid-cols-2 gap-1 md:grid-cols-6 mt-1" >
+<div class="grid grid-cols-2 gap-1 md:grid-cols-6 mt-1">
+
   <div class="card-container">
-    <a class="card card-allocation" >
-    <!-- <a class="card card-allocation" [style]="mapStyle.get('Itajobi')"> -->
-      <div class="flex flex-column">
-        <img (click)="aprovacaoHoraExtra()" title="Hora Extra"
-          src="/assets/layout/img/sistema/hora-extra.png" width="90px;" />
+    <a class="card card-allocation">
+      <!-- <a class="card card-allocation" [style]="mapStyle.get('Itajobi')"> -->
+      <div class="flex flex-col items-center">
+        <div>
+          <img (click)="aprovacaoHoraExtra()" title="Hora Extra" src="/assets/layout/img/sistema/hora-extra.png"
+            width="90px;" />
+        </div>
+        <div>
+
+          <span>Hora Extra</span>
+        </div>
+        <div>
+          @if (loadingCountSolicitacaoHoraExtra) {
+          <p-progressSpinner styleClass="w-2rem h-2rem" strokeWidth="8" />
+          }@else {
+          <p-badge value="{{countSolicitacaoHoraExtra}}" severity="warning" />
+          }
+
+        </div>
+
       </div>
     </a>
+
   </div>
+
+
+
 </div>
