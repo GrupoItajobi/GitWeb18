@@ -6,10 +6,18 @@ export interface SolicitacaoHoraExtra{
     departamentoCodigo?: number,
     departamentoDescricao?: string,
     motivoCodigo?: number,
+    motivoCod?: number,
     motivoDescricao?: string,  
     dia?: Date,
     minutos?: number,
     usuarioNome?: string,
     observacao?: string,
-    dataHe?: number
+    dataHe?: number,
+    horas?: string,
+    quantidadeAprovador?: number
 }
+
+
+
+
+    

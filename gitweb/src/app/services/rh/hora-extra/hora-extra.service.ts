@@ -32,7 +32,7 @@ export class HoraExtraService implements OnInit {
 
 
     return await firstValueFrom(
-      this.http.get<SolicitacaoHoraExtra[]>(`${this.url}`, { headers }))
+      this.http.get<SolicitacaoHoraExtra[]>(`${this.url}/solicitacoes-por-solicitante`, { headers }))
       .then(response => {
         return response;
       })
@@ -46,7 +46,7 @@ export class HoraExtraService implements OnInit {
       .append('Content-Type', 'application/json');
 
     return await firstValueFrom(
-      this.http.get<FuncionarioPorSolicitanteHe[]>(`${this.url}/por-solicitante`, { headers }))
+      this.http.get<FuncionarioPorSolicitanteHe[]>(`${this.url}/funcionarios-por-solicitante`, { headers }))
       .then(response => {
         return response;
       })
@@ -70,7 +70,8 @@ export class HoraExtraService implements OnInit {
       });
   }
 
-  async alterar(solicitaHoraExtra: SolicitacaoHoraExtraIncluir): Promise<SolicitacaoHoraExtra> {
+  async alterar(solicitaHoraExtra: SolicitacaoHoraExtra): Promise<SolicitacaoHoraExtra> {
+    console.log(solicitaHoraExtra);
     const headers = new HttpHeaders()
       .append('Content-Type', 'application/json');
 

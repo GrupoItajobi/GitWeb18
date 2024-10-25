@@ -178,6 +178,10 @@ textarea,
   margin-right: 5px;
 }
 
+.pi-user, .fa-edit{
+   cursor: pointer
+}
+
 p-password:focus,
 input:focus,
 button:focus,
@@ -865,5 +869,9 @@ tr:nth-child(odd) {
   border-top-right-radius: 6px;
   border-top-left-radius: 6px;
 }
+
+
+
+
 
 

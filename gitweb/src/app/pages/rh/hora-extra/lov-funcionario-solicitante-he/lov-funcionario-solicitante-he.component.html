@@ -1,20 +1,57 @@
-<ng-template pTemplate="content">
-    <div >
-      <p-table [value]="solicitante" selectionMode="single" [(selection)]="eventoSelecionado" dataKey="code"
-        (onRowSelect)="onRowSelect($event)" [tableStyle]="{'min-width': '40rem'}">
+<p-dialog
+  header="Funcionários"
+  [modal]="true"
+  [(visible)]="dialogVisible"
+  class="max-w-lg text-center"
+>
+  <ng-template pTemplate="content">
+    <div>
+      <p-table
+        [value]="funcionarios"
+        selectionMode="single"
+        [(selection)]="funcionarioSelecionado"
+        dataKey="id"
+        (onRowSelect)="onRowSelect($event)"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [rows]="15"
+        [paginator]="true"
+      >
         <ng-template pTemplate="header">
           <tr>
-            <th style="text-align: center; width: 3rem;">Code</th>
-            <th>Descrição</th>
+            <th style="text-align: center; width: 11rem">Cód Funcionário</th>
+            <th style="text-align: center">Nome</th>
+          </tr>
+
+          <tr>
+            <th>
+              <p-columnFilter
+                matchMode="contains"
+                style="color: black"
+                type="text"
+                field="funcionarioCodigo"
+                placeholder="Cód funcionario"
+                class="w-2"
+              />
+            </th>
+            <th>
+              <p-columnFilter
+                matchMode="contains"
+                style="color: black"
+                type="text"
+                field="funcionarioNome"
+                placeholder="Nome"
+              />
+            </th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-evento>
-          <tr [pSelectableRow]="evento">
-            <td style="text-align: center;">{{evento.code}}</td>
-            <td>{{evento.descricao}}</td>
+
+        <ng-template pTemplate="body" let-pessoas>
+          <tr [pSelectableRow]="pessoas">
+            <td style="text-align: center">{{ pessoas.funcionarioCodigo }}</td>
+            <td>{{ pessoas.funcionarioNome }}</td>
           </tr>
         </ng-template>
       </p-table>
-
     </div>
   </ng-template>
+</p-dialog>

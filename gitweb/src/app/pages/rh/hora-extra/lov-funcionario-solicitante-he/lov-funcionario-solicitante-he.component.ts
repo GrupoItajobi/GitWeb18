@@ -3,11 +3,13 @@ import { TableModule } from 'primeng/table';
 import { FuncionarioPorSolicitanteHe } from '../../../../models/rh/hora-extra/funcionario-por-solicitante-he';
 import { HoraExtraService } from '../../../../services/rh/hora-extra/hora-extra.service';
 import { ErrorHandleService } from '../../../../services/error-handle/error-handle.service';
+import { DialogModule } from 'primeng/dialog';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-lov-funcionario-solicitante-he',
   standalone: true,
-  imports: [TableModule],
+  imports: [TableModule, DialogModule],
   templateUrl: './lov-funcionario-solicitante-he.component.html',
   styleUrl: './lov-funcionario-solicitante-he.component.scss',
 })
@@ -15,10 +17,11 @@ export class LovFuncionarioSolicitanteHeComponent implements OnInit {
   @Input() dialogVisible: boolean = false;
 
   @Output() selecionouEvento = new EventEmitter();
-
+  
+  form!: FormGroup; 
   solicitante: any[] = [];
 
-  eventoSelecionado: any[] = [];
+  funcionarioSelecionado: FuncionarioPorSolicitanteHe = {};
 
   funcionarios: FuncionarioPorSolicitanteHe[] = [];
 
@@ -41,9 +44,9 @@ export class LovFuncionarioSolicitanteHeComponent implements OnInit {
       .catch((error) => {
         this.errorHandleService.handle(error);
       });
-  }
+  } 
 
   onRowSelect(event: any) {
-    this.selecionouEvento.emit(this.eventoSelecionado);
+    this.selecionouEvento.emit(this.funcionarioSelecionado);
   }
 }

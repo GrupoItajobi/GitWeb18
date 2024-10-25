@@ -1,3 +1,4 @@
+export { initcap, initLower, nowString, minutosEmHorasStr, dividir, dateToString, padLeft };
 
 // Primeira letra em maiusculo e restante minuscula de cada palavra separa pelo caracter passado
 function initcap(texto: string, init: number = 0, caracter: string = ' '): string {
@@ -50,7 +51,7 @@ function dividir(dividendo: number, divisor: number): number {
   }
   return 0;
 }
-function minutosEmHorasStr(minutos: number = 0): string {
+function minutosEmHorasStr(minutos: number = 0, mask: string = "hm"): string {
   let hr: number = 0;
   let mi: number = 0;
   let ss: number = 0;
@@ -59,7 +60,19 @@ function minutosEmHorasStr(minutos: number = 0): string {
   mi = Math.trunc(minutos - (hr * 60));
 
   let miTexto: string = mi.toString();
-  return hr + "h: " + miTexto.padStart(2, '0') + "m";
+  let result: string = "";
+
+  if (mask=="hm") {
+    result = hr + "h: " + miTexto.padStart(2, '0') + "m";
+  } else if (mask=="hh:mm"){
+    result = padLeft(hr.toString(), "0", 2)+":" + padLeft(mi.toString(), "0", 2);
+  }
+  return result;
 }
 
-export { initcap, initLower, nowString, minutosEmHorasStr, dividir, dateToString };
+function padLeft(text:string, padChar:string, size:number): string {
+
+    while (text.length < size) text = padChar + text;
+    return text;
+}
+

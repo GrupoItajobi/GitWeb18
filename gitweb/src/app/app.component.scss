@@ -4,13 +4,20 @@
   margin-top: -3%;
   background: var(--slate-300);
   // background: var(--gray-300);
-  min-height: 100rem;
+  // min-height: 100rem;
+  min-height: 86vh;
   height: 100% !important;
   width: 98%;
 
   border-radius: 8px;
   color: var(--color-logo-font);
   box-shadow: 5px 5px 3px grey, 0 0 3px black;
+  height: 100vh;
+  object-fit: cover;
+  overflow: hidden;
 }
+
+
+
 
 
