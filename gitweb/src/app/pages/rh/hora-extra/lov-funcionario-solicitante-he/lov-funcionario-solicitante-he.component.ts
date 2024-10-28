@@ -38,7 +38,6 @@ export class LovFuncionarioSolicitanteHeComponent implements OnInit {
     await this.horaExtraService
       .listarFuncionarioSolicitante()
       .then((response) => {
-        console.log(response);
         this.funcionarios = response;
       })
       .catch((error) => {

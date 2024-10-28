@@ -11,11 +11,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { SolicitacaoHoraExtra } from '../../../../models/rh/hora-extra/solicitacao-he';
-import { minutosEmHorasStr, nowString } from '../../../../core/util/gitweb-util';
 import {
-  
-  SolicitacaoHoraExtraIncluir,
-} from '../../../../models/rh/hora-extra/solicitacao-he-incluir';
+  minutosEmHorasStr,
+  nowString,
+} from '../../../../core/util/gitweb-util';
+import { SolicitacaoHoraExtraIncluir } from '../../../../models/rh/hora-extra/solicitacao-he-incluir';
 import { ButtonModule } from 'primeng/button';
 import { HoraExtraService } from '../../../../services/rh/hora-extra/hora-extra.service';
 import { ErrorHandleService } from '../../../../services/error-handle/error-handle.service';
@@ -24,6 +24,8 @@ import { ListboxModule } from 'primeng/listbox';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { FuncionarioPorSolicitanteHe } from '../../../../models/rh/hora-extra/funcionario-por-solicitante-he';
+import { ToastService } from '../../../../services/toast/toast.service';
+import { Renderer2 } from '@angular/core';
 
 @Component({
   selector: 'app-solicitacao-he',
@@ -37,7 +39,7 @@ import { FuncionarioPorSolicitanteHe } from '../../../../models/rh/hora-extra/fu
     ListboxModule,
     FormsModule,
     DropdownModule,
-    TooltipModule
+    TooltipModule,
   ],
   templateUrl: './solicitacao-he.component.html',
   styleUrl: './solicitacao-he.component.scss',
@@ -52,8 +54,9 @@ export class SolicitacaoHeComponent {
   dialogVisible: boolean = false;
   saving: boolean = false;
   lovSolicitacaoVisible: boolean = false;
+  gravarContinuar: boolean = false;
 
-  codigoFuncionario: string = "";
+  codigoFuncionario: string = '';
 
   funcionarios: FuncionarioPorSolicitanteHe[] = [];
 
@@ -61,6 +64,8 @@ export class SolicitacaoHeComponent {
     private formBuilder: FormBuilder,
     private horaExtraService: HoraExtraService,
     private errorHandleService: ErrorHandleService,
+    private toastService: ToastService,
+    private renderer: Renderer2
   ) {}
 
   ngOnInit() {
@@ -81,7 +86,6 @@ export class SolicitacaoHeComponent {
   }
 
   initForm() {
-
     this.form = this.formBuilder.group({
       id: new FormControl(this.usuarioEdit.id),
       version: new FormControl(this.usuarioEdit.version),
@@ -89,7 +93,10 @@ export class SolicitacaoHeComponent {
         this.usuarioEdit.funcionarioCodigo,
         Validators.required
       ),
-      funcionarioNome: new FormControl(this.usuarioEdit.funcionarioNome),
+      funcionarioNome: new FormControl({
+        value: this.usuarioEdit.funcionarioNome,
+        disabled: true,
+      }),
       departamentoCodigo: new FormControl(
         this.usuarioEdit.departamentoCodigo,
         Validators.required
@@ -105,14 +112,16 @@ export class SolicitacaoHeComponent {
       usuarioNome: new FormControl(this.usuarioEdit.usuarioNome),
       observacao: new FormControl(this.usuarioEdit.observacao),
       dataHoraExtra: new FormControl(this.usuarioEdit.dia),
-      horas: new FormControl(minutosEmHorasStr(this.usuarioEdit.minutos, "hh:mm"))
+      horas: new FormControl(
+        minutosEmHorasStr(this.usuarioEdit.minutos, 'hh:mm')
+      ),
     });
 
     this.form.valueChanges.subscribe((newValue) => {});
   }
 
-  minutoEmHoras(minutos: number): string{
-     return minutosEmHorasStr(minutos, "hh:mm" )
+  minutoEmHoras(minutos: number): string {
+    return minutosEmHorasStr(minutos, 'hh:mm');
   }
 
   adicionarAlteracao() {
@@ -137,11 +146,15 @@ export class SolicitacaoHeComponent {
       minutos: minutosConvertido,
     };
 
-    if (this.usuarioEdit.version) {
+    
+    if (this.usuarioEdit.version && !this.gravarContinuar) {
+      console.log("chegou aquiiiiiiiiiiiiiiiiiiiiiii")
       this.alterar(usuario);
     } else {
       this.incluir(usuario);
     }
+
+    if(this.gravarContinuar == false){ this.fecharDialog();}
   }
 
   async alterar(solicitaHe: SolicitacaoHoraExtraIncluir) {
@@ -164,8 +177,8 @@ export class SolicitacaoHeComponent {
       })
       .catch((error) => {
         this.errorHandleService.handle(error);
-      });
-    this.fecharDialog();
+      });   
+    
   }
 
   horaInicio() {
@@ -176,16 +189,16 @@ export class SolicitacaoHeComponent {
 
   fecharDialog() {
     this.dialogVisible = false;
-    this.usuarioEdit = {};   
+    this.usuarioEdit = {};
     this.initForm();
-  } 
+  }
 
   selecionouEventoHe(event: any) {
+
+    console.log(event);
     this.lovSolicitacaoVisible = false;
-    // this.disableBotaoAdicionar = false;
 
     if (event != null) {
-      // this.form.value.eventoDescricao.enable();
       this.form.patchValue({
         funcionarioCodigo: event.funcionarioCodigo,
         funcionarioNome: event.funcionarioNome,
@@ -199,31 +212,28 @@ export class SolicitacaoHeComponent {
 
   listaHoras() {
     this.horas = [
-      
-      {label: "01:00"},
-      {label: "01:30"},
-      {label: "02:00"},
-      {label: "02:30"},
-      {label: "03:00"},
-      {label: "03:30"},
-      {label: "04:00"},
-      {label: "04:30"},
-      {label: "05:00"},
-      {label: "05:30"},
+      { label: '01:00' },
+      { label: '01:30' },
+      { label: '02:00' },
+      { label: '02:30' },
+      { label: '03:00' },
+      { label: '03:30' },
+      { label: '04:00' },
+      { label: '04:30' },
+      { label: '05:00' },
+      { label: '05:30' },
     ];
   }
 
-  edit(solicitaHoraExtra: SolicitacaoHoraExtraIncluir) {    
-    
+  edit(solicitaHoraExtra: SolicitacaoHoraExtraIncluir) {
     this.usuarioEdit = solicitaHoraExtra;
 
     this.initForm();
     this.dialogVisible = true;
   }
 
-
+  //Converte as horas selecionadas para minutos, para salvar no banco
   converterMinutos() {
-
     let tempo = this.form.value.horas.label;
     let partes: string[] = tempo.split(':');
     let hora = partes[0];
@@ -232,46 +242,77 @@ export class SolicitacaoHeComponent {
     let minutos = Number(hora) * 60 + Number(minuto);
 
     return minutos;
-    
   }
 
-  buscaValorCampo(event: Event){
-    this.codigoFuncionario = (event.target as HTMLInputElement).value; 
+  //Buscando o valor do Input inserido no HTML
+  buscaValorCampo(event: Event) {
+    this.codigoFuncionario = (event.target as HTMLInputElement).value;
   }
 
-  async buscaFuncionario(){
-
+  //Traz todos os usuários que o usuário logado pode solicitar hora extra
+  async buscaFuncionario() {
     await this.horaExtraService
       .listarFuncionarioSolicitante()
       .then((response) => {
-        this.funcionarios = response;       
+        this.funcionarios = response;
       })
       .catch((error) => {
         this.errorHandleService.handle(error);
       });
-    
-      this.teste();
+
+    this.nomeFuncionario();
   }
 
+  //Busca nome de funcionário que o usuario pode solicitar Hora extra.
+  nomeFuncionario() {
+    if (this.codigoFuncionario != '') {
+      for (let chave in this.funcionarios) {
+        this.limpaForm();
+        if (
+          this.funcionarios[chave].funcionarioCodigo ==
+          Number(this.codigoFuncionario)
+        ) {
+          this.form.patchValue({
+            funcionarioCodigo: this.funcionarios[chave].funcionarioCodigo,
+            funcionarioNome: this.funcionarios[chave].funcionarioNome,
+          });
 
-  teste(){
-    for (let chave in this.funcionarios) {
-      if (this.funcionarios[chave].funcionarioCodigo === Number(this.codigoFuncionario)) {
-
-        this.form.patchValue({
-          funcionarioCodigo: this.funcionarios[chave].funcionarioCodigo,
-          funcionarioNome: this.funcionarios[chave].funcionarioNome
-        })
-       
-
-        break; // para caso encontre o primeiro valor igual
+          break; // para caso encontre o primeiro valor igual
+        } else {
+          this.toastService.showInfoMsg('Usuário não encontrado!');
+          this.focoInput();
+          break;
+        }
       }
     }
-
   }
 
- 
+  //limpa os campor codigo funcionário e nome funcionário
+  limpaForm() {
+    this.form.patchValue({
+      funcionarioCodigo: '',
+      funcionarioNome: '',
+    });
+  }
 
+  //dar o foco em um campo especifico
+  focoInput() {
+    this.renderer.selectRootElement('#funcionarioCodigo').focus();
+  }
 
+  salvarContinuar(){
+    console.log("passou aquiiiiiiii")
+    this.dialogVisible = true;
+    this.gravarContinuar = true;
 
+    this.salvar();
+
+    this.form.patchValue({
+      funcionarioCodigo: "",
+      funcionarioNome: "",
+    });
+
+    this.renderer.selectRootElement('#funcionarioCodigo').focus();
+    
+  } 
 }
