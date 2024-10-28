@@ -9,6 +9,17 @@
             <img (click)="click(item)" title="{{item.titleDescription}}" src="{{item.img}}" width="{{width}}" />
           </div>
           <div><span>{{item.title}}</span></div>
+          <div>
+            {{item.quantidade}}
+            @if (!item.loading) {
+              @if (item.quantidade != null) {
+                <p-badge [value]="item!.quantidade!" />
+              }
+            } @else {
+            <p-progressSpinner ariaLabel="loading" styleClass="w-1rem h-1rem"
+            strokeWidth="8" />
+            }
+          </div>
         </div>
       </a>
     </div>

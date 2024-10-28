@@ -45,7 +45,7 @@ export class AuthService {
       if (this.refreshInterval == null) {
         this.refreshInterval = setInterval(() => {
           this.refreshToken();
-        }, 5*60*1000);
+        }, 1*60*60*1000);
       }
     }
 

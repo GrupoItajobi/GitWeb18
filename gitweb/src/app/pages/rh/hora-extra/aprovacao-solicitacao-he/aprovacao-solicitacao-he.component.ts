@@ -47,15 +47,13 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
       {
         img: "/assets/layout/img/sistema/aprovado.png",
         title: "Aprovar",
-        clicked: false,
-        returnWhenClicked: "aprovado"
+        returnWhenClicked: "aprovado",
       },
       {
         img: "/assets/layout/img/sistema/reprovado.png",
         title: "Reprovar",
-        clicked: false,
-        returnWhenClicked: "reprovado"
-      }
+        returnWhenClicked: "reprovado",
+      },
     ];
   }
   minutosEmHoras(minutos: number = 0): string {
@@ -63,7 +61,7 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
   }
 
   clickButtonCard(event: string) {
-    console.log('clickButtonCard: '+event);
+    console.log('clickButtonCard: ' + event);
   }
 
 
