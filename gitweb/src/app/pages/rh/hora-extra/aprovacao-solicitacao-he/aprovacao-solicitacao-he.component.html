@@ -1,7 +1,9 @@
 <div class="pt-1">
 
-  <div class="containerCabec1" style="min-height: 2rem; ">
-
+  <div class="containerCabec1" style="min-height: 5rem; ">
+    <div class="flex justify-center">
+      <app-button-card [options]="optionsButtonCard" (clickButtonCard)="clickButtonCard($event)"></app-button-card>
+    </div>
   </div>
 
   <p-table [value]="solicitacoes" [tableStyle]="{ 'min-width': '50rem' }" selectionMode="single"
@@ -11,7 +13,7 @@
         <th class="text-center" rowspan="2" style="width: 2rem">
           <p-tableHeaderCheckbox />
         </th>
-        <th style="width: 8rem" rowspan="2" >G.E.F
+        <th style="width: 8rem" rowspan="2">G.E.F
           <p-columnFilter matchMode="contains" field="gef" placeholder="Search" />
         </th>
 
