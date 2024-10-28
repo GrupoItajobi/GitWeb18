@@ -1,6 +1,20 @@
 <div class="w-full content-center">
   <div class=" flex flex-row  justify-center">
     <div class="card-container" disabled="true">
+
+      <div class="card-container" disabled="true">
+        <div class="card card-allocation" (click)="clickRotacao()">
+          <div class=" flex flex-col">
+            <div>
+              <img title="Entrega Cana" src="/assets/layout/img/sistema/cana-de-acucar-acucar.png" width="50px;" />
+            </div>
+            <div>
+              <span>Entrega Cana</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="card card-allocation" (click)="clickRotacao()">
         <div class=" flex flex-col">
           <div>
@@ -12,6 +26,7 @@
         </div>
       </div>
     </div>
+
     <div class="card-container">
       <div class="card" (click)="clickProducao()">
         <div class=" flex flex-col">

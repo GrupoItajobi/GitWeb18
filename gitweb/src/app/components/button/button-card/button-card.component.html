@@ -1,0 +1,17 @@
+<div style="z-index: 9999;">
+  <div class="flex justify-center">
+    @for (item of options; track $index) {
+
+    <div class="card-container">
+      <a class="card" [style]="style(item)">
+        <div class="flex flex-column text-center">
+          <div>
+            <img (click)="click(item)" title="{{item.titleDescription}}" src="{{item.img}}" width="{{width}}" />
+          </div>
+          <div><span>{{item.title}}</span></div>
+        </div>
+      </a>
+    </div>
+    }
+  </div>
+</div>

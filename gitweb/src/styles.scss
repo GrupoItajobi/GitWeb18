@@ -631,7 +631,7 @@ tr:nth-child(odd) {
   margin: 5px;
   padding: 5px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   transition: all 0.2s ease-in-out;
