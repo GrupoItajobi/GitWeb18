@@ -1,11 +1,17 @@
-import { ErrorHandleService } from './../../../../services/error-handle/error-handle.service';
-import { SolicitacaoHoraExtraPorAprovador } from './../../../../models/rh/hora-extra/solicitacao-he-por-aprovador';
-import { Component, OnInit } from '@angular/core';
-import { TableModule } from 'primeng/table';
-import { HoraExtraService } from '../../../../services/rh/hora-extra/hora-extra.service';
-import { minutosEmHorasStr } from '../../../../core/util/gitweb-util';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+
+import { TableModule } from 'primeng/table';
+
+import { HoraExtraService } from '../../../../services/rh/hora-extra/hora-extra.service';
+import { ErrorHandleService } from './../../../../services/error-handle/error-handle.service';
+import { ToastService } from './../../../../services/toast/toast.service';
+
+import { minutosEmHorasStr } from '../../../../core/util/gitweb-util';
+
 import { ButtonCardComponent, ButtonCardOptions } from "../../../../components/button/button-card/button-card.component";
+import { SolicitacaoHoraExtraPorAprovador } from './../../../../models/rh/hora-extra/solicitacao-he-por-aprovador';
+
 @Component({
   selector: 'app-aprovacao-solicitacao-he',
   standalone: true,
@@ -16,12 +22,13 @@ import { ButtonCardComponent, ButtonCardOptions } from "../../../../components/b
 export class AprovacaoSolicitacaoHeComponent implements OnInit {
 
   solicitacoes: SolicitacaoHoraExtraPorAprovador[] = [];
-  solicitacaoSelecionada: SolicitacaoHoraExtraPorAprovador = {};
+  solicitacoesSelecionadas!: SolicitacaoHoraExtraPorAprovador[];
 
   optionsButtonCard: ButtonCardOptions[] = [];
   constructor(
     private horaExtraService: HoraExtraService,
     private errorHandleService: ErrorHandleService,
+    private toastService: ToastService,
   ) {
 
   }
@@ -61,7 +68,19 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
   }
 
   clickButtonCard(event: string) {
-    console.log('clickButtonCard: ' + event);
+    if (this.solicitacoesSelecionadas) {
+      if (event === 'aprovado') {
+        this.horaExtraService.aprovar(this.solicitacoesSelecionadas)
+          .then()
+          .catch(error => {
+            this.errorHandleService.handle(error);
+          });
+      } else if (event === 'reprovado') {
+
+      }
+    } else {
+      this.toastService.showWarnMsg("Selecione uma Solicitação!")
+    }
   }
 
 

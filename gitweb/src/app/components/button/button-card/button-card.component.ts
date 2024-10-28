@@ -60,11 +60,6 @@ export class ButtonCardComponent implements OnInit {
     }
   }
 
-  carregarStyle() {
-
-  }
-
-
   optionsDefault() {
     this.options = [
       {
