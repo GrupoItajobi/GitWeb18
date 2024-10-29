@@ -5,6 +5,7 @@ import { SolicitacaoHoraExtra } from '../../../models/rh/hora-extra/solicitacao-
 import { firstValueFrom } from 'rxjs';
 import { FuncionarioPorSolicitanteHe } from '../../../models/rh/hora-extra/funcionario-por-solicitante-he';
 import { SolicitacaoHoraExtraIncluir } from '../../../models/rh/hora-extra/solicitacao-he-incluir';
+import { MotivoHoraExtra } from '../../../models/rh/hora-extra/motivo-hora-extra';
 
 @Injectable({
   providedIn: 'root'
@@ -99,7 +100,6 @@ export class HoraExtraService implements OnInit {
   }
 
   async alterar(solicitaHoraExtra: SolicitacaoHoraExtra): Promise<SolicitacaoHoraExtra> {
-    console.log(solicitaHoraExtra);
     const headers = new HttpHeaders()
       .append('Content-Type', 'application/json');
 
@@ -114,23 +114,18 @@ export class HoraExtraService implements OnInit {
       });
   }
 
-  // async listarSolicitacoes(ueId: string, solicitacoesId: string): Promise<SolicitacaoHoraExtra[]> {
-  //   const headers = new HttpHeaders()
-  //     .append('Content-Type', 'application/json');
+  async buscaMotivo(): Promise<MotivoHoraExtra[]> {
+    const headers = new HttpHeaders()
+      .append('Content-Type', 'application/json');
 
-  //   const params = new HttpParams()
-  //     .set('ueId', ueId)
-  //     .set('moendaId', solicitacoesId);
-
-
-  //   return await firstValueFrom(
-  //     this.http.get<SolicitacaoHoraExtra[]>(`${this.url}`, { headers, params }))
-  //     .then(response => {
-  //       return response;
-  //     })
-  //     .catch(error => {
-  //       return Promise.reject(error);
-  //     });
-  // }
-
+    return await firstValueFrom(
+      this.http.get<MotivoHoraExtra[]>(`${this.url}/motivo`, { headers}))
+      .then(response => {
+        return response;
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+    
 }

@@ -26,6 +26,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FuncionarioPorSolicitanteHe } from '../../../../models/rh/hora-extra/funcionario-por-solicitante-he';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { Renderer2 } from '@angular/core';
+import { MotivoHoraExtra } from '../../../../models/rh/hora-extra/motivo-hora-extra';
 
 @Component({
   selector: 'app-solicitacao-he',
@@ -47,9 +48,14 @@ import { Renderer2 } from '@angular/core';
 export class SolicitacaoHeComponent {
   horas: any[] = [];
 
+  motivo: any[] = [];
+
   form!: FormGroup;
   solicitacoes: SolicitacaoHoraExtra[] = [];
   usuarioEdit: SolicitacaoHoraExtra = {};
+
+  buscaMotivo: MotivoHoraExtra[] = [];
+  buscaMotivoEdit: MotivoHoraExtra = {};
 
   dialogVisible: boolean = false;
   saving: boolean = false;
@@ -57,6 +63,7 @@ export class SolicitacaoHeComponent {
   gravarContinuar: boolean = false;
 
   codigoFuncionario: string = '';
+  indiceSelecionado: number = 0;
 
   funcionarios: FuncionarioPorSolicitanteHe[] = [];
 
@@ -69,12 +76,13 @@ export class SolicitacaoHeComponent {
   ) {}
 
   ngOnInit() {
-    this.listaHoras();
     this.initForm();
     this.init();
+    this.listaHoras();    
   }
 
   async init() {
+    
     await this.horaExtraService
       .listarHoraExtra()
       .then((response) => {
@@ -83,7 +91,18 @@ export class SolicitacaoHeComponent {
       .catch((error) => {
         this.errorHandleService.handle(error);
       });
-  }
+
+    await this.horaExtraService
+      .buscaMotivo()
+      .then((response) => {
+        this.buscaMotivo = response;
+      })
+      .catch((error) => {
+        this.errorHandleService.handle(error);
+      });
+
+      this.listaMotivos();
+  } 
 
   initForm() {
     this.form = this.formBuilder.group({
@@ -141,20 +160,20 @@ export class SolicitacaoHeComponent {
       version: this.form.value.version,
       funcionarioCodigo: this.form.value.funcionarioCodigo,
       departamentoCodigo: this.form.value.departamentoCodigo,
-      motivoCodigo: this.form.value.motivoCodigo,
+      motivoCodigo: this.indiceSelecionado,
       dia: this.form.value.dataHoraExtra,
       minutos: minutosConvertido,
     };
 
-    
     if (this.usuarioEdit.version && !this.gravarContinuar) {
-      console.log("chegou aquiiiiiiiiiiiiiiiiiiiiiii")
       this.alterar(usuario);
     } else {
       this.incluir(usuario);
     }
 
-    if(this.gravarContinuar == false){ this.fecharDialog();}
+    if (this.gravarContinuar == false) {
+      this.fecharDialog();
+    }
   }
 
   async alterar(solicitaHe: SolicitacaoHoraExtraIncluir) {
@@ -177,8 +196,7 @@ export class SolicitacaoHeComponent {
       })
       .catch((error) => {
         this.errorHandleService.handle(error);
-      });   
-    
+      });
   }
 
   horaInicio() {
@@ -194,8 +212,6 @@ export class SolicitacaoHeComponent {
   }
 
   selecionouEventoHe(event: any) {
-
-    console.log(event);
     this.lovSolicitacaoVisible = false;
 
     if (event != null) {
@@ -207,6 +223,7 @@ export class SolicitacaoHeComponent {
   }
 
   buscaNomeFuncionario() {
+    this.lovSolicitacaoVisible = false;
     this.lovSolicitacaoVisible = true;
   }
 
@@ -225,11 +242,30 @@ export class SolicitacaoHeComponent {
     ];
   }
 
+  async listaMotivos(){
+
+    let motivoDescricao: { label: string; value: number }[] = [];
+
+    for (let index = 0; index < this.buscaMotivo.length; index++) {
+      let descricao = this.buscaMotivo[index].descricao;
+      
+      motivoDescricao.push({label: String(descricao), value: index+1})
+    }
+    
+    this.motivo = motivoDescricao   
+
+  }
+
+  onMotivoSelecionado(event: any) {
+    this.indiceSelecionado = event.value.value;
+     return Number(this.indiceSelecionado);
+  }
+
   edit(solicitaHoraExtra: SolicitacaoHoraExtraIncluir) {
     this.usuarioEdit = solicitaHoraExtra;
 
     this.initForm();
-    this.dialogVisible = true;
+    //this.dialogVisible = true;
   }
 
   //Converte as horas selecionadas para minutos, para salvar no banco
@@ -300,19 +336,17 @@ export class SolicitacaoHeComponent {
     this.renderer.selectRootElement('#funcionarioCodigo').focus();
   }
 
-  salvarContinuar(){
-    console.log("passou aquiiiiiiii")
+  salvarContinuar() {
     this.dialogVisible = true;
     this.gravarContinuar = true;
 
     this.salvar();
 
     this.form.patchValue({
-      funcionarioCodigo: "",
-      funcionarioNome: "",
+      funcionarioCodigo: '',
+      funcionarioNome: '',
     });
 
     this.renderer.selectRootElement('#funcionarioCodigo').focus();
-    
-  } 
+  }
 }

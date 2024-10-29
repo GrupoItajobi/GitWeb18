@@ -53,8 +53,8 @@
   class="max-w-xl text-center"
 >
   <ng-template pTemplate="content">
-    <form [formGroup]="form">    
-
+    
+    <form [formGroup]="form">
       <div class="flex flex-col-12 gap-4 align-items-center mb-4">
         <!-- QUANTIDADE HORAS  -->
         <div class="flex flex-col w-3">
@@ -65,13 +65,13 @@
               [options]="horas"
               optionLabel="label"
               placeholder="Horas"
-              class="w-full "
+              class="w-full"
             />
           </form>
         </div>
 
         <!-- CÓDIGO MOTIVO -->
-        <div class="flex flex-col w-2">
+        <!-- <div class="flex flex-col w-2">
           <label for="motivoCodigo" class="w-full">Cód motivo</label>
           <input
             pInputText
@@ -81,19 +81,30 @@
             formControlName="motivoCodigo"
             aria-describedby="Cód motivo"
           />
-        </div>
+        </div> -->
 
         <!-- DESCRIÇÃO MOTIVO -->
-        <div class="flex flex-col w-7">
+        <div class="flex flex-col w-9">
           <label for="motivoDescricao" class="w-full">Motivo descrição</label>
-          <input
+
+          <form [formGroup]="form" class="mt-1 w-9">
+            <p-dropdown
+              formControlName="motivoDescricao"
+              [options]="motivo"
+              optionLabel="label"
+              (onChange)="onMotivoSelecionado($event)"
+              class="w-full"
+            />
+          </form>
+          
+          <!-- <input
             pInputText
             id="motivoDescricao"
             class="w-full mt-1"
             type="text"
             formControlName="motivoDescricao"
             aria-describedby="Motivo descrição"
-          />
+          /> -->
         </div>
       </div>
 
@@ -145,6 +156,16 @@
 
         <!-- NOME FUNCIONÁRIO -->
         <div class="flex flex-row w-12">
+          <!-- BUSCA FUNCIONARIO -->
+          <div
+            class="flex flex-col w-1 mt-3"
+            (click)="buscaNomeFuncionario()"
+            pTooltip="Buscar funcionário"
+            tooltipPosition="top"
+          >
+            <i class="pi pi-user"></i>
+          </div>
+
           <div class="flex flex-col w-11">
             <label for="funcionarioNome" class="w-full">Nome funcionário</label>
             <input
@@ -157,16 +178,6 @@
               readonly
             />
           </div>
-
-          <!-- BUSCA FUNCIONARIO -->
-          <div
-            class="flex flex-col w-1 mt-3"
-            (click)="buscaNomeFuncionario()"
-            pTooltip="Buscar funcionário"
-            tooltipPosition="top"
-          >
-            <i class="pi pi-user"></i>
-          </div>
         </div>
       </div>
 
@@ -176,7 +187,6 @@
 
   <!-- Botões salvar, cancelar e salvar continuar -->
   <ng-template pTemplate="footer">
-    
     <!-- Salvar e continuar -->
     <p-button
       title="Salvar e continuar"

@@ -15,6 +15,7 @@ import { FormGroup } from '@angular/forms';
 })
 export class LovFuncionarioSolicitanteHeComponent implements OnInit {
   @Input() dialogVisible: boolean = false;
+  
 
   @Output() selecionouEvento = new EventEmitter();
   
@@ -47,5 +48,6 @@ export class LovFuncionarioSolicitanteHeComponent implements OnInit {
 
   onRowSelect(event: any) {
     this.selecionouEvento.emit(this.funcionarioSelecionado);
+    
   }
 }
