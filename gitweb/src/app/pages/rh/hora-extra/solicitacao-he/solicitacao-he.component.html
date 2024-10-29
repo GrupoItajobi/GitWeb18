@@ -53,9 +53,8 @@
   class="max-w-xl text-center"
 >
   <ng-template pTemplate="content">
-    
-    <form [formGroup]="form">
-      <div class="flex flex-col-12 gap-4 align-items-center mb-4">
+    <form [formGroup]="form" class="flex flex-col w-full md:w-12">
+      <div class="flex flex-col-12 gap-4 align-items-center mb-3">
         <!-- QUANTIDADE HORAS  -->
         <div class="flex flex-col w-3">
           <label for="funcionarioNome" class="w-full">Quantidade Hrs</label>
@@ -70,48 +69,23 @@
           </form>
         </div>
 
-        <!-- CÓDIGO MOTIVO -->
-        <!-- <div class="flex flex-col w-2">
-          <label for="motivoCodigo" class="w-full">Cód motivo</label>
-          <input
-            pInputText
-            id="motivoCodigo"
-            class="w-full mt-1"
-            type="number"
-            formControlName="motivoCodigo"
-            aria-describedby="Cód motivo"
-          />
-        </div> -->
-
         <!-- DESCRIÇÃO MOTIVO -->
-        <div class="flex flex-col w-9">
-          <label for="motivoDescricao" class="w-full">Motivo descrição</label>
-
-          <form [formGroup]="form" class="mt-1 w-9">
-            <p-dropdown
-              formControlName="motivoDescricao"
-              [options]="motivo"
-              optionLabel="label"
-              (onChange)="onMotivoSelecionado($event)"
-              class="w-full"
-            />
-          </form>
-          
-          <!-- <input
-            pInputText
-            id="motivoDescricao"
-            class="w-full mt-1"
-            type="text"
-            formControlName="motivoDescricao"
-            aria-describedby="Motivo descrição"
-          /> -->
+        <div class="flex flex-col w-9 items-center">
+              <label for="motivoDescricao" class=" flex flex-col w-full">Motivo descrição</label>            
+              <p-dropdown
+                formControlName="motivoDescricao"
+                [options]="motivo"
+                optionLabel="label"
+                (onChange)="onMotivoSelecionado($event)"
+                class="flex flex-col w-full mt-1"
+              />
         </div>
       </div>
 
       <!-- ##################################################################################### -->
 
       <!-- Data inicio da hora extra -->
-      <div class="flex flex-col-12 gap-4 align-items-center mb-4">
+      <div class="flex flex-col-12 gap-4 align-items-center mb-3">
         <div class="flex flex-col w-3">
           <label for="dataHoraExtra" class="w-full">Data Início</label>
           <input
