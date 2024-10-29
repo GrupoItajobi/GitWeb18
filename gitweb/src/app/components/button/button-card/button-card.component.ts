@@ -1,9 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
+import { BadgeModule } from 'primeng/badge';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+
 @Component({
   selector: 'app-button-card',
   standalone: true,
-  imports: [],
+  imports: [BadgeModule, ProgressSpinnerModule],
   templateUrl: './button-card.component.html',
   styleUrl: './button-card.component.scss'
 })
@@ -57,11 +60,6 @@ export class ButtonCardComponent implements OnInit {
     }
   }
 
-  carregarStyle() {
-
-  }
-
-
   optionsDefault() {
     this.options = [
       {
@@ -93,4 +91,6 @@ export interface ButtonCardOptions {
   titleDescription?: string,
   clicked?: boolean,
   returnWhenClicked?: any,
+  quantidade?: number,
+  loading?: boolean
 }

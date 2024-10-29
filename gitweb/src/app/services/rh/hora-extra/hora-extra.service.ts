@@ -5,6 +5,7 @@ import { SolicitacaoHoraExtra } from '../../../models/rh/hora-extra/solicitacao-
 import { firstValueFrom } from 'rxjs';
 import { FuncionarioPorSolicitanteHe } from '../../../models/rh/hora-extra/funcionario-por-solicitante-he';
 import { SolicitacaoHoraExtraIncluir } from '../../../models/rh/hora-extra/solicitacao-he-incluir';
+import { SolicitacaoHoraExtraPorAprovador } from '../../../models/rh/hora-extra/solicitacao-he-por-aprovador';
 import { MotivoHoraExtra } from '../../../models/rh/hora-extra/motivo-hora-extra';
 
 @Injectable({
@@ -114,6 +115,38 @@ export class HoraExtraService implements OnInit {
       });
   }
 
+  async aprovar(solicitacoes: SolicitacaoHoraExtraPorAprovador[]): Promise<SolicitacaoHoraExtraPorAprovador | null> {
+    console.log(solicitacoes);
+
+    if (solicitacoes) {
+      let lista: any[] = [];
+      solicitacoes.forEach(s => {
+        let solicitacao: any = {
+          idSolicitacao: s.id,
+          nivelAprovador: s.nivelAprovar
+        }
+        lista.push(solicitacao);
+      });
+      const headers = new HttpHeaders()
+        .append('Content-Type', 'application/json');
+
+      const body = JSON.stringify(lista);
+      console.log(body)
+      return await firstValueFrom(
+        this.http.post<any>(`${this.url}/aprovar`, body, { headers }))
+        .then(response => {
+          return response;
+        })
+        .catch(error => {
+          return Promise.reject(error);
+        });
+    }
+    return null;
+  }
+  // async listarSolicitacoes(ueId: string, solicitacoesId: string): Promise<SolicitacaoHoraExtra[]> {
+  //   const headers = new HttpHeaders()
+  //     .append('Content-Type', 'application/json');
+  
   async buscaMotivo(): Promise<MotivoHoraExtra[]> {
     const headers = new HttpHeaders()
       .append('Content-Type', 'application/json');

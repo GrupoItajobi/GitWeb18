@@ -6,8 +6,8 @@
     </div>
   </div>
 
-  <p-table [value]="solicitacoes" [tableStyle]="{ 'min-width': '50rem' }" selectionMode="single"
-    [(selection)]="solicitacaoSelecionada" dataKey="id">
+  <p-table [value]="solicitacoes" [tableStyle]="{ 'min-width': '50rem' }" selectionMode="multiple"
+    [(selection)]="solicitacoesSelecionadas" dataKey="id">
     <ng-template pTemplate="header">
       <tr>
         <th class="text-center" rowspan="2" style="width: 2rem">
