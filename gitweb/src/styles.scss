@@ -429,18 +429,18 @@ tr:nth-child(odd) {
 }
 
 .p-dropdown .p-dropdown-trigger {
-  background: var(--color-button);
+  background: var(--slate-400);
   color: var(--white) !important;
+  width: 1rem;
 }
 
 .p-dropdown .p-dropdown-label {
-  color: var(--gray-700) !important;
   padding: 5px !important;
 }
 
 .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
   font-size: var(--font-size);
-  background: var(--slate-200);
+  // background: var(--slate-200);
 }
 
 /* ================   Tab */
