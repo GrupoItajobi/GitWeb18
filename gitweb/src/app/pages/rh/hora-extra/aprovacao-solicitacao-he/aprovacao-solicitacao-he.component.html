@@ -13,7 +13,7 @@
         <th class="text-center" rowspan="2" style="width: 2rem">
           <p-tableHeaderCheckbox />
         </th>
-        <th style="width: 8rem" rowspan="2">G.E.F
+        <th style="width: 8rem" colspan="2" rowspan="2">G.E.F
           <p-columnFilter matchMode="contains" field="gef" placeholder="Search" />
         </th>
 
@@ -49,11 +49,13 @@
       </tr>
 
     </ng-template>
-    <ng-template pTemplate="body" let-solicitacao>
+    <ng-template pTemplate="body" let-solicitacao let-rowIndex="rowIndex" >
       <tr [pSelectableRow]="solicitacao">
         <td>
-          <p-tableCheckbox [value]="solicitacao" />
+          <p-tableCheckbox style="width: 8px;" [value]="solicitacao" />
+
         </td>
+        <td class="text-center">{{rowIndex+1}}</td>
         <td class="text-center">{{ solicitacao.gef }}</td>
         <td class="text-center">{{ solicitacao.funcionarioCodigo }}</td>
         <td>{{ solicitacao.funcionarioNome }}</td>

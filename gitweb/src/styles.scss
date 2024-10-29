@@ -328,12 +328,7 @@ button {
   font-size: var(--font-size);
   padding: 0%;
 }
-.p-column-filter-clear-button {
-  background: var(--background-body);
-  width: 1rem !important;
-  height: 1rem !important;
-  font-size: var(--font-size);
-}
+
 
 .p-datatable .p-paginator-bottom {
   height: 2rem;
@@ -349,9 +344,19 @@ tr:nth-child(odd) {
   background: var(--white) !important;
 }
 
-.p-column-filter-row .p-column-filter-menu-button,
+.p-column-filter-row .p-column-filter-menu-button {
+  background: var(--slate-500);
+  width: 1rem !important;
+  height: 1rem !important;
+  font-size: var(--font-size);
+}
+
 .p-column-filter-row .p-column-filter-clear-button {
-  margin-left: 5px;
+  background: var(--slate-500);
+  width: 0rem !important;
+  height: 0rem !important;
+  font-size: var(--font-size);
+  display: none;
 }
 .p-paginator {
   flex-wrap: initial !important;
@@ -746,6 +751,7 @@ tr:nth-child(odd) {
   font-size: .75rem;
   color: var(--slate-100);
 }
+
 
 .p-panel .p-panel-header {
   border: 1px solid #e5e7eb;
