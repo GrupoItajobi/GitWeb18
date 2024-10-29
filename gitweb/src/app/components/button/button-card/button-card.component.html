@@ -1,28 +1,44 @@
 <div style="z-index: 9999;">
-  <div class="flex justify-center">
+
+  <!-- <p-panel #pnl> -->
+
+  <div class="flex justify-center" >
+
     @for (item of options; track $index) {
 
     <div class="card-container">
-      <a class="card" [style]="style(item)">
+      <p-blockUI [target]="pnl" [blocked]="loading">
+        <i class="pi pi-lock" style="font-size: 3rem; margin-top: -100px;"></i>
+      </p-blockUI>
+      <a class="card" [style]="style(item)" (click)="click(item)" #pnl>
+
         <div class="flex flex-column text-center">
+
           <div>
-            <img (click)="click(item)" title="{{item.titleDescription}}" src="{{item.img}}" width="{{width}}" />
+            <img title="{{item.titleDescription}}" src="{{item.img}}" width="{{width}}" />
           </div>
-          <div><span>{{item.title}}</span></div>
+
+
+          @if(item.title){
+          <div><span>{{item.title}}
+
+            </span></div>
+          }
+
           <div>
-            {{item.quantidade}}
             @if (!item.loading) {
-              @if (item.quantidade != null) {
+                @if (item.quantidade != null) {
                 <p-badge [value]="item!.quantidade!" />
-              }
-            } @else {
-            <p-progressSpinner ariaLabel="loading" styleClass="w-1rem h-1rem"
-            strokeWidth="8" />
+                }
+            }@else {
+              <p-progressSpinner styleClass="w-1rem h-1rem" strokeWidth="8" />
             }
+
           </div>
         </div>
       </a>
     </div>
     }
   </div>
+  <!-- </p-panel> -->
 </div>

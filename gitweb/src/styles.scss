@@ -351,6 +351,7 @@ tr:nth-child(odd) {
   font-size: var(--font-size);
 }
 
+// retira o icone de limpar
 .p-column-filter-row .p-column-filter-clear-button {
   background: var(--slate-500);
   width: 0rem !important;
@@ -358,6 +359,8 @@ tr:nth-child(odd) {
   font-size: var(--font-size);
   display: none;
 }
+
+
 .p-paginator {
   flex-wrap: initial !important;
   background: var(--slate-400) !important;
