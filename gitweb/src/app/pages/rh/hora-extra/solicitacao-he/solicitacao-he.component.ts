@@ -1,8 +1,7 @@
-import { ChangeDetectorRef, Component, input } from '@angular/core';
+import { Component } from '@angular/core';
+import { Renderer2 } from '@angular/core';
 
-import { TableModule } from 'primeng/table';
-import { TooltipModule } from 'primeng/tooltip';
-import { DialogModule } from 'primeng/dialog';
+import { FormsModule } from '@angular/forms';
 import {
   FormBuilder,
   FormControl,
@@ -10,25 +9,28 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+
+import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
+import { ButtonModule } from 'primeng/button';
+import { ListboxModule } from 'primeng/listbox';
+import { DropdownModule } from 'primeng/dropdown';
+
+import { ToastService } from '../../../../services/toast/toast.service';
+import { ErrorHandleService } from '../../../../services/error-handle/error-handle.service';
+import { HoraExtraService } from '../../../../services/rh/hora-extra/hora-extra.service';
+
+import { LovFuncionarioSolicitanteHeComponent } from '../lov-funcionario-solicitante-he/lov-funcionario-solicitante-he.component';
+import { SolicitacaoHoraExtraIncluir } from '../../../../models/rh/hora-extra/solicitacao-he-incluir';
+import { FuncionarioPorSolicitanteHe } from '../../../../models/rh/hora-extra/funcionario-por-solicitante-he';
+import { MotivoHoraExtra } from '../../../../models/rh/hora-extra/motivo-hora-extra';
 import { SolicitacaoHoraExtra } from '../../../../models/rh/hora-extra/solicitacao-he';
+
 import {
   minutosEmHorasStr,
   nowString,
 } from '../../../../core/util/gitweb-util';
-import { SolicitacaoHoraExtraIncluir } from '../../../../models/rh/hora-extra/solicitacao-he-incluir';
-import { ButtonModule } from 'primeng/button';
-import { HoraExtraService } from '../../../../services/rh/hora-extra/hora-extra.service';
-import { ErrorHandleService } from '../../../../services/error-handle/error-handle.service';
-import { LovFuncionarioSolicitanteHeComponent } from '../lov-funcionario-solicitante-he/lov-funcionario-solicitante-he.component';
-import { ListboxModule } from 'primeng/listbox';
-import { FormsModule } from '@angular/forms';
-import { DropdownModule } from 'primeng/dropdown';
-import { FuncionarioPorSolicitanteHe } from '../../../../models/rh/hora-extra/funcionario-por-solicitante-he';
-import { ToastService } from '../../../../services/toast/toast.service';
-import { Renderer2 } from '@angular/core';
-import { MotivoHoraExtra } from '../../../../models/rh/hora-extra/motivo-hora-extra';
-import { FocusTrapModule } from 'primeng/focustrap';
-import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
   selector: 'app-solicitacao-he',
@@ -43,15 +45,13 @@ import { FloatLabelModule } from 'primeng/floatlabel';
     FormsModule,
     DropdownModule,
     TooltipModule,
-    FocusTrapModule,
-    FloatLabelModule,
   ],
   templateUrl: './solicitacao-he.component.html',
   styleUrl: './solicitacao-he.component.scss',
 })
+
 export class SolicitacaoHeComponent {
   horas: any[] = [];
-
   motivo: any[] = [];
 
   form!: FormGroup;
@@ -62,7 +62,6 @@ export class SolicitacaoHeComponent {
   buscaMotivoEdit: MotivoHoraExtra = {};
 
   dialogVisible: boolean = false;
-  modalSolicita: boolean = false;
   saving: boolean = false;
   lovSolicitacaoVisible: boolean = false;
   gravarContinuar: boolean = false;
@@ -71,7 +70,6 @@ export class SolicitacaoHeComponent {
   indiceSelecionado: number = 0;
 
   funcionarios: FuncionarioPorSolicitanteHe[] = [];
-  label: string | undefined;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -88,6 +86,7 @@ export class SolicitacaoHeComponent {
   }
 
   async init() {
+
     await this.horaExtraService
       .listarHoraExtra()
       .then((response) => {
@@ -106,7 +105,7 @@ export class SolicitacaoHeComponent {
         this.errorHandleService.handle(error);
       });
 
-    this.listaMotivos();
+      this.listaMotivos();
   }
 
   initForm() {
@@ -114,27 +113,30 @@ export class SolicitacaoHeComponent {
       id: new FormControl(this.usuarioEdit.id),
       version: new FormControl(this.usuarioEdit.version),
       funcionarioCodigo: new FormControl(
-        this.usuarioEdit.funcionarioCodigo, Validators.required
+        this.usuarioEdit.funcionarioCodigo,
+        Validators.required
       ),
       funcionarioNome: new FormControl({
         value: this.usuarioEdit.funcionarioNome,
         disabled: true,
       }),
       departamentoCodigo: new FormControl(
-        this.usuarioEdit.departamentoCodigo
+        this.usuarioEdit.departamentoCodigo,
+        Validators.required
       ),
       departamentoDescricao: new FormControl(
         this.usuarioEdit.departamentoDescricao
       ),
       motivoCodigo: new FormControl(
-        this.usuarioEdit.motivoCodigo
+        this.usuarioEdit.motivoCodigo,
+        Validators.required
       ),
-      motivoDescricao: new FormControl(this.usuarioEdit.motivoDescricao, Validators.required),
+      motivoDescricao: new FormControl(this.usuarioEdit.motivoDescricao),
       usuarioNome: new FormControl(this.usuarioEdit.usuarioNome),
-      observacao: new FormControl(this.usuarioEdit.observacao, Validators.required),
-      dataHoraExtra: new FormControl(this.usuarioEdit.dia, Validators.required),
+      observacao: new FormControl(this.usuarioEdit.observacao),
+      dataHoraExtra: new FormControl(this.usuarioEdit.dia),
       horas: new FormControl(
-        minutosEmHorasStr(this.usuarioEdit.minutos, 'hh:mm'), Validators.required
+        minutosEmHorasStr(this.usuarioEdit.minutos, 'hh:mm')
       ),
     });
 
@@ -225,6 +227,7 @@ export class SolicitacaoHeComponent {
   }
 
   buscaNomeFuncionario() {
+    this.lovSolicitacaoVisible = false;
     this.lovSolicitacaoVisible = true;
   }
 
@@ -243,21 +246,23 @@ export class SolicitacaoHeComponent {
     ];
   }
 
-  async listaMotivos() {
+  async listaMotivos(){
+
     let motivoDescricao: { label: string; value: number }[] = [];
 
     for (let index = 0; index < this.buscaMotivo.length; index++) {
       let descricao = this.buscaMotivo[index].descricao;
 
-      motivoDescricao.push({ label: String(descricao), value: index + 1 });
+      motivoDescricao.push({label: String(descricao), value: index+1})
     }
 
-    this.motivo = motivoDescricao;
+    this.motivo = motivoDescricao
+
   }
 
   onMotivoSelecionado(event: any) {
     this.indiceSelecionado = event.value.value;
-    return Number(this.indiceSelecionado);
+     return Number(this.indiceSelecionado);
   }
 
   edit(solicitaHoraExtra: SolicitacaoHoraExtraIncluir) {
@@ -303,14 +308,15 @@ export class SolicitacaoHeComponent {
     if (this.codigoFuncionario != '') {
       for (let chave in this.funcionarios) {
         this.limpaForm();
-        if ( this.funcionarios[chave].funcionarioCodigo == Number(this.codigoFuncionario)) 
-          {
+        if (
+          this.funcionarios[chave].funcionarioCodigo ==
+          Number(this.codigoFuncionario)
+        ) {
           this.form.patchValue({
             funcionarioCodigo: this.funcionarios[chave].funcionarioCodigo,
             funcionarioNome: this.funcionarios[chave].funcionarioNome,
           });
 
-          disabled: true
           break; // para caso encontre o primeiro valor igual
         } else {
           this.toastService.showInfoMsg('Usuário não encontrado!');
@@ -347,9 +353,4 @@ export class SolicitacaoHeComponent {
 
     this.renderer.selectRootElement('#funcionarioCodigo').focus();
   }
-
-  // updateDialog() {
-  //   this.lovSolicitacaoVisible = false;
-  //   console.log(this.lovSolicitacaoVisible);
-  // }
 }
