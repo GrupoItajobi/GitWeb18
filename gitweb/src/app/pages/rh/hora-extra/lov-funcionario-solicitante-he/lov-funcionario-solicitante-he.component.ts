@@ -14,17 +14,16 @@ import { FormGroup } from '@angular/forms';
   styleUrl: './lov-funcionario-solicitante-he.component.scss',
 })
 export class LovFuncionarioSolicitanteHeComponent implements OnInit {
-  @Input() dialogVisible: boolean = false;
-  
+  @Input() modalSolicita: boolean = false;
+  @Output() modalSolicitaChange = new EventEmitter<boolean>();
 
   @Output() selecionouEvento = new EventEmitter();
-  
-  form!: FormGroup; 
+
+  form!: FormGroup;
   solicitante: any[] = [];
+  funcionarios: FuncionarioPorSolicitanteHe[] = [];
 
   funcionarioSelecionado: FuncionarioPorSolicitanteHe = {};
-
-  funcionarios: FuncionarioPorSolicitanteHe[] = [];
 
   constructor(
     private horaExtraService: HoraExtraService,
@@ -44,10 +43,14 @@ export class LovFuncionarioSolicitanteHeComponent implements OnInit {
       .catch((error) => {
         this.errorHandleService.handle(error);
       });
-  } 
+  }
 
   onRowSelect(event: any) {
     this.selecionouEvento.emit(this.funcionarioSelecionado);
-    
+  }
+
+  toggleDialog() {
+    this.modalSolicita = !this.modalSolicita;
+    this.modalSolicitaChange.emit(this.modalSolicita);
   }
 }
