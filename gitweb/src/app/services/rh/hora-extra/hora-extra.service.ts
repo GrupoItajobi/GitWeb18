@@ -115,7 +115,29 @@ export class HoraExtraService implements OnInit {
       });
   }
 
-  async aprovar(solicitacoes: SolicitacaoHoraExtraPorAprovador[]): Promise<SolicitacaoHoraExtraPorAprovador | null> {
+  async aprovar(solicitacoes: SolicitacaoHoraExtraPorAprovador[]): Promise<SolicitacaoHoraExtraPorAprovador[] | null> {
+    let aprovar: boolean = true;
+    return await this.aprovarReprovar(solicitacoes, aprovar)
+      .then(response => {
+        return response;
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      })
+  }
+
+  async reprovar(solicitacoes: SolicitacaoHoraExtraPorAprovador[]): Promise<SolicitacaoHoraExtraPorAprovador[] | null> {
+    let reprovar: boolean = false;
+    return await this.aprovarReprovar(solicitacoes, reprovar)
+      .then(response => {
+        return response;
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      })
+  }
+
+  private async aprovarReprovar(solicitacoes: SolicitacaoHoraExtraPorAprovador[], aprovar: boolean): Promise<SolicitacaoHoraExtraPorAprovador[] | null> {
     console.log(solicitacoes);
 
     if (solicitacoes) {
@@ -131,9 +153,15 @@ export class HoraExtraService implements OnInit {
         .append('Content-Type', 'application/json');
 
       const body = JSON.stringify(lista);
-      console.log(body)
+      console.log('body');
+      console.log(body);
+
+      let command: string = "reprovar"
+      if (aprovar) {
+        command = "aprovar"
+      }
       return await firstValueFrom(
-        this.http.post<any>(`${this.url}/aprovar`, body, { headers }))
+        this.http.post<any>(`${this.url}/${command}`, body, { headers }))
         .then(response => {
           return response;
         })
@@ -146,13 +174,13 @@ export class HoraExtraService implements OnInit {
   // async listarSolicitacoes(ueId: string, solicitacoesId: string): Promise<SolicitacaoHoraExtra[]> {
   //   const headers = new HttpHeaders()
   //     .append('Content-Type', 'application/json');
-  
+
   async buscaMotivo(): Promise<MotivoHoraExtra[]> {
     const headers = new HttpHeaders()
       .append('Content-Type', 'application/json');
 
     return await firstValueFrom(
-      this.http.get<MotivoHoraExtra[]>(`${this.url}/motivo`, { headers}))
+      this.http.get<MotivoHoraExtra[]>(`${this.url}/motivo`, { headers }))
       .then(response => {
         return response;
       })
@@ -160,5 +188,5 @@ export class HoraExtraService implements OnInit {
         return Promise.reject(error);
       });
   }
-    
+
 }

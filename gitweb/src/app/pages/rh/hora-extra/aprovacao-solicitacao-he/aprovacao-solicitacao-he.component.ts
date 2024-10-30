@@ -23,8 +23,11 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
 
   solicitacoes: SolicitacaoHoraExtraPorAprovador[] = [];
   solicitacoesSelecionadas!: SolicitacaoHoraExtraPorAprovador[];
-
   optionsButtonCard: ButtonCardOptions[] = [];
+
+  loading: boolean = false;
+
+
   constructor(
     private horaExtraService: HoraExtraService,
     private errorHandleService: ErrorHandleService,
@@ -40,11 +43,18 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
   }
 
   async init() {
+    await this.downloadSolicitacaoPorAprovador();
+  }
+
+  async downloadSolicitacaoPorAprovador() {
+    this.solicitacoes = [];
+    this.solicitacoesSelecionadas = [];
     await this.horaExtraService.solicitacaoPorAprovador()
       .then(response => {
         this.solicitacoes = response;
       })
       .catch(error => {
+
         this.errorHandleService.handle(error);
       })
 
@@ -67,21 +77,44 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
     return minutosEmHorasStr(minutos)
   }
 
-  clickButtonCard(event: string) {
-    if (this.solicitacoesSelecionadas) {
+  async clickButtonCard(event: string) {
+    if (this.solicitacoesSelecionadas.length>0) {
       if (event === 'aprovado') {
-        this.horaExtraService.aprovar(this.solicitacoesSelecionadas)
-          .then()
-          .catch(error => {
-            this.errorHandleService.handle(error);
-          });
+        await this.aprovar();
       } else if (event === 'reprovado') {
-
+        await this.reprovar();
       }
     } else {
       this.toastService.showWarnMsg("Selecione uma Solicitação!")
     }
   }
 
+  async aprovar() {
+    this.loading = true;
+    await this.horaExtraService.aprovar(this.solicitacoesSelecionadas)
+      .then(reponse => {
+        this.downloadSolicitacaoPorAprovador();
+
+        setTimeout(() => {
+          console.log('fechei o timeout')
+           this.loading = false;
+           }, 5000);
+      })
+      .catch(error => {
+        this.errorHandleService.handle(error);
+      });
+  }
+
+  async reprovar() {
+    this.loading = true;
+    await this.horaExtraService.reprovar(this.solicitacoesSelecionadas)
+      .then(reponse => {
+        this.downloadSolicitacaoPorAprovador();
+        setTimeout(() => { this.loading = false; }, 5000);
+      })
+      .catch(error => {
+        this.errorHandleService.handle(error);
+      });
+  }
 
 }
