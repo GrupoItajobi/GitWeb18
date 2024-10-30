@@ -38,7 +38,7 @@ export class UrlService {
     this.roleTags = new Map<string, string>();
   }
   async permissaoParaoLink(link: string): Promise<any> {
-    let menuApp: MenuApp = { descricao: "", link: link, publico: false };
+    let menuApp: MenuApp = { descricao: "", link: link, publico: 'N' };
 
     return await this.permissaoParaoApp(menuApp)
       .then(response => {
@@ -51,7 +51,7 @@ export class UrlService {
 
   async permissaoParaoApp(menuApp: MenuApp): Promise<any> {
     if (menuApp) {
-      this.aplicacao = { titulo: menuApp!.descricao!, routerLink: menuApp!.link!, publica: menuApp!.publico! };
+      this.aplicacao = { titulo: menuApp!.descricao!, routerLink: menuApp!.link!, publico: menuApp!.publico!, ordem: 0 };
       return await this.roleAplicacao(this.aplicacao)
         .then(response => {
           return this.aplicacao;
@@ -66,7 +66,7 @@ export class UrlService {
 
 
   async intranet(): Promise<InfoAplicacao> {
-    this.aplicacao = { titulo: "Intranet", routerLink: "/intranet", publica: true };
+    this.aplicacao = { titulo: "Intranet", routerLink: "/intranet", publico: 'S', ordem: 0 };
     // await this.roleAplicacao(this.aplicacao);
     return this.aplicacao;
   }
@@ -74,7 +74,7 @@ export class UrlService {
 
 
   public login(): InfoAplicacao {
-    this.aplicacao = { titulo: "Login", routerLink: "/intranet/login", publica: true };
+    this.aplicacao = { titulo: "Login", routerLink: "/intranet/login", publico: 'S', ordem: 0 };
     return this.aplicacao;
   }
 
@@ -115,5 +115,6 @@ export class UrlService {
 export interface InfoAplicacao {
   titulo?: string,
   routerLink?: string,
-  publica?: boolean
+  publico?: string,
+  ordem?: number,
 }

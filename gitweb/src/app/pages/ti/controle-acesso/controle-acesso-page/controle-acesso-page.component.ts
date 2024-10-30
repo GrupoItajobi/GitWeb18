@@ -14,6 +14,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { TableModule } from 'primeng/table';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { Role } from '../../../../models/link-seguranca/Role';
 import { RoleTag } from '../../../../models/link-seguranca/RoleTag';
@@ -24,6 +25,7 @@ import { MenuApp } from '../../../../models/menu/MenuApp';
 import { MenuGestao } from '../../../../models/menu/MenuGestao';
 import { MenuModulo } from '../../../../models/menu/MenuModulo';
 import { MenuTipo } from '../../../../models/menu/MenuTipo';
+
 
 import { MenuCrudComponent } from '../../../../components/crud/menu-crud/menu-crud.component';
 import { ListaUsuarioPageComponent } from "../lista-usuario-page/lista-usuario-page.component";
@@ -51,6 +53,7 @@ import { AuthService } from '../../../../core/auth/auth.service';
     TableModule,
     ConfirmDialogModule,
     ToastModule,
+    DropdownModule,
     MenuCrudComponent,
 
     ListaUsuarioPageComponent
@@ -107,8 +110,8 @@ export class ControleAcessoPageComponent implements OnInit {
   visibleListUser: boolean = false;
 
   publicoOptions: any[] = [
-    { label: 'Sim', value: '1' },
-    { label: 'Não', value: '0' }
+    { label: 'Sim', value: 'S' },
+    { label: 'Não', value: 'N' }
   ];
 
   constructor(
@@ -135,7 +138,6 @@ export class ControleAcessoPageComponent implements OnInit {
   async init() {
     await this.urlService.permissaoParaoLink(this.router.url);
 
-    console.log(this.urlService.role);
     this.limparGestao();
     this.buscarGestao();
   }
@@ -250,6 +252,7 @@ export class ControleAcessoPageComponent implements OnInit {
     } else {
       await this.alterarApp(app);
     }
+
     this.visibleApp = false;
 
   }
@@ -257,6 +260,7 @@ export class ControleAcessoPageComponent implements OnInit {
   private async incluirApp(app: MenuApp) {
     await this.appService.apiIncluirApp(app)
       .then(response => {
+        this.selectedApp = response;
       })
       .catch(error => {
         this.errorHandleService.handle(error)
@@ -267,6 +271,7 @@ export class ControleAcessoPageComponent implements OnInit {
   private async alterarApp(app: MenuApp) {
     await this.appService.apiAlterarApp(app)
       .then(response => {
+        this.selectedApp = response;
       })
       .catch(error => {
         this.errorHandleService.handle(error)
@@ -538,15 +543,16 @@ export class ControleAcessoPageComponent implements OnInit {
 
   initFormApp() {
 
+
     this.formApp = this.formBuilder.group(
       {
-        id: new FormControl(this.selectedApp.id),
-        link: new FormControl(this.selectedApp.link, Validators.required),
-        descricao: new FormControl(this.selectedApp.descricao, Validators.required),
-        ordem: new FormControl(this.selectedApp.ordem),
-        publico: new FormControl(this.selectedApp.publico, Validators.required),
-        menuModuloId: new FormControl(this.selectedModulo.id, Validators.required),
-        menuTipo: new FormControl(this.selectedTipo.id, Validators.required),
+        id: new FormControl(this.selectedApp!.id!),
+        link: new FormControl(this.selectedApp!.link!, Validators.required),
+        descricao: new FormControl(this.selectedApp!.descricao, Validators.required),
+        ordem: new FormControl(this.selectedApp!.ordem!),
+        publico: new FormControl(this.selectedApp!.publico!, Validators.required),
+        menuModuloId: new FormControl(this.selectedModulo!.id!, Validators.required),
+        menuTipo: new FormControl(this.selectedTipo!.id, Validators.required),
         backOuFront: 'Front'
       });
 
@@ -564,7 +570,7 @@ export class ControleAcessoPageComponent implements OnInit {
         password: new FormControl('', Validators.required),
       });
 
-    this.formApp.valueChanges.subscribe(newValue => {
+    this.formUser.valueChanges.subscribe(newValue => {
 
     });
   }

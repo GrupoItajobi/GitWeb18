@@ -1,9 +1,9 @@
 <p-accordion [multiple]="true" [activeIndex]="[0,1,2]">
   <p-accordionTab header="Aplicação">
-    <div class="grid nested-grid" style="min-height: 15rem;">
+    <div class="grid " style="min-height: 15rem;">
       <div class="col-12">
-        <div class="flex justify-content-center flex-wrap" style="min-height: 20rem !important;">
-          <div class="flex align-items-baseline justify-content-start card">
+        <div class="flex gap-1" style="min-height: 20rem !important;">
+          <div>
 
             <p-table [value]="menuGestao" [style]="{width:'15rem'}" dataKey="id" selectionMode="single"
               [(selection)]="selectedGestao" (onRowSelect)="onRowSelectGestao($event)"
@@ -22,7 +22,7 @@
             </p-table>
 
           </div>
-          <div class="flex align-items-baseline justify-content-center card">
+          <div>
 
             <p-table [value]="menuModulo" [style]="{width:'15rem'}" dataKey="id" selectionMode="single"
               [(selection)]="selectedModulo" (onRowSelect)="onRowSelectModulo($event)"
@@ -41,10 +41,11 @@
             </p-table>
           </div>
 
-          <div class="flex align-items-baseline justify-content-center card">
+          <div>
 
             <p-table [value]="menuTipo" [style]="{width:'15rem'}" dataKey="id" selectionMode="single"
-              [(selection)]="selectedTipo" (onRowSelect)="onRowSelectTipo($event)" (onRowUnselect)="onRowUnselectTipo($event)">
+              [(selection)]="selectedTipo" (onRowSelect)="onRowSelectTipo($event)"
+              (onRowUnselect)="onRowUnselectTipo($event)">
               <ng-template pTemplate="caption">
                 <div class="flex align-items-center justify-content-between">
                   Tipo
@@ -59,7 +60,7 @@
             </p-table>
           </div>
 
-          <div class="flex align-items-baseline justify-content-center card">
+          <div >
             <div class="flex flex-column">
               <div style="text-align: center;">
                 <p-table [value]="menuApp" [style]="{width:'25rem'}" dataKey="id" selectionMode="single"
@@ -262,12 +263,10 @@
                       <div class="grid" style="margin: 5px;">
 
                         <div class="col-12">
-                          <app-menu-crud
-                          (clickSalvar)="emmitterUsuarioCrudSalvar($event)"
-                          (clickAdicionar)="emmitterUsuarioCrudAdicionar($event)"
-                          (clickExcluir)="emmitterUsuarioCrudExcluir($event)"
-                          [habilitarBotaoSalvar]="formUser.valid"
-                          [habilitarBotaoExcluir]="formUser.value.id"></app-menu-crud>
+                          <app-menu-crud (clickSalvar)="emmitterUsuarioCrudSalvar($event)"
+                            (clickAdicionar)="emmitterUsuarioCrudAdicionar($event)"
+                            (clickExcluir)="emmitterUsuarioCrudExcluir($event)" [habilitarBotaoSalvar]="formUser.valid"
+                            [habilitarBotaoExcluir]="formUser.value.id"></app-menu-crud>
                         </div>
 
                         <div class="col-12">
@@ -276,8 +275,7 @@
                                 label="Login" icon="pi pi-list" class="mr-2"
                                 (click)="showListUsers('formUser')" /></label>
                             <div class="col">
-                              <input pInputText id="login" formControlName="login"
-                                 style="width: 20rem">
+                              <input pInputText id="login" formControlName="login" style="width: 20rem">
                             </div>
                           </div>
 
@@ -317,7 +315,7 @@
 
 
 
-<p-dialog id="dialogApp" [(visible)]="visibleApp" [style]="{ width: '40rem' }" [modal]="true"
+<p-dialog id="dialogApp" [(visible)]="visibleApp" [style]="{ width: '50rem' }" [modal]="true"
   (onHide)="onHideDialogApp()">
 
   <ng-template pTemplate="header">
@@ -332,29 +330,34 @@
         <div class="col-12">
           <!-- <div class="card"> -->
           <div class="grid">
-
-            <div class="col-12">
-              <p-divider></p-divider>
+            <div class="col-12" style="text-align: left;">
+              <div class="field grid">
+                <label for="menuTipo" class="col-fixed" style="width: 5rem">Tipo</label>
+                <div class="col">
+                  <p-dropdown id="menuTipo" formControlName="menuTipo" [options]="menuTipo" optionValue="id" optionLabel="descricao"
+                    placeholder="Selecione Tipo" />
+                </div>
+              </div>
             </div>
+
             <div class="col-12" style="text-align: left;">
 
               <div class="field grid">
                 <label for="link" class="col-fixed" style="width: 5rem">Link</label>
                 <div class="col">
-                  <input pInputText id="link" formControlName="link"
-                    style="width: 20rem">
+                  <input pInputText id="link" formControlName="link" style="width: 20rem">
                 </div>
               </div>
               <div class="field grid">
                 <label for="descricao" class="col-fixed" style="width: 5rem">Descrição</label>
                 <div class="col">
-                  <input pInputText id="descricao" formControlName="descricao" style="width: 20rem">
+                  <input pInputText id="descricao" formControlName="descricao" style="width: 20rem" />
                 </div>
               </div>
               <div class="field grid">
-                <label for="ordem" class="col-fixed" style="width: 5rem">Ordem</label>
+                <label for="ordem" class="col-fixed" style="width: 5rem">Ordem2</label>
                 <div class="col">
-                  <p-inputNumber inputId="ordem" formControlName="ordem" [style]="{'width': '2rem'}"></p-inputNumber>
+                  <input id="ordem" formControlName="ordem" [style]="{'width': '2rem'}" />
                 </div>
               </div>
               <div class="field grid">
@@ -409,8 +412,7 @@
               <div class="field grid">
                 <label for="tag" class="col-fixed" style="width: 5rem">Tag</label>
                 <div class="col">
-                  <input pInputText id="tag" formControlName="tag"
-                    style="width: 20rem">
+                  <input pInputText id="tag" formControlName="tag" style="width: 20rem">
                 </div>
               </div>
               <div class="field grid">
@@ -462,8 +464,7 @@
               <div class="field grid">
                 <label for="tag" class="col-fixed" style="width: 5rem">Tag</label>
                 <div class="col">
-                  <input pInputText id="tag" formControlName="tag"
-                    style="width: 20rem">
+                  <input pInputText id="tag" formControlName="tag" style="width: 20rem">
                 </div>
               </div>
               <div class="field grid">
@@ -494,4 +495,3 @@
 
 <app-lista-usuario-page [visible]="visibleListUser" (outputUser)="emitterUser($event)"></app-lista-usuario-page>
 <p-toast></p-toast>
-

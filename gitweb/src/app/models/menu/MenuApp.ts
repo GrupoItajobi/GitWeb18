@@ -5,7 +5,7 @@ export interface MenuApp {
   descricao?: string;
   ordem?: number,
   link?: string,
-  publico?: boolean,
+  publico?: string,
   backOuFront?: string;
   menuTipo?: string;
   menuModulo?: MenuModulo;
