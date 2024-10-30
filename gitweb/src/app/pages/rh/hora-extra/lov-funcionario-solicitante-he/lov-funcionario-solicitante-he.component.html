@@ -1,8 +1,8 @@
 <p-dialog
   header="Funcionários"
   [modal]="true"
-  [(visible)]="dialogVisible"
-  class="max-w-lg text-center"
+  [(visible)]="modalSolicita"
+  class="max-w-lg text-center"  
 >
   <ng-template pTemplate="content">
     <div>
@@ -14,7 +14,7 @@
         (onRowSelect)="onRowSelect($event)"
         [tableStyle]="{ 'min-width': '50rem' }"
         [rows]="15"
-        [paginator]="true"
+        [paginator]="true"        
       >
         <ng-template pTemplate="header">
           <tr>

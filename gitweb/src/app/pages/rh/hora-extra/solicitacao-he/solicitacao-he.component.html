@@ -1,6 +1,6 @@
 <div class="content-center text-center">
   <div class="content-center text-center">
-    <button class="m-1" type="button" (click)="adicionarAlteracao()">
+    <button class="m-1 cursor-pointer" type="button" (click)="adicionarAlteracao()">
       <i class="fas fa-plus"></i>Solicitar Hora Extra
     </button>
   </div>
@@ -70,14 +70,16 @@
 
         <!-- DESCRIÇÃO MOTIVO -->
         <div class="flex flex-col w-9 items-center">
-              <label for="motivoDescricao" class=" flex flex-col w-full">Motivo descrição</label>
-              <p-dropdown
-                formControlName="motivoDescricao"
-                [options]="motivo"
-                optionLabel="label"
-                (onChange)="onMotivoSelecionado($event)"
-                class="flex flex-col w-full mt-1"
-              />
+          <label for="motivoDescricao" class="flex flex-col w-full"
+            >Motivo descrição</label
+          >
+          <p-dropdown
+            formControlName="motivoDescricao"
+            [options]="motivo"
+            optionLabel="label"
+            (onChange)="onMotivoSelecionado($event)"
+            class="flex flex-col w-full mt-1"
+          />
         </div>
       </div>
 
@@ -112,7 +114,7 @@
 
       <!-- ##################################################################################### -->
 
-      <div class="flex flex-col-12 gap-4 align-items-center mb-4">
+      <div class="flex flex-col-12 gap-4 align-items-center mb-3">
         <!-- CÓDIGO FUNCIONÁRIO -->
         <div class="flex flex-col w-4">
           <label for="funcionarioCodigo" class="w-full">Cód. funcionário</label>
@@ -132,12 +134,12 @@
         <div class="flex flex-row w-12">
           <!-- BUSCA FUNCIONARIO -->
           <div
-            class="flex flex-col w-1 mt-3"
+            class="flex flex-col w-2 mt-3"
             (click)="buscaNomeFuncionario()"
             pTooltip="Buscar funcionário"
             tooltipPosition="top"
           >
-            <i class="pi pi-user"></i>
+            <i class="pi pi-user mt-1 ml-4"></i>
           </div>
 
           <div class="flex flex-col w-11">
@@ -171,6 +173,8 @@
       pTooltip="Salvar e continuar"
       class="p-button-success"
       icon="pi pi-arrow-right"
+      [loading]="saving"
+      [disabled]="!form.valid"
     ></p-button>
 
     <!-- Salvar -->
@@ -185,6 +189,7 @@
       class="p-button-success"
       icon="pi pi-save"
       [loading]="saving"
+      [disabled]="!form.valid"
     ></p-button>
 
     <!-- Cancelar -->
@@ -202,6 +207,6 @@
 </p-dialog>
 
 <app-lov-funcionario-solicitante-he
-  [dialogVisible]="lovSolicitacaoVisible"
+  [(modalSolicita)]="lovSolicitacaoVisible"
   (selecionouEvento)="selecionouEventoHe($event)"
 ></app-lov-funcionario-solicitante-he>
