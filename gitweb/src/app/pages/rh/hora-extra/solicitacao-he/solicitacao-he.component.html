@@ -1,6 +1,10 @@
 <div class="content-center text-center">
   <div class="content-center text-center">
-    <button class="m-1 cursor-pointer" type="button" (click)="adicionarAlteracao()">
+    <button
+      class="m-1 cursor-pointer"
+      type="button"
+      (click)="adicionarAlteracao()"
+    >
       <i class="fas fa-plus"></i>Solicitar Hora Extra
     </button>
   </div>
@@ -51,6 +55,7 @@
   [modal]="true"
   [(visible)]="dialogVisible"
   class="max-w-xl text-center"
+  [style]="{ width: '600px', height: '270px' }"
 >
   <ng-template pTemplate="content">
     <form [formGroup]="form" class="flex flex-col w-full md:w-12">
@@ -91,8 +96,8 @@
           <label for="dataHoraExtra" class="w-full">Data Início</label>
           <input
             id="dataHoraExtra"
-            class="w-full mt-1"
             type="date"
+            class="w-full mt-1 cursor-pointer"
             formControlName="dataHoraExtra"
           />
         </div>
@@ -115,8 +120,9 @@
       <!-- ##################################################################################### -->
 
       <div class="flex flex-col-12 gap-4 align-items-center mb-3">
+
         <!-- CÓDIGO FUNCIONÁRIO -->
-        <div class="flex flex-col w-4">
+        <div class="flex flex-col w-5">
           <label for="funcionarioCodigo" class="w-full">Cód. funcionário</label>
           <input
             pInputText
@@ -130,19 +136,23 @@
           />
         </div>
 
-        <!-- NOME FUNCIONÁRIO -->
+        <!-- COD FUNCIONARIO / NOME FUNCIONARIO -->
         <div class="flex flex-row w-12">
-          <!-- BUSCA FUNCIONARIO -->
-          <div
-            class="flex flex-col w-2 mt-3"
+
+          <!-- BUSCA FUNCIONARIO -->          
+          <button
+            type="button"
+            value="Evento"
+            class="flex flex-col items-center justify-center w-2 mt-3 mr-0 cursor-pointer"
             (click)="buscaNomeFuncionario()"
             pTooltip="Buscar funcionário"
             tooltipPosition="top"
           >
-            <i class="pi pi-user mt-1 ml-4"></i>
-          </div>
+            <i class="fas fa-search"> </i>
+          </button>
 
-          <div class="flex flex-col w-11">
+          <!-- NOME FUNCIONARIO -->
+          <div class="flex flex-col w-11 ml-0">
             <label for="funcionarioNome" class="w-full">Nome funcionário</label>
             <input
               pInputText

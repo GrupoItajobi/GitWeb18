@@ -2,6 +2,7 @@
   header="Funcionários"
   [modal]="true"
   [(visible)]="modalSolicita"
+  (onHide)="onHideDialog()"
   class="max-w-lg text-center"  
 >
   <ng-template pTemplate="content">
