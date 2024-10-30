@@ -49,8 +49,13 @@ export class LovFuncionarioSolicitanteHeComponent implements OnInit {
     this.selecionouEvento.emit(this.funcionarioSelecionado);
   }
 
-  toggleDialog() {
-    this.modalSolicita = !this.modalSolicita;
-    this.modalSolicitaChange.emit(this.modalSolicita);
+  // toggleDialog() {
+  //   this.modalSolicita = !this.modalSolicita;
+  //   this.modalSolicitaChange.emit(this.modalSolicita);
+  // }
+
+  onHideDialog() {
+    this.modalSolicita = false;
+    this.selecionouEvento.emit(null);
   }
 }
