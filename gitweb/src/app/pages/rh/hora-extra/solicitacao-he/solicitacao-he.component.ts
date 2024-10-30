@@ -1,8 +1,7 @@
-import { Component, input } from '@angular/core';
+import { Component } from '@angular/core';
+import { Renderer2 } from '@angular/core';
 
-import { TableModule } from 'primeng/table';
-import { TooltipModule } from 'primeng/tooltip';
-import { DialogModule } from 'primeng/dialog';
+import { FormsModule } from '@angular/forms';
 import {
   FormBuilder,
   FormControl,
@@ -10,23 +9,28 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+
+import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
+import { ButtonModule } from 'primeng/button';
+import { ListboxModule } from 'primeng/listbox';
+import { DropdownModule } from 'primeng/dropdown';
+
+import { ToastService } from '../../../../services/toast/toast.service';
+import { ErrorHandleService } from '../../../../services/error-handle/error-handle.service';
+import { HoraExtraService } from '../../../../services/rh/hora-extra/hora-extra.service';
+
+import { LovFuncionarioSolicitanteHeComponent } from '../lov-funcionario-solicitante-he/lov-funcionario-solicitante-he.component';
+import { SolicitacaoHoraExtraIncluir } from '../../../../models/rh/hora-extra/solicitacao-he-incluir';
+import { FuncionarioPorSolicitanteHe } from '../../../../models/rh/hora-extra/funcionario-por-solicitante-he';
+import { MotivoHoraExtra } from '../../../../models/rh/hora-extra/motivo-hora-extra';
 import { SolicitacaoHoraExtra } from '../../../../models/rh/hora-extra/solicitacao-he';
+
 import {
   minutosEmHorasStr,
   nowString,
 } from '../../../../core/util/gitweb-util';
-import { SolicitacaoHoraExtraIncluir } from '../../../../models/rh/hora-extra/solicitacao-he-incluir';
-import { ButtonModule } from 'primeng/button';
-import { HoraExtraService } from '../../../../services/rh/hora-extra/hora-extra.service';
-import { ErrorHandleService } from '../../../../services/error-handle/error-handle.service';
-import { LovFuncionarioSolicitanteHeComponent } from '../lov-funcionario-solicitante-he/lov-funcionario-solicitante-he.component';
-import { ListboxModule } from 'primeng/listbox';
-import { FormsModule } from '@angular/forms';
-import { DropdownModule } from 'primeng/dropdown';
-import { FuncionarioPorSolicitanteHe } from '../../../../models/rh/hora-extra/funcionario-por-solicitante-he';
-import { ToastService } from '../../../../services/toast/toast.service';
-import { Renderer2 } from '@angular/core';
-import { MotivoHoraExtra } from '../../../../models/rh/hora-extra/motivo-hora-extra';
 
 @Component({
   selector: 'app-solicitacao-he',
@@ -45,9 +49,9 @@ import { MotivoHoraExtra } from '../../../../models/rh/hora-extra/motivo-hora-ex
   templateUrl: './solicitacao-he.component.html',
   styleUrl: './solicitacao-he.component.scss',
 })
+
 export class SolicitacaoHeComponent {
   horas: any[] = [];
-
   motivo: any[] = [];
 
   form!: FormGroup;
@@ -78,11 +82,11 @@ export class SolicitacaoHeComponent {
   ngOnInit() {
     this.initForm();
     this.init();
-    this.listaHoras();    
+    this.listaHoras();
   }
 
   async init() {
-    
+
     await this.horaExtraService
       .listarHoraExtra()
       .then((response) => {
@@ -102,7 +106,7 @@ export class SolicitacaoHeComponent {
       });
 
       this.listaMotivos();
-  } 
+  }
 
   initForm() {
     this.form = this.formBuilder.group({
@@ -248,11 +252,11 @@ export class SolicitacaoHeComponent {
 
     for (let index = 0; index < this.buscaMotivo.length; index++) {
       let descricao = this.buscaMotivo[index].descricao;
-      
+
       motivoDescricao.push({label: String(descricao), value: index+1})
     }
-    
-    this.motivo = motivoDescricao   
+
+    this.motivo = motivoDescricao
 
   }
 
