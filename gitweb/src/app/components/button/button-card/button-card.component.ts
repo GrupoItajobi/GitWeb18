@@ -20,6 +20,7 @@ export class ButtonCardComponent implements OnInit, OnChanges {
   @Output() clickButtonCard = new EventEmitter();
   @Input() width: number = 30;
   @Input() selected: boolean = true; // se true após clicado o botão fica em alto relevo, senão ficar normal
+  @Input() blockedDocument: boolean = false; // se true após clicado o botão fica o documento é bloqueado até o termino do processamento
   @Input() loading: boolean = false; // usado em conjunto com loadingClicked, coloca em loading o botação clicado e retira e para o loading do botão clocado
   @Input() options: ButtonCardOptions[] = [];
 
@@ -57,7 +58,6 @@ export class ButtonCardComponent implements OnInit, OnChanges {
   click(event: ButtonCardOptions) {
     this.buttonCardClicked = event;
     let clicked: boolean = this.checkOptionsChange(event);
-    console.log(this.options)
     if (clicked) {
       this.clickButtonCard.emit(this.options[event.id!].returnWhenClicked!);
     }
@@ -66,9 +66,6 @@ export class ButtonCardComponent implements OnInit, OnChanges {
   checkOptionsChange(event: ButtonCardOptions): boolean {
     let clicked: boolean = false;
     if (event != null) {
-
-      console.log('checkOptionsChange event != null Loading: ' + this.loading)
-
       this.options.forEach(e => {
         e.loading = false;
 
@@ -86,8 +83,6 @@ export class ButtonCardComponent implements OnInit, OnChanges {
         } else {
           e.clicked = false;
         }
-
-        console.log('loading no for : ' + e.loading + " - " + e.id)
       })
     }
     return clicked;
@@ -112,8 +107,7 @@ export class ButtonCardComponent implements OnInit, OnChanges {
     ];
   }
 
-
-}
+ }
 
 
 export interface ButtonCardOptions {

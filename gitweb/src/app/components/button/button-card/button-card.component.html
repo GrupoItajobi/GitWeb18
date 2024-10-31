@@ -1,16 +1,17 @@
 <div style="z-index: 9999;">
 
-  <!-- <p-panel #pnl> -->
+  <p-blockUI [blocked]="blockedDocument">
+    <i class="pi pi-lock" style="font-size: 3rem; color: white;"></i>
+    <p-progressSpinner styleClass="w-3rem h-3rem" strokeWidth="8" />
+  </p-blockUI>
 
   <div class="flex justify-center" >
 
     @for (item of options; track $index) {
 
     <div class="card-container">
-      <p-blockUI [target]="pnl" [blocked]="loading">
-        <i class="pi pi-lock" style="font-size: 3rem; margin-top: -100px;"></i>
-      </p-blockUI>
-      <a class="card" [style]="style(item)" (click)="click(item)" #pnl>
+
+      <a class="card" [style]="style(item)" (click)="click(item)">
 
         <div class="flex flex-column text-center">
 

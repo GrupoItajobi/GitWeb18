@@ -26,7 +26,7 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
   optionsButtonCard: ButtonCardOptions[] = [];
 
   loading: boolean = false;
-
+  blockedDocument: boolean = false;
 
   constructor(
     private horaExtraService: HoraExtraService,
@@ -78,11 +78,12 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
   }
 
   async clickButtonCard(event: string) {
-    if (this.solicitacoesSelecionadas.length>0) {
+    if (this.solicitacoesSelecionadas.length > 0) {
       if (event === 'aprovado') {
         await this.aprovar();
       } else if (event === 'reprovado') {
         await this.reprovar();
+
       }
     } else {
       this.toastService.showWarnMsg("Selecione uma Solicitação!")
@@ -90,15 +91,20 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
   }
 
   async aprovar() {
+    this.blockedDocument = true;
     this.loading = true;
     await this.horaExtraService.aprovar(this.solicitacoesSelecionadas)
       .then(reponse => {
         this.downloadSolicitacaoPorAprovador();
 
-        setTimeout(() => {
-          console.log('fechei o timeout')
-           this.loading = false;
-           }, 5000);
+        // setTimeout(() => {
+        //   console.log('fechei o timeout')
+        //   this.loading = false;
+        //   this.blockedDocument = false;
+        // }, 5000);
+
+        this.loading = false;
+        this.blockedDocument = false;
       })
       .catch(error => {
         this.errorHandleService.handle(error);
@@ -106,11 +112,18 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
   }
 
   async reprovar() {
+    this.blockedDocument = true;
     this.loading = true;
     await this.horaExtraService.reprovar(this.solicitacoesSelecionadas)
       .then(reponse => {
         this.downloadSolicitacaoPorAprovador();
-        setTimeout(() => { this.loading = false; }, 5000);
+        // setTimeout(() => {
+        //   console.log('fechei o timeout')
+        //   this.loading = false;
+        //   this.blockedDocument = false;
+        // }, 5000);
+        this.loading = false;
+        this.blockedDocument = false;
       })
       .catch(error => {
         this.errorHandleService.handle(error);

@@ -138,7 +138,6 @@ export class HoraExtraService implements OnInit {
   }
 
   private async aprovarReprovar(solicitacoes: SolicitacaoHoraExtraPorAprovador[], aprovar: boolean): Promise<SolicitacaoHoraExtraPorAprovador[] | null> {
-    console.log(solicitacoes);
 
     if (solicitacoes) {
       let lista: any[] = [];
@@ -153,8 +152,6 @@ export class HoraExtraService implements OnInit {
         .append('Content-Type', 'application/json');
 
       const body = JSON.stringify(lista);
-      console.log('body');
-      console.log(body);
 
       let command: string = "reprovar"
       if (aprovar) {
