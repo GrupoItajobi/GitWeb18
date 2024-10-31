@@ -1,7 +1,7 @@
 <div class="content-center text-center">
   <div class="content-center text-center">
     <button
-      class="m-1 cursor-pointer"
+      class="m-1 cursor-pointer h-10"
       type="button"
       (click)="adicionarAlteracao()"
     >
@@ -51,11 +51,13 @@
 </div>
 
 <p-dialog
+  [breakpoints]="{'1199px': '75vw','575px': '90vw'}"
   header="Solicitar Hora Extra"
   [modal]="true"
   [(visible)]="dialogVisible"
   class="max-w-xl text-center"
   [style]="{ width: '600px', height: '270px' }"
+  
 >
   <ng-template pTemplate="content">
     <form [formGroup]="form" class="flex flex-col w-full md:w-12">
@@ -63,14 +65,13 @@
         <!-- QUANTIDADE HORAS  -->
         <div class="flex flex-col w-3">
           <label for="funcionarioNome" class="w-full">Quantidade Hrs</label>
-          <form [formGroup]="form" class="mt-1">
-            <p-dropdown
-              formControlName="horas"
-              [options]="horas"
-              optionLabel="label"
-              placeholder="Horas"
-            />
-          </form>
+              <p-dropdown
+                formControlName="horas"
+                [options]="horas"
+                optionLabel="label"
+                placeholder="Horas"
+                class="flex flex-col w-full mt-1"
+              />
         </div>
 
         <!-- DESCRIÇÃO MOTIVO -->
@@ -102,7 +103,6 @@
           />
         </div>
 
-
         <!-- OBSERVAÇÃO -->
         <div class="flex flex-col w-9">
           <label for="motivoDescricao" class="w-full">Observação</label>
@@ -120,7 +120,6 @@
       <!-- ##################################################################################### -->
 
       <div class="flex flex-col-12 gap-4 align-items-center mb-3">
-
         <!-- CÓDIGO FUNCIONÁRIO -->
         <div class="flex flex-col w-5">
           <label for="funcionarioCodigo" class="w-full">Cód. funcionário</label>
@@ -138,8 +137,7 @@
 
         <!-- COD FUNCIONARIO / NOME FUNCIONARIO -->
         <div class="flex flex-row w-12">
-
-          <!-- BUSCA FUNCIONARIO -->          
+          <!-- BUSCA FUNCIONARIO -->
           <button
             type="button"
             value="Evento"
