@@ -67,27 +67,33 @@
     <div>
       <h1>{{mapMoendas.get(this.moendaOptionsSel.value!)?.descricao}}</h1>
       <form [formGroup]="form">
+        <div class="grid grid-cols-4 gap-1 ml-2">
+          <div>
+            <label style="width: 20rem;" for="dataInicio">Data Início</label>
+            <input id="dataInicio" type="datetime-local" formControlName="dataInicio" />
 
-        <label for="dataInicio">Data Início</label>
-        <input id="dataInicio" type="datetime-local" formControlName="dataInicio" />
-        <button type="button"  (click)="horaInicio()"><i class="far fa-clock"></i></button>
-
-        <label for="prevRetorno">Previsão Retorno</label>
-        <input id="prevRetorno" type="datetime-local" formControlName="dataPrevistaRetorno" />
-        <button type="button"  (click)="horaPrevista()"><i class="far fa-clock"></i></button>
-
-
-        <label for="rotacaoAtual">Rotação Atual</label>
-        <input id="rotacaoAtual" type="number" min="0" max="9999" formControlName="rotacaoAtual" />
-
-        <label for="obs">Observação</label>
-        <input id="obs" type="text" formControlName="observacao" />
-
-        <label for="evento">Evento</label>
-        <input id="evento" type="number" formControlName="eventoCode" />
-        <button type="button" value="Evento" (click)="lovEvento()"><i class="fas fa-search"></i></button>
-        <input id="eventoDescricao" [disabled]="disableInput" type="text" formControlName="eventoDescricao" />
-
+            <button type="button" (click)="horaInicio()"><i class="far fa-clock"></i></button>
+          </div>
+          <div>
+            <label for="prevRetorno" style="width: 20rem;" >Previsão Retorno</label>
+            <input id="prevRetorno" type="datetime-local" formControlName="dataPrevistaRetorno" />
+            <button type="button" (click)="horaPrevista()"><i class="far fa-clock"></i></button>
+          </div>
+          <div>
+            <output style="width: 20rem;" for="rotacaoAtual">Rotação Atual</output>
+            <input id="rotacaoAtual" type="number" min="0" max="9999" formControlName="rotacaoAtual" />
+          </div>
+          <div>
+            <label for="obs">Observação</label>
+            <input id="obs" type="text" formControlName="observacao" />
+          </div>
+          <div class="col-span-2">
+            <label for="evento">Evento</label>
+            <input id="evento" type="number" formControlName="eventoCode" style="width: 3rem;" />
+            <button type="button" value="Evento" (click)="lovEvento()"><i class="fas fa-search"></i></button>
+            <input id="eventoDescricao" [disabled]="disableInput" type="text" formControlName="eventoDescricao" />
+          </div>
+        </div>
       </form>
 
     </div>
