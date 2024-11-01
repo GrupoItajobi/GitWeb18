@@ -53,7 +53,7 @@
     <ng-template pTemplate="body" let-solicitacao let-rowIndex="rowIndex">
       <tr [pSelectableRow]="solicitacao">
         <td>
-          <p-tableCheckbox style="width: 8px;" [value]="solicitacao" />
+          <p-tableCheckbox style="width: 8px;" [value]="solicitacao" (click)="$event.stopPropagation()"/>
 
         </td>
         <td class="text-center">{{rowIndex+1}} {{solicitacao.aguardandoAprovacao}}</td>

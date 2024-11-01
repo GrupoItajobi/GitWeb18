@@ -26,6 +26,7 @@ import { SolicitacaoHoraExtraIncluir } from '../../../../models/rh/hora-extra/so
 import { FuncionarioPorSolicitanteHe } from '../../../../models/rh/hora-extra/funcionario-por-solicitante-he';
 import { MotivoHoraExtra } from '../../../../models/rh/hora-extra/motivo-hora-extra';
 import { SolicitacaoHoraExtra } from '../../../../models/rh/hora-extra/solicitacao-he';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import {
   minutosEmHorasStr,
@@ -45,6 +46,7 @@ import {
     FormsModule,
     DropdownModule,
     TooltipModule,
+    ProgressSpinnerModule
   ],
   templateUrl: './solicitacao-he.component.html',
   styleUrl: './solicitacao-he.component.scss',
@@ -65,6 +67,7 @@ export class SolicitacaoHeComponent {
   saving: boolean = false;
   lovSolicitacaoVisible: boolean = false;
   gravarContinuar: boolean = false;
+  loading: boolean = false;
 
   codigoFuncionario: string = '';
   indiceSelecionado: number = 0;
@@ -121,22 +124,21 @@ export class SolicitacaoHeComponent {
         disabled: true,
       }),
       departamentoCodigo: new FormControl(
-        this.usuarioEdit.departamentoCodigo,
-        Validators.required
+        this.usuarioEdit.departamentoCodigo        
       ),
       departamentoDescricao: new FormControl(
         this.usuarioEdit.departamentoDescricao
       ),
       motivoCodigo: new FormControl(
         this.usuarioEdit.motivoCodigo,
-        Validators.required
+      
       ),
-      motivoDescricao: new FormControl(this.usuarioEdit.motivoDescricao),
+      motivoDescricao: new FormControl(this.usuarioEdit.motivoDescricao, Validators.required),
       usuarioNome: new FormControl(this.usuarioEdit.usuarioNome),
-      observacao: new FormControl(this.usuarioEdit.observacao),
-      dataHoraExtra: new FormControl(this.usuarioEdit.dia),
+      observacao: new FormControl(this.usuarioEdit.observacao, Validators.required),
+      dataHoraExtra: new FormControl(this.usuarioEdit.dia, Validators.required),
       horas: new FormControl(
-        minutosEmHorasStr(this.usuarioEdit.minutos, 'hh:mm')
+        minutosEmHorasStr(this.usuarioEdit.minutos, 'hh:mm'), Validators.required
       ),
     });
 
@@ -156,8 +158,8 @@ export class SolicitacaoHeComponent {
   }
 
   async salvar() {
-    //this.retiraroTdaData();
 
+    this.loading = true;
     let minutosConvertido = this.converterMinutos();
     let usuario: SolicitacaoHoraExtraIncluir = {
       id: this.usuarioEdit.id,
@@ -168,6 +170,7 @@ export class SolicitacaoHeComponent {
       dia: this.form.value.dataHoraExtra,
       minutos: minutosConvertido,
     };
+    console.log(usuario);
 
     if (this.usuarioEdit.version && !this.gravarContinuar) {
       this.alterar(usuario);
@@ -189,6 +192,7 @@ export class SolicitacaoHeComponent {
       .catch((error) => {
         this.errorHandleService.handle(error);
       });
+    this.finalizaProcesso();
     this.fecharDialog();
   }
 
@@ -197,6 +201,7 @@ export class SolicitacaoHeComponent {
       .incluir(solicitaHe)
       .then((response) => {
         this.usuarioEdit = response;
+        this.finalizaProcesso();
       })
       .catch((error) => {
         this.errorHandleService.handle(error);
@@ -266,10 +271,12 @@ export class SolicitacaoHeComponent {
   }
 
   edit(solicitaHoraExtra: SolicitacaoHoraExtraIncluir) {
-    this.usuarioEdit = solicitaHoraExtra;
+    this.usuarioEdit = solicitaHoraExtra;   
 
+    if(this.usuarioEdit.minutos == undefined){return}
+    console.log(this.usuarioEdit); //verificar ####################### this.usuarioEdit.minutos, 'hh:mm'
     this.initForm();
-    //this.dialogVisible = true;
+    this.dialogVisible = true;
   }
 
   //Converte as horas selecionadas para minutos, para salvar no banco
@@ -352,5 +359,11 @@ export class SolicitacaoHeComponent {
     });
 
     this.renderer.selectRootElement('#funcionarioCodigo').focus();
+  }
+
+  finalizaProcesso(){
+    this.loading = false;
+
+    if(this.usuarioEdit.id != ""){this.toastService.showSuccessMsg('Salvo!');}
   }
 }

@@ -51,13 +51,12 @@
 </div>
 
 <p-dialog
-  [breakpoints]="{'1199px': '75vw','575px': '90vw'}"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
   header="Solicitar Hora Extra"
   [modal]="true"
   [(visible)]="dialogVisible"
   class="max-w-xl text-center"
   [style]="{ width: '600px', height: '270px' }"
-  
 >
   <ng-template pTemplate="content">
     <form [formGroup]="form" class="flex flex-col w-full md:w-12">
@@ -65,13 +64,13 @@
         <!-- QUANTIDADE HORAS  -->
         <div class="flex flex-col w-3">
           <label for="funcionarioNome" class="w-full">Quantidade Hrs</label>
-              <p-dropdown
-                formControlName="horas"
-                [options]="horas"
-                optionLabel="label"
-                placeholder="Horas"
-                class="flex flex-col w-full mt-1"
-              />
+          <p-dropdown
+            formControlName="horas"
+            [options]="horas"
+            optionLabel="label"
+            placeholder="Horas"
+            class="flex flex-col w-full mt-1"
+          />
         </div>
 
         <!-- DESCRIÇÃO MOTIVO -->
@@ -214,7 +213,21 @@
   </ng-template>
 </p-dialog>
 
+<!-- ######################################### -->
+
 <app-lov-funcionario-solicitante-he
   [(modalSolicita)]="lovSolicitacaoVisible"
   (selecionouEvento)="selecionouEventoHe($event)"
 ></app-lov-funcionario-solicitante-he>
+
+<!-- Teste para implementar o spinner -->
+<!-- @if(loading){
+  <div>
+    <p-progressSpinner
+    styleClass="w-4rem h-4rem"
+    strokeWidth="8"
+    fill="var(--surface-ground)"
+    animationDuration=".5s"
+    />
+  </div>
+} -->
