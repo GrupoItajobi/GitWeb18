@@ -52,6 +52,7 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
     await this.horaExtraService.solicitacaoPorAprovador()
       .then(response => {
         this.solicitacoes = response;
+        console.log(this.solicitacoes)
       })
       .catch(error => {
 

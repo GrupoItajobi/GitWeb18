@@ -22,4 +22,5 @@ export interface SolicitacaoHoraExtraPorAprovador {
   aprovadorNome?: string,
   nivelMax?: number,
   nivelAprovar?: number,
+  status?: string,
 }
