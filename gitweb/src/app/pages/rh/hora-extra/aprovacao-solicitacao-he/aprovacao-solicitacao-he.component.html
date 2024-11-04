@@ -28,16 +28,6 @@
           <p-tableHeaderCheckbox />
         </th>
 
-        <!-- STATUS -->
-        <th rowspan="2" class="w-10rem">
-          Status
-          <p-columnFilter
-            matchMode="contains"
-            field="status"
-            placeholder="Search"
-          />
-        </th>
-
         <!-- GEF -->
         <th style="width: 8rem" colspan="2" rowspan="2">
           G.E.F
@@ -94,12 +84,6 @@
             [value]="solicitacao"
             (click)="$event.stopPropagation()"
           />
-        </td>
-
-        <!-- Status -->
-        <td class="text-center">
-          <!-- <i class="pi pi-check" style="color: green"></i> -->
-          {{ "Aguardando aprovação..." }}
         </td>
 
         <td class="text-center">

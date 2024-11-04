@@ -109,6 +109,8 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
       })
       .catch(error => {
         this.errorHandleService.handle(error);
+        this.loading = false;
+        this.blockedDocument = false;
       });
   }
 

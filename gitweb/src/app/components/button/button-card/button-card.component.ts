@@ -4,12 +4,13 @@ import { BadgeModule } from 'primeng/badge';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { BlockUIModule } from 'primeng/blockui';
 import { PanelModule } from 'primeng/panel';
+import { BloquearTelaComponent } from "../../bloquear-tela/bloquear-tela.component";
 const STYLE_SELECIONADO: string = "transform: translateY(-15px); box-shadow: 10px 20px 17px rgba(0, 0, 0, 0.50);";
 
 @Component({
   selector: 'app-button-card',
   standalone: true,
-  imports: [BadgeModule, ProgressSpinnerModule, BlockUIModule,PanelModule],
+  imports: [BadgeModule, ProgressSpinnerModule, BlockUIModule, PanelModule, BloquearTelaComponent],
   templateUrl: './button-card.component.html',
   styleUrl: './button-card.component.scss'
 })
