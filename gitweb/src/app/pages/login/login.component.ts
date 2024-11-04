@@ -52,7 +52,8 @@ export class LoginComponent {
     this.messageService.clear();
     await this.auth.login(this.formLogin.value.login, this.formLogin.value.password)
       .then(data => {
-        this.menuService.clear()
+
+        this.menuService.clear();
         let link = '/home';
         if (this.auth.link) {
           link = this.auth.link!;
@@ -60,6 +61,8 @@ export class LoginComponent {
         }
         this.auth.startRefresh();
         this.router.navigate([link]);
+
+
       })
       .catch(error => {
         // this.auth.stopRefresh();

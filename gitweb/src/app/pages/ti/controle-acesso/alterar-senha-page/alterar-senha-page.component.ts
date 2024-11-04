@@ -5,6 +5,7 @@ import { UsuarioAlterarSenha } from '../../../../models/usuario/UsuarioAlterarSe
 import { AuthService } from '../../../../core/auth/auth.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { ErrorHandleService } from '../../../../services/error-handle/error-handle.service';
+import { PasswordModule } from 'primeng/password';
 
 @Component({
   selector: 'app-alterar-senha-page',
@@ -12,7 +13,8 @@ import { ErrorHandleService } from '../../../../services/error-handle/error-hand
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    DialogModule
+    DialogModule,
+    PasswordModule
   ],
   templateUrl: './alterar-senha-page.component.html',
   styleUrl: './alterar-senha-page.component.scss'
@@ -20,52 +22,65 @@ import { ErrorHandleService } from '../../../../services/error-handle/error-hand
 export class AlterarSenhaPageComponent implements OnInit {
   @Output() eventCloseDialog = new EventEmitter();
   @Input() visible: boolean = false;
-  @Input() login!: string;
 
   form!: FormGroup;
   user!: UsuarioAlterarSenha;
 
   constructor(
     private formBuilder: FormBuilder,
-    private auth: AuthService,
-    private toastMessageService: ToastService ,
+    public auth: AuthService,
+    private toastMessageService: ToastService,
     private errorHandleService: ErrorHandleService,
   ) { }
 
   ngOnInit(): void {
-    this.user = {} as UsuarioAlterarSenha;
     this.initForm();
   }
 
   async alterarSenha() {
+
+    this.form.patchValue({ login: this.auth.usuarioLogado().login! });
     this.user = this.form.value;
-    await this.auth.alterarSenha(this.user)
-      .then(request => {
-        this.toastMessageService.showSuccessMsg("Senha Alterada");
-        this.eventCloseDialog.emit(true);
-      })
-      .catch(erro => {
-        this.errorHandleService.handle(erro);
-      });
+
+    if (this.user.newPassword && this.user.newPasswordConfirm && this.user.newPassword === this.user.newPasswordConfirm) {
+
+      await this.auth.alterarSenha(this.user)
+        .then(request => {
+          this.initForm();
+          this.toastMessageService.showSuccessMsg("Senha Alterada");
+          this.eventCloseDialog.emit(true);
+        })
+        .catch(erro => {
+          this.errorHandleService.handle(erro);
+          this.onHideDialog();
+        });
+    } else {
+      this.toastMessageService.showWarnMsg('Senhas não conferem...')
+    }
   }
 
   onHideDialog() {
-    console.log('onHide');
+    this.initForm();
+
     this.visible = false;
     this.eventCloseDialog.emit(true);
   }
 
+
   initForm() {
+
     this.user = {
-      login: this.login,
+      login: this.auth.usuarioLogado().login!,
       oldPassword: "",
-      newPassword: ""
+      newPassword: "",
+      newPasswordConfirm: "",
     }
     this.form = this.formBuilder.group(
       {
-        login: new FormControl(this.login, Validators.required),
+        login: new FormControl(this.auth.usuarioLogado().login, Validators.required),
         oldPassword: new FormControl(this.user.oldPassword, Validators.required),
         newPassword: new FormControl(this.user.newPassword, Validators.required),
+        newPasswordConfirm: new FormControl(this.user.newPasswordConfirm, Validators.required),
       });
 
     this.form.valueChanges.subscribe(newValue => {

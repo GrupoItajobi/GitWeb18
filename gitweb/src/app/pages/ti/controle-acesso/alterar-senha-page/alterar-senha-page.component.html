@@ -11,22 +11,28 @@
           <div class="col-12">
 
             <div class="field grid">
-              <label for="login" class="col-fixed" style="width: 7rem">Login</label>
+              <label for="login" class="col-fixed" style="width: 10rem">Login</label>
               <div class="col">
-                <span>{{form.value.login}}</span>
+                <span>{{auth.usuarioLogado().login!}}</span>
               </div>
             </div>
             <div class="field grid">
-              <label for="oldPass" class="col-fixed" style="width: 7rem">Senha Antiga</label>
+              <label for="oldPass" class="col-fixed" style="width: 10rem">Senha Antiga</label>
               <div class="col">
-                <input type="password" id="oldPass" formControlName="oldPassword" />
+                <p-password type="password" id="oldPass" formControlName="oldPassword" [feedback]="false" [toggleMask]="true"/>
               </div>
             </div>
 
             <div class="field grid">
-              <label for="newPass" class="col-fixed" style="width: 7rem">Senha Nova</label>
+              <label for="newPass" class="col-fixed" style="width: 10rem">Senha Nova</label>
               <div class="col">
-                <input type="password" id="oldPass" formControlName="newPassword" />
+                <p-password type="password" id="newPass" formControlName="newPassword" [feedback]="false" [toggleMask]="true"/>
+              </div>
+            </div>
+            <div class="field grid">
+              <label for="newPassConfirm" class="col-fixed" style="width: 10rem" >Confirmar Senha nova</label>
+              <div class="col">
+                <p-password type="password" id="newPassConfirm" formControlName="newPasswordConfirm" [feedback]="false" [toggleMask]="true"/>
               </div>
             </div>
           </div>
@@ -50,6 +56,3 @@
 
 </p-dialog>
 <!-- <p-toast></p-toast> -->
-
-
-

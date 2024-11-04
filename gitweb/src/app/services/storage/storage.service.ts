@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Usuario } from '../../models/usuario/Usuario';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
@@ -8,7 +8,7 @@ const TAG_TOKEN = "token-git";
   providedIn: 'root'
 })
 
-export class StorageService {
+export class StorageService implements OnInit {
 
   private jwtPayload!: any;
   private token!: string | null;
@@ -18,10 +18,14 @@ export class StorageService {
     private jwtHelperService: JwtHelperService,
   ) { }
 
+
+  ngOnInit(): void {
+    this.usuarioLogado();
+  }
   usuarioLogado(): Usuario {
-    let usuario:Usuario={}
+    let usuario: Usuario = {}
     if (this.jwtPayload) {
-       usuario = {
+      usuario = {
         login: this.jwtPayload.sub,
         nome: this.jwtPayload.name
       }
@@ -29,7 +33,7 @@ export class StorageService {
     return usuario;
   }
 
-  versaoApp():string {
+  versaoApp(): string {
     return this.jwtPayload.versaoApp;
   }
   clear(): void {
@@ -41,7 +45,8 @@ export class StorageService {
 
 
   public armazenarToken(token: string) {
-    this.writeTokentoStorage(token)
+    this.writeTokentoStorage(token);
+    this.readTokenFromStorage();
   }
 
   // public carregarLink() {
@@ -68,7 +73,7 @@ export class StorageService {
     return this.token;
   }
 
-  private writeTokentoStorage(token: string) {
+  private async writeTokentoStorage(token: string) {
     if (this.tokenIsNotNull(token)) {
       this.token = token;
       localStorage.setItem(TAG_TOKEN, token);
@@ -76,8 +81,11 @@ export class StorageService {
     }
   }
 
-  private tokenIsNotNull(token: string | null) {
-    return (token && token != 'undefined')
+  private tokenIsNotNull(token: string | null): boolean {
+    if (token && token != 'undefined') {
+      return true;
+    }
+    return false;
   }
 
 }

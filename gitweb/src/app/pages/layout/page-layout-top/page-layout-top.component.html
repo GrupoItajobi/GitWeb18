@@ -106,4 +106,4 @@
 </div>
 
 <app-sidebar [sidebarVisible]="sidebarVisible" (eventSidebarClose)="eventSidebarClose($event)"></app-sidebar>
-<app-alterar-senha-page [visible]="dialogAlterarSenha" [login]="authService.usuarioLogado().login!" (eventCloseDialog)="eventCloseDialog($event)"></app-alterar-senha-page>
+<app-alterar-senha-page [visible]="dialogAlterarSenha" (eventCloseDialog)="eventCloseDialog($event)"></app-alterar-senha-page>

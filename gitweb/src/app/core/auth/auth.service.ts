@@ -45,7 +45,7 @@ export class AuthService {
       if (this.refreshInterval == null) {
         this.refreshInterval = setInterval(() => {
           this.refreshToken();
-        }, 1*60*60*1000);
+        }, 1 * 60 * 60 * 1000);
       }
     }
 
@@ -86,9 +86,8 @@ export class AuthService {
 
     const body = JSON.stringify(user);
 
-const url =this.url+'/login/signin';
-console.log('url login')
-console.log(url)
+    const url = this.url + '/login/signin';
+
     return await firstValueFrom(
       this.http.post<Token>(`${url}`, body, { headers, withCredentials: true }))
       .then(token => {
@@ -207,8 +206,8 @@ console.log(url)
   }
   async checkIpAddress() {
     const headers = new HttpHeaders()
-    .append('Content-Type', 'application/json')
-    .append('Access-Control-Allow-Origin', 'http://localhost:4200');
+      .append('Content-Type', 'application/json')
+      .append('Access-Control-Allow-Origin', 'http://localhost:4200');
 
     console.log('entrei checkIpAddress')
     return await firstValueFrom(

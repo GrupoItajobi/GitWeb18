@@ -42,6 +42,7 @@ export class PageLayoutTopComponent implements OnInit {
   empresaService = inject(EmpresaService);
   url = inject(UrlService);
 
+  userLogin!: string;
 
   constructor(
     // public url: UrlService,
@@ -61,7 +62,7 @@ export class PageLayoutTopComponent implements OnInit {
     // this.usuarioLogado = this.authService.usuarioLogado()!;
   }
 
-  click(par:any) {
+  click(par: any) {
     document.getElementById('clickMenu')?.click();
   }
   logout() {
@@ -78,6 +79,7 @@ export class PageLayoutTopComponent implements OnInit {
     this.router.navigate(['home']);
   }
   alterarSenha() {
+    this.userLogin = this.authService.usuarioLogado().login!;
     this.dialogAlterarSenha = true;
   }
   eventSidebarClose(sidebarVisible: boolean) {
