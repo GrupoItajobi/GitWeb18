@@ -43,6 +43,7 @@ export class UtilSpringComponent implements OnInit {
     this.entity = classe + "Entity";
     if (!isEntity) {
       this.entity = classe + "View";
+      classe = this.entity;
     }
 
     this.repository = classe + "Repository";
