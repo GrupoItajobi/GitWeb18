@@ -14,7 +14,9 @@ export interface SolicitacaoHoraExtra{
     observacao?: string,
     dataHe?: number,
     horas?: string,
-    quantidadeAprovador?: number
+    quantidadeAprovador?: number,
+    dataInicio?: Date,
+    dataFim?: Date,
 }
 
 
