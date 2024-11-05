@@ -1,12 +1,86 @@
 <div class="content-center text-center">
-  <div class="content-center text-center">
-    <button
-      class="m-1 cursor-pointer h-10"
-      type="button"
-      (click)="adicionarAlteracao()"
-    >
-      <i class="fas fa-plus"></i>Solicitar Hora Extra
-    </button>
+  <!-- botões -->
+  <div class="flex items-center justify-center w-full">
+
+
+    <div class="flex flex-wrap gap-3">
+      <div class="flex align-items-center">
+        <p-radioButton
+          name="status"
+          value="A"
+          [(ngModel)]="selectedStatus"
+          inputId="aprovados"
+        />
+        <label for="aprovados" class="ml-2"> Aprovados </label>
+      </div>
+    </div>
+    
+    <div class="flex flex-wrap gap-3">
+      <div class="flex align-items-center">
+        <p-radioButton
+          name="status"
+          value="S"
+          [(ngModel)]="selectedStatus"
+          inputId="naoAprovado"
+        />
+        <label for="naoAprovado" class="ml-2"> Não aprovados </label>
+      </div>
+    </div>
+    
+    <div class="flex flex-wrap gap-3">
+      <div class="flex align-items-center">
+        <p-radioButton
+          name="status"
+          value="R"
+          [(ngModel)]="selectedStatus"
+          inputId="recusado"
+        />
+        <label for="recusado" class="ml-2"> Recusado </label>
+      </div>
+    </div>
+
+    <form [formGroup]="form" class="flex flex-row">
+
+      <div class="flex flex-col">
+        <label for="dataInicio" class="w-full">Data Início</label>
+        <input
+          id="dataInicio"
+          type="date"
+          class="w-full mt-1 cursor-pointer"
+          formControlName="dataInicio"
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label for="dataFim" class="w-full">Data Fim</label>
+        <input
+          id="dataFim"
+          type="date"
+          class="w-full mt-1 cursor-pointer"
+          formControlName="dataFim"
+        />
+      </div>
+
+      <div class="content-center text-center m-1">
+        <button
+          class="cursor-pointer h-10"
+          type="button"
+          (click)="buscarSolicitacoes()"
+        >
+          <i class="fas fa-search"></i> Buscar
+        </button>
+      </div>
+    </form>
+
+    <div class="content-center text-center m-1">
+      <button
+        class="cursor-pointer h-10"
+        type="button"
+        (click)="adicionarAlteracao()"
+      >
+        <i class="fas fa-plus"></i> Solicitar Hora Extra
+      </button>
+    </div>
   </div>
 
   <div class="flex-col items-center content-center w-full table-nomes">
@@ -22,7 +96,7 @@
         <tr class="w-12">
           <th class="w-4">Nome</th>
           <th class="w-3">Departamento</th>
-          <th class="w-1">Cód Motivo</th>
+          <!-- <th class="w-1">Cód Motivo</th> -->
           <th class="w-3">Descrição</th>
           <th class="w-3">Solicitante</th>
           <th class="w-3">Horas</th>
@@ -33,9 +107,9 @@
         <tr class="w-12">
           <td class="w-4">{{ usuario.funcionarioNome }}</td>
           <td class="w-3">{{ usuario.departamentoDescricao }}</td>
-          <td class="w-1">{{ usuario.motivoCodigo }}</td>
+          <!-- <td class="w-1">{{ usuario.motivoCodigo }}</td> -->
           <td class="w-3">{{ usuario.motivoDescricao }}</td>
-          <td class="w-3">{{ usuario.usuarioNome }}</td>
+          <td class="w-3">{{ usuario.solicitadoPor }}</td>
           <td class="w-3">{{ minutoEmHoras(usuario.minutos) }}</td>
           <td style="text-align: center">
             <i

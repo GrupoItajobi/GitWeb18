@@ -27,6 +27,7 @@ import { FuncionarioPorSolicitanteHe } from '../../../../models/rh/hora-extra/fu
 import { MotivoHoraExtra } from '../../../../models/rh/hora-extra/motivo-hora-extra';
 import { SolicitacaoHoraExtra } from '../../../../models/rh/hora-extra/solicitacao-he';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 import {
   minutosEmHorasStr,
@@ -46,7 +47,8 @@ import {
     FormsModule,
     DropdownModule,
     TooltipModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    RadioButtonModule
   ],
   templateUrl: './solicitacao-he.component.html',
   styleUrl: './solicitacao-he.component.scss',
@@ -70,7 +72,14 @@ export class SolicitacaoHeComponent {
   loading: boolean = false;
 
   codigoFuncionario: string = '';
+
   indiceSelecionado: number = 0;
+
+  dataInicio: any;
+  dataFim: any;
+
+  selectedStatus!: string;
+  
 
   funcionarios: FuncionarioPorSolicitanteHe[] = [];
 
@@ -137,6 +146,8 @@ export class SolicitacaoHeComponent {
       usuarioNome: new FormControl(this.usuarioEdit.usuarioNome),
       observacao: new FormControl(this.usuarioEdit.observacao, Validators.required),
       dataHoraExtra: new FormControl(this.usuarioEdit.dia, Validators.required),
+      dataInicio: new FormControl(this.usuarioEdit.dataInicio),
+      dataFim: new FormControl(this.usuarioEdit.dataFim),
       horas: new FormControl(
         minutosEmHorasStr(this.usuarioEdit.minutos, 'hh:mm'), Validators.required
       ),
@@ -365,5 +376,26 @@ export class SolicitacaoHeComponent {
     this.loading = false;
 
     if(this.usuarioEdit.id != ""){this.toastService.showSuccessMsg('Salvo!');}
+  }
+
+  async buscarSolicitacoes(){        
+
+    let solicitacoes: any = ({
+      dataInicio: this.form.controls['dataInicio'].value,
+      dataFim: this.form.controls['dataFim'].value,
+      status: this.selectedStatus
+    }) 
+   
+    await this.horaExtraService
+    .solicitacoesPorSolicitante(solicitacoes)
+    .then((response) => {
+      this.solicitacoes = response
+      this.initForm();
+      console.log(this.solicitacoes);
+    })
+    .catch((error) => {
+      this.errorHandleService.handle(error);
+    });
+
   }
 }
