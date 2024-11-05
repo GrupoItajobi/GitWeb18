@@ -307,7 +307,7 @@ button {
   height: 1rem !important;
   background: var(--slate-500) !important;
   color: var(--white);
-  box-shadow: 5px 5px 3px grey, 0 0 3px black;
+  box-shadow: 5px 5px 3px rgb(165, 164, 164), 0 0 3px black;
   padding: 5px;
 }
 /* row selecionada */
@@ -321,7 +321,7 @@ button {
   border-width: 1px 1px 1px 1px;
   padding: 0.1rem 0.5rem;
   height: 1.5rem !important;
-  box-shadow: 3px 3px 3px grey, 0 0 3px black;
+  box-shadow: 3px 3px 3px var(--gray-300), 0 0 3px black;
 }
 .p-datatable .p-paginator-bottom {
   background: var(--background-body);
@@ -339,7 +339,7 @@ button {
   padding: 0rem;
 }
 tr:nth-child(even) {
-  background: var(--slate-200) !important;
+  background: var(--slate-100) !important;
 }
 tr:nth-child(odd) {
   background: var(--white) !important;
