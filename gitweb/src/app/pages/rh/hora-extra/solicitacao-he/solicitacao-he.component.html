@@ -1,7 +1,6 @@
 <div class="content-center text-center">
   <!-- botões do navbar-->
   <div class="flex items-center justify-center w-full m-2">
-
     <!-- Selecionar solicitações aprovadas -->
     <div class="flex flex-wrap">
       <div class="flex align-items-center mr-2">
@@ -13,10 +12,10 @@
         />
         <label for="aprovados" class="ml-1 cursor-pointer"> Aprovados </label>
       </div>
-      <hr>
+      <hr />
     </div>
-    
-    <!-- Selecionar solicitações Liberadas para aprovação -->
+
+    <!-- Selecionar solicitações aguardando aprovação-->
     <div class="flex flex-wrap">
       <div class="flex align-items-center mr-2 ml-2">
         <p-radioButton
@@ -25,11 +24,13 @@
           [(ngModel)]="selectedStatus"
           inputId="naoAprovado"
         />
-        <label for="naoAprovado" class="ml-1 cursor-pointer"> Não aprovados </label>
+        <label for="naoAprovado" class="ml-1 cursor-pointer">
+          Aguardando aprovação
+        </label>
       </div>
-      <hr>
+      <hr />
     </div>
-    
+
     <!-- Selecionar solicitações Recusadas -->
     <div class="flex flex-wrap">
       <div class="flex align-items-center ml-2">
@@ -39,12 +40,29 @@
           [(ngModel)]="selectedStatus"
           inputId="recusado"
         />
-        <label for="recusado" class="ml-1 mr-3 cursor-pointer"> Recusado </label>
+        <label for="recusado" class="ml-1 mr-3 cursor-pointer">
+          Recusado
+        </label>
+      </div>
+      <hr>
+    </div>
+
+    <!-- Selecionar solicitações sem aprovador -->
+    <div class="flex flex-wrap">
+      <div class="flex align-items-center ml-2">
+        <p-radioButton
+          name="status"
+          value="E"
+          [(ngModel)]="selectedStatus"
+          inputId="semAprovador"
+        />
+        <label for="semAprovador" class="ml-1 mr-3 cursor-pointer">
+          Sem aprovador
+        </label>
       </div>
     </div>
 
     <form [formGroup]="form" class="flex flex-row">
-
       <!-- Selecionar solicitações com data inicio-->
       <div class="flex flex-col mr-2">
         <label for="dataInicio" class="w-full">Data Início</label>
@@ -58,7 +76,7 @@
 
       <!-- Selecionar solicitações com data fim-->
       <div class="flex flex-col mr-2">
-        <label for="dataFim" class="w-full">Data Fim</label>
+        <label for="dataFim" class="w-full">Data Final</label>
         <input
           id="dataFim"
           type="date"
@@ -102,23 +120,34 @@
     >
       <ng-template pTemplate="header">
         <tr class="w-12">
-          <th class="w-4">Nome</th>
+          <!-- <th class="w-4">Nome</th>
           <th class="w-3">Departamento</th>
-          <!-- <th class="w-1">Cód Motivo</th> -->
           <th class="w-3">Descrição</th>
           <th class="w-3">Solicitante</th>
-          <th class="w-3">Horas</th>
+          <th class="w-3">Data</th>
+          <th class="w-3">Horas</th> -->
+
+          <th>Nome</th>
+          <th>Departamento</th>
+          <th>Descrição</th>
+          <th>Solicitante</th>
+          <th>Aprovador</th>
+          <th>Data</th>
+          <th>Horas</th>
+          <th>Observação</th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-usuario>
         <tr class="w-12">
-          <td class="w-4">{{ usuario.funcionarioNome }}</td>
-          <td class="w-3">{{ usuario.departamentoDescricao }}</td>
-          <!-- <td class="w-1">{{ usuario.motivoCodigo }}</td> -->
-          <td class="w-3">{{ usuario.motivoDescricao }}</td>
-          <td class="w-3">{{ usuario.solicitadoPor }}</td>
-          <td class="w-3">{{ minutoEmHoras(usuario.minutos) }}</td>
+          <td class="col-nome text-align: center">{{ usuario.funcionarioNome }}</td>
+          <td class="col-departamento">{{ usuario.departamentoDescricao }}</td>
+          <td class="col-descricao">{{ usuario.motivoDescricao }}</td>
+          <td class="col-solicitante">{{ usuario.solicitadoPor }}</td>
+          <td class="col-solicitante">{{ usuario.aprovadores }}</td>
+          <td class="col-data">{{ usuario.dia | date: 'dd/MM/yyyy' }}</td>
+          <td class="col-horas">{{ minutoEmHoras(usuario.minutos) }}</td>
+          <td class="col-horas">{{ usuario.observacao }}</td>
           <td style="text-align: center">
             <i
               class="fas fa-edit"
@@ -143,7 +172,6 @@
   <ng-template pTemplate="content">
     <form [formGroup]="form" class="flex flex-col w-full md:w-12">
       <div class="flex flex-col-12 gap-4 align-items-center mb-3">
-
         <!-- QUANTIDADE HORAS  -->
         <div class="flex flex-col w-3">
           <label for="funcionarioNome" class="w-full">Quantidade Hrs</label>

@@ -28,6 +28,7 @@ import { MotivoHoraExtra } from '../../../../models/rh/hora-extra/motivo-hora-ex
 import { SolicitacaoHoraExtra } from '../../../../models/rh/hora-extra/solicitacao-he';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { DatePipe } from '@angular/common';
 
 import {
   minutosEmHorasStr,
@@ -48,7 +49,8 @@ import {
     DropdownModule,
     TooltipModule,
     ProgressSpinnerModule,
-    RadioButtonModule
+    RadioButtonModule,
+    DatePipe
   ],
   templateUrl: './solicitacao-he.component.html',
   styleUrl: './solicitacao-he.component.scss',
@@ -88,7 +90,8 @@ export class SolicitacaoHeComponent {
     private horaExtraService: HoraExtraService,
     private errorHandleService: ErrorHandleService,
     private toastService: ToastService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    // private datePipe: DatePipe
   ) {}
 
   ngOnInit() {
@@ -390,18 +393,25 @@ export class SolicitacaoHeComponent {
     this.toastService.showErrorMsg("Por favor, preencha todos os campos obrigatórios.")
     return; 
   }
+
+  if(this.form.controls['dataInicio'].value > this.form.controls['dataFim'].value){
+    this.toastService.showInfoMsg("Data inicio não pode ser menor que data final")
+    return; 
+  }
   
     try {
       const response = await this.horaExtraService.solicitacoesPorSolicitante(solicitacoes);
       this.solicitacoes = response;
+      console.log(this.solicitacoes);
       this.dataInicio = this.form.controls['dataInicio'].value
       this.dataFim = this.form.controls['dataFim'].value
-      this.selectedStatus = '';
       this.initForm();
 
     } catch (error) {
       this.errorHandleService.handle(error);
     }
   }
+
+ 
   
 }

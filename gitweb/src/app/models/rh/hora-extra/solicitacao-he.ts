@@ -17,6 +17,7 @@ export interface SolicitacaoHoraExtra{
     quantidadeAprovador?: number,
     dataInicio?: Date,
     dataFim?: Date,
+    aprovadores?: string
 }
 
 
