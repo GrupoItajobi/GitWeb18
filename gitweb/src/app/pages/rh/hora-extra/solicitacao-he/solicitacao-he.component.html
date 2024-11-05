@@ -1,57 +1,63 @@
 <div class="content-center text-center">
-  <!-- botões -->
-  <div class="flex items-center justify-center w-full">
+  <!-- botões do navbar-->
+  <div class="flex items-center justify-center w-full m-2">
 
-
-    <div class="flex flex-wrap gap-3">
-      <div class="flex align-items-center">
+    <!-- Selecionar solicitações aprovadas -->
+    <div class="flex flex-wrap">
+      <div class="flex align-items-center mr-2">
         <p-radioButton
           name="status"
           value="A"
           [(ngModel)]="selectedStatus"
           inputId="aprovados"
         />
-        <label for="aprovados" class="ml-2"> Aprovados </label>
+        <label for="aprovados" class="ml-1 cursor-pointer"> Aprovados </label>
       </div>
+      <hr>
     </div>
     
-    <div class="flex flex-wrap gap-3">
-      <div class="flex align-items-center">
+    <!-- Selecionar solicitações Liberadas para aprovação -->
+    <div class="flex flex-wrap">
+      <div class="flex align-items-center mr-2 ml-2">
         <p-radioButton
           name="status"
           value="S"
           [(ngModel)]="selectedStatus"
           inputId="naoAprovado"
         />
-        <label for="naoAprovado" class="ml-2"> Não aprovados </label>
+        <label for="naoAprovado" class="ml-1 cursor-pointer"> Não aprovados </label>
       </div>
+      <hr>
     </div>
     
-    <div class="flex flex-wrap gap-3">
-      <div class="flex align-items-center">
+    <!-- Selecionar solicitações Recusadas -->
+    <div class="flex flex-wrap">
+      <div class="flex align-items-center ml-2">
         <p-radioButton
           name="status"
           value="R"
           [(ngModel)]="selectedStatus"
           inputId="recusado"
         />
-        <label for="recusado" class="ml-2"> Recusado </label>
+        <label for="recusado" class="ml-1 mr-3 cursor-pointer"> Recusado </label>
       </div>
     </div>
 
     <form [formGroup]="form" class="flex flex-row">
 
-      <div class="flex flex-col">
+      <!-- Selecionar solicitações com data inicio-->
+      <div class="flex flex-col mr-2">
         <label for="dataInicio" class="w-full">Data Início</label>
         <input
           id="dataInicio"
           type="date"
-          class="w-full mt-1 cursor-pointer"
+          class="w-full mt-1 cursor-pointer ng-invalid ng-dirty"
           formControlName="dataInicio"
         />
       </div>
 
-      <div class="flex flex-col">
+      <!-- Selecionar solicitações com data fim-->
+      <div class="flex flex-col mr-2">
         <label for="dataFim" class="w-full">Data Fim</label>
         <input
           id="dataFim"
@@ -61,6 +67,7 @@
         />
       </div>
 
+      <!-- Botão buscar solicitações-->
       <div class="content-center text-center m-1">
         <button
           class="cursor-pointer h-10"
@@ -72,6 +79,7 @@
       </div>
     </form>
 
+    <!-- Botão que solicita hora extra -->
     <div class="content-center text-center m-1">
       <button
         class="cursor-pointer h-10"
@@ -135,6 +143,7 @@
   <ng-template pTemplate="content">
     <form [formGroup]="form" class="flex flex-col w-full md:w-12">
       <div class="flex flex-col-12 gap-4 align-items-center mb-3">
+
         <!-- QUANTIDADE HORAS  -->
         <div class="flex flex-col w-3">
           <label for="funcionarioNome" class="w-full">Quantidade Hrs</label>
@@ -293,15 +302,3 @@
   [(modalSolicita)]="lovSolicitacaoVisible"
   (selecionouEvento)="selecionouEventoHe($event)"
 ></app-lov-funcionario-solicitante-he>
-
-<!-- Teste para implementar o spinner -->
-<!-- @if(loading){
-  <div>
-    <p-progressSpinner
-    styleClass="w-4rem h-4rem"
-    strokeWidth="8"
-    fill="var(--surface-ground)"
-    animationDuration=".5s"
-    />
-  </div>
-} -->

@@ -146,8 +146,8 @@ export class SolicitacaoHeComponent {
       usuarioNome: new FormControl(this.usuarioEdit.usuarioNome),
       observacao: new FormControl(this.usuarioEdit.observacao, Validators.required),
       dataHoraExtra: new FormControl(this.usuarioEdit.dia, Validators.required),
-      dataInicio: new FormControl(this.usuarioEdit.dataInicio),
-      dataFim: new FormControl(this.usuarioEdit.dataFim),
+      dataInicio: new FormControl(this.dataInicio),
+      dataFim: new FormControl(this.dataFim),
       horas: new FormControl(
         minutosEmHorasStr(this.usuarioEdit.minutos, 'hh:mm'), Validators.required
       ),
@@ -181,7 +181,6 @@ export class SolicitacaoHeComponent {
       dia: this.form.value.dataHoraExtra,
       minutos: minutosConvertido,
     };
-    console.log(usuario);
 
     if (this.usuarioEdit.version && !this.gravarContinuar) {
       this.alterar(usuario);
@@ -285,7 +284,6 @@ export class SolicitacaoHeComponent {
     this.usuarioEdit = solicitaHoraExtra;   
 
     if(this.usuarioEdit.minutos == undefined){return}
-    console.log(this.usuarioEdit); //verificar ####################### this.usuarioEdit.minutos, 'hh:mm'
     this.initForm();
     this.dialogVisible = true;
   }
@@ -376,26 +374,34 @@ export class SolicitacaoHeComponent {
     this.loading = false;
 
     if(this.usuarioEdit.id != ""){this.toastService.showSuccessMsg('Salvo!');}
-  }
+  } 
 
-  async buscarSolicitacoes(){        
-
-    let solicitacoes: any = ({
+  // Busca as solicitações com base no filtro "data fim, data inicio, status".
+  async buscarSolicitacoes() {
+  
+    const solicitacoes = {
       dataInicio: this.form.controls['dataInicio'].value,
       dataFim: this.form.controls['dataFim'].value,
       status: this.selectedStatus
-    }) 
-   
-    await this.horaExtraService
-    .solicitacoesPorSolicitante(solicitacoes)
-    .then((response) => {
-      this.solicitacoes = response
-      this.initForm();
-      console.log(this.solicitacoes);
-    })
-    .catch((error) => {
-      this.errorHandleService.handle(error);
-    });
+    };
 
+     // Verifica se algum campo está nulo ou indefinido
+  if (!solicitacoes.dataInicio || !solicitacoes.dataFim || !solicitacoes.status) {
+    this.toastService.showErrorMsg("Por favor, preencha todos os campos obrigatórios.")
+    return; 
   }
+  
+    try {
+      const response = await this.horaExtraService.solicitacoesPorSolicitante(solicitacoes);
+      this.solicitacoes = response;
+      this.dataInicio = this.form.controls['dataInicio'].value
+      this.dataFim = this.form.controls['dataFim'].value
+      this.selectedStatus = '';
+      this.initForm();
+
+    } catch (error) {
+      this.errorHandleService.handle(error);
+    }
+  }
+  
 }

@@ -31,7 +31,6 @@ export class HoraExtraService implements OnInit {
     return await firstValueFrom(
       this.http.get<SolicitacaoHoraExtra[]>(`${this.url}/solicitacoes-por-solicitante`, { headers }))
       .then(response => {
-        console.log(response);
         return response;
       })
       .catch(error => {
@@ -180,21 +179,29 @@ export class HoraExtraService implements OnInit {
       .catch(error => {
         return Promise.reject(error);
       });
-  }
+  }  
 
   async solicitacoesPorSolicitante(solicitacoes: any): Promise<SolicitacaoHoraExtra[]> {
-    const headers = new HttpHeaders()
-      .append('Content-Type', 'application/json');
-      
-    return await firstValueFrom(
-      this.http.get<SolicitacaoHoraExtra[]>(`${this.url}/solicitacoes-por-solicitante?dataInicio=${solicitacoes.dataInicio}&dataFim=${solicitacoes.dataFim}&status=${solicitacoes.status}`, { headers }))
-      .then(response => {
-        console.log(response);
-        return response;
-      })
-      .catch(error => {
-        return Promise.reject(error);
-      });
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    
+    try {
+      return await firstValueFrom(
+        this.http.get<SolicitacaoHoraExtra[]>(
+          `${this.url}/solicitacoes-por-solicitante`, 
+          { 
+            headers, 
+            params: {
+              dataInicio: solicitacoes.dataInicio,
+              dataFim: solicitacoes.dataFim,
+              status: solicitacoes.status
+            }
+          }
+        )
+      );
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
+  
 
 }
