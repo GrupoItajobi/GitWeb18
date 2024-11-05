@@ -39,6 +39,19 @@
                 </tr>
               </ng-template>
             </p-table>
+
+            <div style="text-align: center;">
+
+              @if (selectedModulo.id) {
+              <p-button pRipple severity="success" label="Change" icon="pi pi-file-edit" class="mr-2"
+                (click)="showDialogModulo()" [disabled]="!selectedModulo!.id!" />
+              } @else {
+              <p-button pRipple severity="success" label="New" icon="pi pi-plus" class="mr-2"
+                (click)="showDialogApp()" [disabled]="!selectedGestao!.id!" />
+              }
+              <p-button pRipple severity="danger" label="Delete" icon="pi pi-trash"
+                (click)="confirmExcluir($event,'app')" [disabled]="!selectedModulo!.id!" />
+            </div>
           </div>
 
           <div>
@@ -441,7 +454,7 @@
 
 </p-dialog>
 
-<p-dialog id="dialogRole" [(visible)]="visibleTag" [style]="{ width: '40rem' }" [modal]="true"
+<p-dialog id="dialogTag" [(visible)]="visibleTag" [style]="{ width: '40rem' }" [modal]="true"
   (onHide)="onHideDialogApp()">
 
   <ng-template pTemplate="header">
@@ -485,6 +498,54 @@
           <button title="Salvar" label="Salvar" pButton pRipple (click)="saveTag()" pTooltip="Salvar"
             class="p-button-success" icon="pi pi-save"></button>
           <button title="Fechar" label="Sair" pButton pRipple (click)="closeDialogTag()" pTooltip="Salvar"
+            class="p-button-secondary" icon="pi pi-arrow-right"></button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</p-dialog>
+
+
+
+<p-dialog id="dialogModulo" [(visible)]="visibleModulo" [style]="{ width: '40rem' }" [modal]="true"
+  (onHide)="onHideDialogApp()">
+
+  <ng-template pTemplate="header">
+    <span class="font-bold">Cadastro de Módulo</span>
+    <span>Módulo {{selectedModulo.descricao}}</span>
+
+  </ng-template>
+
+  <form [formGroup]="formModulo">
+    <div style="margin: 5px;">
+      <div class="grid">
+        <div class="col-12">
+          <!-- <div class="card"> -->
+          <div class="grid">
+
+            <div class="col-12">
+              <p-divider></p-divider>
+            </div>
+            <div class="col-12" style="text-align: left;">
+              <div class="field grid">
+                <label for="descricao" class="col-fixed" style="width: 5rem">Descrição</label>
+                <div class="col">
+                  <input pInputText id="descricao" formControlName="descricao" style="width: 20rem">
+                </div>
+              </div>
+            </div>
+            <!-- </div> -->
+          </div>
+        </div>
+
+        <div class="col-12">
+          <p-divider></p-divider>
+        </div>
+        <div class="col-12">
+          <button title="Salvar" label="Salvar" pButton pRipple (click)="saveModulo()" pTooltip="Salvar"
+            class="p-button-success" icon="pi pi-save"></button>
+          <button title="Fechar" label="Sair" pButton pRipple (click)="closeDialogModulo()" pTooltip="Sair"
             class="p-button-secondary" icon="pi pi-arrow-right"></button>
         </div>
       </div>

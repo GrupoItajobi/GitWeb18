@@ -65,6 +65,7 @@ export class ControleAcessoPageComponent implements OnInit {
 
 
   formUser!: FormGroup;
+  formModulo!: FormGroup;
   formApp!: FormGroup;
   formRole!: FormGroup;
   formTag!: FormGroup;
@@ -105,6 +106,7 @@ export class ControleAcessoPageComponent implements OnInit {
   excluindo!: string;
 
   visibleApp: boolean = false;
+  visibleModulo: boolean = false;
   visibleRole: boolean = false;
   visibleTag: boolean = false;
   visibleListUser: boolean = false;
@@ -151,6 +153,10 @@ export class ControleAcessoPageComponent implements OnInit {
         this.errorHandleService.handle(error);
       })
   }
+    showDialogModulo() {
+    this.initFormModulo();
+    this.visibleModulo = true;
+  }
   showDialogRole() {
     this.initFormRole();
     this.visibleRole = true;
@@ -169,6 +175,9 @@ export class ControleAcessoPageComponent implements OnInit {
 
   closeDialogApp() {
     this.visibleApp = false;
+  }
+  closeDialogModulo() {
+    this.visibleModulo = false;
   }
   closeDialogRole() {
     this.visibleRole = false;
@@ -245,6 +254,9 @@ export class ControleAcessoPageComponent implements OnInit {
       });
   }
 
+  async saveModulo() {
+    console.log("desenvolver")
+  }
   async saveApp() {
     let app: MenuApp = this.formApp.value;
     if (!app.id) {
@@ -512,7 +524,9 @@ export class ControleAcessoPageComponent implements OnInit {
 
   initForms() {
     this.initFormApp();
+    this.initFormModulo();
     this.initFormRole();
+
     this.initFormTag();
     this.initFormUser();
   }
@@ -527,6 +541,17 @@ export class ControleAcessoPageComponent implements OnInit {
       });
 
     this.formRole.valueChanges.subscribe(newValue => { });
+  }
+
+  initFormModulo() {
+
+    this.formModulo = this.formBuilder.group(
+      {
+        id: new FormControl(this.selectedModulo.id),
+        descricao: new FormControl(this.selectedModulo.descricao, Validators.required),
+      });
+
+    this.formModulo.valueChanges.subscribe(newValue => { });
   }
 
   initFormTag() {
