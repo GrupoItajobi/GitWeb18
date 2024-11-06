@@ -57,7 +57,7 @@ import { AuthService } from '../../../../core/auth/auth.service';
     MenuCrudComponent,
 
     ListaUsuarioPageComponent
-],
+  ],
   templateUrl: './controle-acesso-page.component.html',
   styleUrl: './controle-acesso-page.component.scss'
 })
@@ -153,7 +153,7 @@ export class ControleAcessoPageComponent implements OnInit {
         this.errorHandleService.handle(error);
       })
   }
-    showDialogModulo() {
+  showDialogModulo() {
     this.initFormModulo();
     this.visibleModulo = true;
   }
@@ -255,8 +255,18 @@ export class ControleAcessoPageComponent implements OnInit {
   }
 
   async saveModulo() {
-    console.log("desenvolver")
+    let modulo: MenuModulo = this.formModulo.value;
+
+    await this.menuService.apiSalvarModulo(modulo)
+      .then(response => {
+        this.visibleModulo = false;
+        this.onRowSelectGestao(null);
+      })
+      .catch(error => {
+        this.errorHandleService.handle(error);
+      })
   }
+
   async saveApp() {
     let app: MenuApp = this.formApp.value;
     if (!app.id) {
@@ -380,7 +390,9 @@ export class ControleAcessoPageComponent implements OnInit {
       .then(request => {
         this.menuModulo = request;
       })
-      .catch()
+      .catch(error => {
+        this.errorHandleService.handle(error);
+      })
   }
 
   onRowSelectModulo(event: any) {
@@ -549,6 +561,9 @@ export class ControleAcessoPageComponent implements OnInit {
       {
         id: new FormControl(this.selectedModulo.id),
         descricao: new FormControl(this.selectedModulo.descricao, Validators.required),
+        menuGestaoId: new FormControl(this.selectedGestao.id),
+        ordem: new FormControl(this.selectedModulo.ordem),
+        version: new FormControl(this.selectedModulo.version),
       });
 
     this.formModulo.valueChanges.subscribe(newValue => { });
@@ -604,6 +619,16 @@ export class ControleAcessoPageComponent implements OnInit {
 
     if (this.excluindo == "app") {
       await this.apiExcluirApp();
+
+    } else if (this.excluindo == "modulo") {
+      await this.menuService.apiExcluirModulo(this.selectedModulo.id!)
+        .then(data => {
+          this.onRowSelectGestao(null);
+          this.toastMessageService.showSuccessMsg("Modulo Excluído!")
+        })
+        .catch(error => {
+          this.errorHandleService.handle(error);
+        });
 
     } else if (this.excluindo == "role") {
       await this.apiExcluirRole();

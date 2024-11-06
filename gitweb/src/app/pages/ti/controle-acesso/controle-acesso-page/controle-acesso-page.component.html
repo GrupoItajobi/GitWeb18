@@ -47,10 +47,10 @@
                 (click)="showDialogModulo()" [disabled]="!selectedModulo!.id!" />
               } @else {
               <p-button pRipple severity="success" label="New" icon="pi pi-plus" class="mr-2"
-                (click)="showDialogApp()" [disabled]="!selectedGestao!.id!" />
+                (click)="showDialogModulo()" [disabled]="!selectedGestao!.id!" />
               }
               <p-button pRipple severity="danger" label="Delete" icon="pi pi-trash"
-                (click)="confirmExcluir($event,'app')" [disabled]="!selectedModulo!.id!" />
+                (click)="confirmExcluir($event,'modulo')" [disabled]="!selectedModulo!.id!" />
             </div>
           </div>
 
@@ -513,10 +513,9 @@
 
   <ng-template pTemplate="header">
     <span class="font-bold">Cadastro de Módulo</span>
-    <span>Módulo {{selectedModulo.descricao}}</span>
 
   </ng-template>
-
+  <span class="font-bold">Módulo {{selectedGestao.descricao}}</span>
   <form [formGroup]="formModulo">
     <div style="margin: 5px;">
       <div class="grid">

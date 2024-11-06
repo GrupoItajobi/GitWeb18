@@ -83,7 +83,7 @@ export class MenuService implements OnInit {
       { id: 'D', descricao: "Digitação" },
       { id: 'P', descricao: "Processo" },
       { id: 'C', descricao: "Consulta" },
-      { id: 'I', descricao: "Interface"},
+      { id: 'I', descricao: "Interface" },
     ];
   }
   async preencherMenuApp() {
@@ -165,5 +165,49 @@ export class MenuService implements OnInit {
   }
 
 
+  async apiExcluirModulo(moduloId: string): Promise<any> {
+    const headers = new HttpHeaders()
+      .append('Content-Type', 'application/json');
+    return await firstValueFrom(
+      this.http.delete<any>(`${this.url}/modulo/${moduloId}`, { headers }))
+      .then(data => {
+        return data;
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
+
+  async apiSalvarModulo(modulo: MenuModulo): Promise<MenuModulo> {
+    const headers = new HttpHeaders()
+      .append('Content-Type', 'application/json');
+
+    const body = JSON.stringify(modulo);
+
+
+    if (modulo.id) {
+      // alterar
+      return await firstValueFrom(
+        this.http.put<MenuApp>(`${this.url}/modulo/${modulo.id}`, body, { headers }))
+        .then(data => {
+          return data;
+        })
+        .catch(error => {
+          return Promise.reject(error);
+        });
+
+    } else {
+      // incluir
+      return await firstValueFrom(
+        this.http.post<MenuApp>(`${this.url}/modulo`, body, { headers }))
+        .then(data => {
+          return data;
+        })
+        .catch(error => {
+          return Promise.reject(error);
+        });
+    }
+
+  }
 }
 

@@ -122,6 +122,7 @@ export class UtilSpringComponent implements OnInit {
     script += '}\n\n';
 
     // Deletar
+    script += '@Transactional \n';
     script += 'public void deletar(String id) { \n';
     script += 'delete(id); \n';
     script += '}\n \n';
