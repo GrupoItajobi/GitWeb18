@@ -81,6 +81,7 @@ export class SolicitacaoHeComponent {
   dataFim: any;
 
   selectedStatus!: string;
+  aprovadores: any;
   
 
   funcionarios: FuncionarioPorSolicitanteHe[] = [];
@@ -394,6 +395,7 @@ export class SolicitacaoHeComponent {
     return; 
   }
 
+  // Verifica se a data inicio é maio que a data final
   if(this.form.controls['dataInicio'].value > this.form.controls['dataFim'].value){
     this.toastService.showInfoMsg("Data inicio não pode ser menor que data final")
     return; 
@@ -402,14 +404,29 @@ export class SolicitacaoHeComponent {
     try {
       const response = await this.horaExtraService.solicitacoesPorSolicitante(solicitacoes);
       this.solicitacoes = response;
-      console.log(this.solicitacoes);
       this.dataInicio = this.form.controls['dataInicio'].value
       this.dataFim = this.form.controls['dataFim'].value
+      this.verificarAprovador();
       this.initForm();
 
     } catch (error) {
       this.errorHandleService.handle(error);
     }
+  }
+
+  // Esta verificando quem são os aprovadores de cada solicitação, caso não tenha aprovador aparece sem aprovador!
+  verificarAprovador(){
+
+    for (let index = 0; index < this.solicitacoes.length; index++) {
+      this.aprovadores = this.solicitacoes[index].aprovadores;    
+      
+      if (this.aprovadores && this.aprovadores.length > 0) {
+        this.aprovadores = this.aprovadores[0].usuarioAprovadorNome;
+      } else {
+        this.aprovadores = "Sem aprovador!";
+      }
+    }    
+   
   }
 
  

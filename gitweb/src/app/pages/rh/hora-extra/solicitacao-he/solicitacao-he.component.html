@@ -115,18 +115,11 @@
       [value]="solicitacoes"
       [tableStyle]="{ 'min-width': '50rem' }"
       [paginator]="true"
-      [rows]="15"
+      [rows]="20"
       [tableStyle]="{ 'min-width': '50rem' }"
     >
       <ng-template pTemplate="header">
-        <tr class="w-12">
-          <!-- <th class="w-4">Nome</th>
-          <th class="w-3">Departamento</th>
-          <th class="w-3">Descrição</th>
-          <th class="w-3">Solicitante</th>
-          <th class="w-3">Data</th>
-          <th class="w-3">Horas</th> -->
-
+        <tr class="w-12">        
           <th>Nome</th>
           <th>Departamento</th>
           <th>Descrição</th>
@@ -144,7 +137,7 @@
           <td class="col-departamento">{{ usuario.departamentoDescricao }}</td>
           <td class="col-descricao">{{ usuario.motivoDescricao }}</td>
           <td class="col-solicitante">{{ usuario.solicitadoPor }}</td>
-          <td class="col-solicitante">{{ usuario.aprovadores }}</td>
+          <td class="col-solicitante">{{ aprovadores}}</td>          
           <td class="col-data">{{ usuario.dia | date: 'dd/MM/yyyy' }}</td>
           <td class="col-horas">{{ minutoEmHoras(usuario.minutos) }}</td>
           <td class="col-horas">{{ usuario.observacao }}</td>
