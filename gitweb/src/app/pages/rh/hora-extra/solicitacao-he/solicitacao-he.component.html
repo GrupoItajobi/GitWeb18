@@ -141,13 +141,15 @@
           <td class="col-data">{{ usuario.dia | date: 'dd/MM/yyyy' }}</td>
           <td class="col-horas">{{ minutoEmHoras(usuario.minutos) }}</td>
           <td class="col-horas">{{ usuario.observacao }}</td>
-          <td style="text-align: center">
-            <i
+          @if(visualizaEdit){
+            <td style="text-align: center">
+              <i
               class="fas fa-edit"
               style="color: orange"
               (click)="edit(usuario)"
-            ></i>
-          </td>
+              ></i>
+            </td>
+          }
         </tr>
       </ng-template>
     </p-table>

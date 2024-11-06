@@ -50,21 +50,16 @@ import {
     TooltipModule,
     ProgressSpinnerModule,
     RadioButtonModule,
-    DatePipe
+    DatePipe,
   ],
   templateUrl: './solicitacao-he.component.html',
   styleUrl: './solicitacao-he.component.scss',
 })
-
 export class SolicitacaoHeComponent {
-  horas: any[] = [];
-  motivo: any[] = [];
-
   form!: FormGroup;
   solicitacoes: SolicitacaoHoraExtra[] = [];
-  usuarioEdit: SolicitacaoHoraExtra = {};
-
   buscaMotivo: MotivoHoraExtra[] = [];
+  usuarioEdit: SolicitacaoHoraExtra = {};
   buscaMotivoEdit: MotivoHoraExtra = {};
 
   dialogVisible: boolean = false;
@@ -72,17 +67,17 @@ export class SolicitacaoHeComponent {
   lovSolicitacaoVisible: boolean = false;
   gravarContinuar: boolean = false;
   loading: boolean = false;
+  visualizaEdit: boolean = false;
 
+  motivo: any[] = [];
+  horas: any[] = [];
+  dataInicio: any;
+  dataFim: any;
+  aprovadores: any;
+  selectedStatus!: string;
   codigoFuncionario: string = '';
 
   indiceSelecionado: number = 0;
-
-  dataInicio: any;
-  dataFim: any;
-
-  selectedStatus!: string;
-  aprovadores: any;
-  
 
   funcionarios: FuncionarioPorSolicitanteHe[] = [];
 
@@ -91,8 +86,7 @@ export class SolicitacaoHeComponent {
     private horaExtraService: HoraExtraService,
     private errorHandleService: ErrorHandleService,
     private toastService: ToastService,
-    private renderer: Renderer2,
-    // private datePipe: DatePipe
+    private renderer: Renderer2 // private datePipe: DatePipe
   ) {}
 
   ngOnInit() {
@@ -102,7 +96,6 @@ export class SolicitacaoHeComponent {
   }
 
   async init() {
-
     await this.horaExtraService
       .listarHoraExtra()
       .then((response) => {
@@ -121,7 +114,7 @@ export class SolicitacaoHeComponent {
         this.errorHandleService.handle(error);
       });
 
-      this.listaMotivos();
+    this.listaMotivos();
   }
 
   initForm() {
@@ -136,24 +129,26 @@ export class SolicitacaoHeComponent {
         value: this.usuarioEdit.funcionarioNome,
         disabled: true,
       }),
-      departamentoCodigo: new FormControl(
-        this.usuarioEdit.departamentoCodigo        
-      ),
+      departamentoCodigo: new FormControl(this.usuarioEdit.departamentoCodigo),
       departamentoDescricao: new FormControl(
         this.usuarioEdit.departamentoDescricao
       ),
-      motivoCodigo: new FormControl(
-        this.usuarioEdit.motivoCodigo,
-      
+      motivoCodigo: new FormControl(this.usuarioEdit.motivoCodigo),
+      motivoDescricao: new FormControl(
+        this.usuarioEdit.motivoDescricao,
+        Validators.required
       ),
-      motivoDescricao: new FormControl(this.usuarioEdit.motivoDescricao, Validators.required),
       usuarioNome: new FormControl(this.usuarioEdit.usuarioNome),
-      observacao: new FormControl(this.usuarioEdit.observacao, Validators.required),
+      observacao: new FormControl(
+        this.usuarioEdit.observacao,
+        Validators.required
+      ),
       dataHoraExtra: new FormControl(this.usuarioEdit.dia, Validators.required),
       dataInicio: new FormControl(this.dataInicio),
       dataFim: new FormControl(this.dataFim),
       horas: new FormControl(
-        minutosEmHorasStr(this.usuarioEdit.minutos, 'hh:mm'), Validators.required
+        minutosEmHorasStr(this.usuarioEdit.minutos, 'hh:mm'),
+        Validators.required
       ),
     });
 
@@ -173,7 +168,6 @@ export class SolicitacaoHeComponent {
   }
 
   async salvar() {
-
     this.loading = true;
     let minutosConvertido = this.converterMinutos();
     let usuario: SolicitacaoHoraExtraIncluir = {
@@ -265,29 +259,29 @@ export class SolicitacaoHeComponent {
     ];
   }
 
-  async listaMotivos(){
-
+  async listaMotivos() {
     let motivoDescricao: { label: string; value: number }[] = [];
 
     for (let index = 0; index < this.buscaMotivo.length; index++) {
       let descricao = this.buscaMotivo[index].descricao;
 
-      motivoDescricao.push({label: String(descricao), value: index+1})
+      motivoDescricao.push({ label: String(descricao), value: index + 1 });
     }
 
-    this.motivo = motivoDescricao
-
+    this.motivo = motivoDescricao;
   }
 
   onMotivoSelecionado(event: any) {
     this.indiceSelecionado = event.value.value;
-     return Number(this.indiceSelecionado);
+    return Number(this.indiceSelecionado);
   }
 
   edit(solicitaHoraExtra: SolicitacaoHoraExtraIncluir) {
-    this.usuarioEdit = solicitaHoraExtra;   
+    this.usuarioEdit = solicitaHoraExtra;
 
-    if(this.usuarioEdit.minutos == undefined){return}
+    if (this.usuarioEdit.minutos == undefined) {
+      return;
+    }
     this.initForm();
     this.dialogVisible = true;
   }
@@ -374,61 +368,82 @@ export class SolicitacaoHeComponent {
     this.renderer.selectRootElement('#funcionarioCodigo').focus();
   }
 
-  finalizaProcesso(){
+  finalizaProcesso() {
     this.loading = false;
 
-    if(this.usuarioEdit.id != ""){this.toastService.showSuccessMsg('Salvo!');}
-  } 
+    if (this.usuarioEdit.id != '') {
+      this.toastService.showSuccessMsg('Salvo!');
+    }
+  }
 
   // Busca as solicitações com base no filtro "data fim, data inicio, status".
   async buscarSolicitacoes() {
-  
     const solicitacoes = {
       dataInicio: this.form.controls['dataInicio'].value,
       dataFim: this.form.controls['dataFim'].value,
-      status: this.selectedStatus
+      status: this.selectedStatus,
     };
 
-     // Verifica se algum campo está nulo ou indefinido
-  if (!solicitacoes.dataInicio || !solicitacoes.dataFim || !solicitacoes.status) {
-    this.toastService.showErrorMsg("Por favor, preencha todos os campos obrigatórios.")
-    return; 
-  }
+    // Verifica se algum campo está nulo ou indefinido
+    if (
+      !solicitacoes.dataInicio ||
+      !solicitacoes.dataFim ||
+      !solicitacoes.status
+    ) {
+      this.toastService.showErrorMsg(
+        'Por favor, preencha todos os campos obrigatórios.'
+      );
+      return;
+    }
 
-  // Verifica se a data inicio é maio que a data final
-  if(this.form.controls['dataInicio'].value > this.form.controls['dataFim'].value){
-    this.toastService.showInfoMsg("Data inicio não pode ser menor que data final")
-    return; 
-  }
-  
+    // Verifica se a data inicio é maio que a data final
+    if (
+      this.form.controls['dataInicio'].value >
+      this.form.controls['dataFim'].value
+    ) {
+      this.toastService.showInfoMsg(
+        'Data inicio não pode ser menor que data final'
+      );
+      return;
+    }
+
     try {
-      const response = await this.horaExtraService.solicitacoesPorSolicitante(solicitacoes);
+      const response = await this.horaExtraService.solicitacoesPorSolicitante(
+        solicitacoes
+      );
       this.solicitacoes = response;
-      this.dataInicio = this.form.controls['dataInicio'].value
-      this.dataFim = this.form.controls['dataFim'].value
+      this.dataInicio = this.form.controls['dataInicio'].value;
+      this.dataFim = this.form.controls['dataFim'].value;
       this.verificarAprovador();
+      this.condicaoEdit();
       this.initForm();
-
     } catch (error) {
       this.errorHandleService.handle(error);
     }
   }
 
   // Esta verificando quem são os aprovadores de cada solicitação, caso não tenha aprovador aparece sem aprovador!
-  verificarAprovador(){
-
+  verificarAprovador() {
     for (let index = 0; index < this.solicitacoes.length; index++) {
-      this.aprovadores = this.solicitacoes[index].aprovadores;    
-      
+      this.aprovadores = this.solicitacoes[index].aprovadores;
+
       if (this.aprovadores && this.aprovadores.length > 0) {
         this.aprovadores = this.aprovadores[0].usuarioAprovadorNome;
       } else {
-        this.aprovadores = "Sem aprovador!";
+        this.aprovadores = 'Sem aprovador!';
       }
-    }    
-   
+    }
   }
 
- 
-  
+  condicaoEdit() {
+    for (let index = 0; index < this.solicitacoes.length; index++) {
+      let solicitacaoStatus = this.solicitacoes[index];
+
+      if (solicitacaoStatus.status == 'R' || solicitacaoStatus.status == 'A') {
+        this.visualizaEdit = false;
+      } else {
+        this.visualizaEdit = true;
+      }
+    }
+  }
 }
