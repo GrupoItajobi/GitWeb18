@@ -11,7 +11,6 @@ import { Component } from '@angular/core';
   styleUrl: './page-layout-bottom.component.scss',
 })
 export class PageLayoutBottonComponent {
-  showDireitosReservados: boolean = false;
 
   constructor(private storageService: StorageService, private router: Router) {}
 
@@ -38,9 +37,7 @@ export class PageLayoutBottonComponent {
   // Verifica se a rota é /home para atribuir um valor na variavel.
   verificaRota() {
     if (this.router.url == '/home') {
-      this.showDireitosReservados = true;
     } else {
-      this.showDireitosReservados = false;
     }
   }
 }

@@ -7,11 +7,12 @@ import { UrlService } from '../../services/url/url.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { UnidadesComponent } from '../../components/unidades/unidades/unidades.component';
 import { ToastModule } from 'primeng/toast';
+import { PageLayoutBottonComponent } from '../layout/page-layout-bottom/page-layout-bottom.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [GalleriaModule, UnidadesComponent, ToastModule],
+  imports: [GalleriaModule, UnidadesComponent, ToastModule, PageLayoutBottonComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -87,5 +88,5 @@ export class HomeComponent implements OnInit {
     }
 
   }
-  
+
 }
