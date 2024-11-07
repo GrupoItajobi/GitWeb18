@@ -18,7 +18,26 @@ export interface SolicitacaoHoraExtra{
     dataInicio?: Date,
     dataFim?: Date,
     aprovadores?: string,
-    status?: string
+    status?: string,
+    departamentoGef?: dadosGef
+}
+
+export interface dadosGef{
+    aprovadores: dadosAprovador[],
+    codigoEmpresa?: number,
+    codigoFilial?: number,
+    codigoGrupoEmpresa?: number,
+    departamentoCodigo?: number
+}
+
+export interface dadosAprovador{
+    aprovadorCodigo?: number,
+    aprovadorNome?: string,
+    departametoCodigo?: number,
+    departamentoDescricao?: string,
+    gef?: string,
+    id?: string,
+    version?: number
 }
 
 

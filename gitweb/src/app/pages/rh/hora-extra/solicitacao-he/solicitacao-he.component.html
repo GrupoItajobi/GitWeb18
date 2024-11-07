@@ -44,23 +44,7 @@
           Recusado
         </label>
       </div>
-      <hr>
-    </div>
-
-    <!-- Selecionar solicitações sem aprovador -->
-    <div class="flex flex-wrap">
-      <div class="flex align-items-center ml-2">
-        <p-radioButton
-          name="status"
-          value="E"
-          [(ngModel)]="selectedStatus"
-          inputId="semAprovador"
-        />
-        <label for="semAprovador" class="ml-1 mr-3 cursor-pointer">
-          Sem aprovador
-        </label>
-      </div>
-    </div>
+    </div>  
 
     <form [formGroup]="form" class="flex flex-row">
       <!-- Selecionar solicitações com data inicio-->
@@ -119,25 +103,33 @@
       [tableStyle]="{ 'min-width': '50rem' }"
     >
       <ng-template pTemplate="header">
-        <tr class="w-12">        
-          <th>Nome</th>
+        <tr class="w-12">   
+          <th style="width: 20rem">
+            Nome
+            <p-columnFilter
+              matchMode="contains"
+              field="funcionarioNome"
+              placeholder="Search"
+            />
+          </th>     
+          <!-- <th>Nome</th> -->
           <th>Departamento</th>
           <th>Descrição</th>
           <th>Solicitante</th>
-          <th>Aprovador</th>
+          <th>Aprovado por</th>
           <th>Data</th>
           <th>Horas</th>
           <th>Observação</th>
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-usuario>
+      <ng-template pTemplate="body" let-usuario let-rowIndex="rowIndex">
         <tr class="w-12">
           <td class="col-nome text-align: center">{{ usuario.funcionarioNome }}</td>
           <td class="col-departamento">{{ usuario.departamentoDescricao }}</td>
           <td class="col-descricao">{{ usuario.motivoDescricao }}</td>
           <td class="col-solicitante">{{ usuario.solicitadoPor }}</td>
-          <td class="col-solicitante">{{ aprovadores}}</td>          
+          <td class="col-solicitante">{{ aprovadores}} <button class="cursor-pointer" pTooltip="Consulte quem pode aprovar" (click)="visualizaAprovadores(rowIndex)">...</button> </td>           
           <td class="col-data">{{ usuario.dia | date: 'dd/MM/yyyy' }}</td>
           <td class="col-horas">{{ minutoEmHoras(usuario.minutos) }}</td>
           <td class="col-horas">{{ usuario.observacao }}</td>
@@ -189,6 +181,7 @@
             [options]="motivo"
             optionLabel="label"
             (onChange)="onMotivoSelecionado($event)"
+            placeholder="Escolha o motivo"
             class="flex flex-col w-full mt-1"
           />
         </div>
@@ -320,6 +313,35 @@
 </p-dialog>
 
 <!-- ######################################### -->
+
+<p-dialog
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  header="Aprovadores"
+  [modal]="true"
+  [(visible)]="aprovadoresDialogVisible"
+  class="max-w-sm text-center"
+>
+
+<p-table
+    [value]="aprovadorNomes"
+    [tableStyle]="{ 'min-width': '50rem' }"
+>
+  <ng-template pTemplate="header">
+    <tr>        
+      <th>Nome</th>        
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-nome>
+    <tr>
+      <td class="text-align: center">{{ nome }}</td>      
+    </tr>
+  </ng-template>
+</p-table>
+
+</p-dialog>
+
+<!-- ############################################################## -->
 
 <app-lov-funcionario-solicitante-he
   [(modalSolicita)]="lovSolicitacaoVisible"

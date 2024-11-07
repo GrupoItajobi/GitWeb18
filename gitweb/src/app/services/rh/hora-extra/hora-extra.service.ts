@@ -163,9 +163,6 @@ export class HoraExtraService implements OnInit {
     }
     return null;
   }
-  // async listarSolicitacoes(ueId: string, solicitacoesId: string): Promise<SolicitacaoHoraExtra[]> {
-  //   const headers = new HttpHeaders()
-  //     .append('Content-Type', 'application/json');
 
   async buscaMotivo(): Promise<MotivoHoraExtra[]> {
     const headers = new HttpHeaders()

@@ -25,7 +25,7 @@ import { LovFuncionarioSolicitanteHeComponent } from '../lov-funcionario-solicit
 import { SolicitacaoHoraExtraIncluir } from '../../../../models/rh/hora-extra/solicitacao-he-incluir';
 import { FuncionarioPorSolicitanteHe } from '../../../../models/rh/hora-extra/funcionario-por-solicitante-he';
 import { MotivoHoraExtra } from '../../../../models/rh/hora-extra/motivo-hora-extra';
-import { SolicitacaoHoraExtra } from '../../../../models/rh/hora-extra/solicitacao-he';
+import { dadosGef, SolicitacaoHoraExtra } from '../../../../models/rh/hora-extra/solicitacao-he';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePipe } from '@angular/common';
@@ -59,10 +59,15 @@ export class SolicitacaoHeComponent {
   form!: FormGroup;
   solicitacoes: SolicitacaoHoraExtra[] = [];
   buscaMotivo: MotivoHoraExtra[] = [];
+  dadosGefAprovadores: SolicitacaoHoraExtra[] = [];
   usuarioEdit: SolicitacaoHoraExtra = {};
   buscaMotivoEdit: MotivoHoraExtra = {};
 
+
+  aprovadorNomes: any[] = [];
+
   dialogVisible: boolean = false;
+  aprovadoresDialogVisible: boolean = false;
   saving: boolean = false;
   lovSolicitacaoVisible: boolean = false;
   gravarContinuar: boolean = false;
@@ -71,9 +76,11 @@ export class SolicitacaoHeComponent {
 
   motivo: any[] = [];
   horas: any[] = [];
+  aprovadoresNomes: any;
   dataInicio: any;
   dataFim: any;
   aprovadores: any;
+  nomeAprovador: any;
   selectedStatus!: string;
   codigoFuncionario: string = '';
 
@@ -216,11 +223,11 @@ export class SolicitacaoHeComponent {
       });
   }
 
-  horaInicio() {
-    this.form.patchValue({
-      dataInicio: nowString(),
-    });
-  }
+  // horaInicio() {
+  //   this.form.patchValue({
+  //     dataInicio: nowString(),
+  //   });
+  // }
 
   fecharDialog() {
     this.dialogVisible = false;
@@ -277,15 +284,17 @@ export class SolicitacaoHeComponent {
   }
 
   edit(solicitaHoraExtra: SolicitacaoHoraExtraIncluir) {
-    this.usuarioEdit = solicitaHoraExtra;
 
-    if (this.usuarioEdit.minutos == undefined) {
-      return;
-    }
+    this.usuarioEdit = solicitaHoraExtra;
     this.initForm();
+
+    this.form.patchValue({
+      motivoCodigo: solicitaHoraExtra.motivoCodigo
+  });
+
     this.dialogVisible = true;
   }
-
+  
   //Converte as horas selecionadas para minutos, para salvar no banco
   converterMinutos() {
     let tempo = this.form.value.horas.label;
@@ -412,8 +421,10 @@ export class SolicitacaoHeComponent {
         solicitacoes
       );
       this.solicitacoes = response;
+
       this.dataInicio = this.form.controls['dataInicio'].value;
       this.dataFim = this.form.controls['dataFim'].value;
+      this.buscaNomeAprovadores();
       this.verificarAprovador();
       this.condicaoEdit();
       this.initForm();
@@ -430,11 +441,49 @@ export class SolicitacaoHeComponent {
       if (this.aprovadores && this.aprovadores.length > 0) {
         this.aprovadores = this.aprovadores[0].usuarioAprovadorNome;
       } else {
-        this.aprovadores = 'Sem aprovador!';
+        this.aprovadores = 'Aguardando aprovação...';
       }
     }
   }
 
+  buscaNomeAprovadores(){
+    this.dadosGefAprovadores = this.solicitacoes  
+
+    for (let index = 0; index < this.dadosGefAprovadores.length; index++) {
+      let dadosAprovadores = this.dadosGefAprovadores[index];
+      
+      if(dadosAprovadores.departamentoGef?.aprovadores == undefined) return;
+      
+      for (let index = 0; index < dadosAprovadores.departamentoGef?.aprovadores.length; index++) {
+        this.aprovadoresNomes = dadosAprovadores.departamentoGef?.aprovadores[index];
+        
+      }
+
+    }
+  
+  } 
+
+  visualizaAprovadores(event: any) {
+    const indice = event; 
+    this.aprovadorNomes = []; 
+
+    this.aprovadoresDialogVisible = true;
+  
+    if (indice >= 0 && indice < this.dadosGefAprovadores.length) { 
+      const nomes = this.dadosGefAprovadores[indice];
+      const nome = nomes.departamentoGef?.aprovadores;
+  
+      if (nome) { 
+        const nomesAprovadores = nome.map((aprovador: any) => aprovador.aprovadorNome);
+        this.aprovadorNomes = nomesAprovadores; 
+      } 
+    } 
+  }
+
+
+
+
+  // Verifica se a solicitação está aprovada ou recusada, caso sim, então a variavel recebe um false e o botão editar não aparece para o usuario.
   condicaoEdit() {
     for (let index = 0; index < this.solicitacoes.length; index++) {
       let solicitacaoStatus = this.solicitacoes[index];
