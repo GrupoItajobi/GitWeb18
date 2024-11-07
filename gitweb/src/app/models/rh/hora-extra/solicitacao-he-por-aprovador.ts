@@ -1,7 +1,7 @@
 export interface SolicitacaoHoraExtraPorAprovador {
 
   id?: string,
-  gef?:string,
+  gef?: string,
   version?: number,
   funcionarioCodigo?: number,
   funcionarioNome?: string,
@@ -23,4 +23,6 @@ export interface SolicitacaoHoraExtraPorAprovador {
   nivelMax?: number,
   nivelAprovar?: number,
   status?: string,
+  ueId?: string,
+  ueDescricao?: string,
 }

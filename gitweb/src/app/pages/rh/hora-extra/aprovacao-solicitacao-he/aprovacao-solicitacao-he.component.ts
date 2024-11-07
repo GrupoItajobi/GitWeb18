@@ -28,6 +28,11 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
   loading: boolean = false;
   blockedDocument: boolean = false;
 
+
+  mapSolicitacoes = new Map<string, SolicitacaoHoraExtraPorAprovador>();
+  resumoPorUnidade: any[] = [];
+  resumoPorUnidadeSelected: any = {};
+
   constructor(
     private horaExtraService: HoraExtraService,
     private errorHandleService: ErrorHandleService,
@@ -49,17 +54,58 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
   async downloadSolicitacaoPorAprovador() {
     this.solicitacoes = [];
     this.solicitacoesSelecionadas = [];
+    this.resumoPorUnidade = [];
+
     await this.horaExtraService.solicitacaoPorAprovador()
       .then(response => {
-        this.solicitacoes = response;
-        console.log(this.solicitacoes)
+        this.loadMapSolicitacoes(response);
       })
       .catch(error => {
-
         this.errorHandleService.handle(error);
       })
 
   }
+
+  private loadMapSolicitacoes(solicitacoes: SolicitacaoHoraExtraPorAprovador[]) {
+    this.mapSolicitacoes = new Map<string, SolicitacaoHoraExtraPorAprovador>();
+    let mapResumoPorUeId = new Map<string, string[]>();
+
+    solicitacoes.forEach(tmp => {
+      this.mapSolicitacoes.set(tmp.id!, tmp);
+      let ids: string[] = [];
+      if (mapResumoPorUeId.has(tmp.ueId!)) {
+        ids = mapResumoPorUeId.get(tmp.ueId!)!;
+      }
+      ids.push(tmp.id!);
+      mapResumoPorUeId.set(tmp.ueId!, ids)
+    });
+    mapResumoPorUeId.forEach((value, key) => {
+      this.resumoPorUnidade.push({ ue: key, ids: value });
+    });
+
+    if (this.resumoPorUnidadeSelected) {
+      this.listarUe(this.resumoPorUnidadeSelected);
+    }
+  }
+
+  listarUe(ue: any) {
+    this.solicitacoes = [];
+    if (ue && ue.ids && ue.ids.length >0 ) {
+      ue.ids.forEach((element: any) => {
+        if (this.mapSolicitacoes.has(element)) {
+          this.solicitacoes.push(this.mapSolicitacoes.get(element)!);
+        }
+      });
+    }
+
+  }
+  onRowSelectResumoUe(event: any) {
+    this.listarUe(event.data);
+  }
+  onRowUnselectResumoUe(event: any) {
+    this.solicitacoes = [];
+  }
+
   loadOptionButtonCard() {
     this.optionsButtonCard = [
       {
@@ -84,7 +130,6 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
         await this.aprovar();
       } else if (event === 'reprovado') {
         await this.reprovar();
-
       }
     } else {
       this.toastService.showWarnMsg("Selecione uma Solicitação!")
@@ -97,13 +142,6 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
     await this.horaExtraService.aprovar(this.solicitacoesSelecionadas)
       .then(reponse => {
         this.downloadSolicitacaoPorAprovador();
-
-        // setTimeout(() => {
-        //   console.log('fechei o timeout')
-        //   this.loading = false;
-        //   this.blockedDocument = false;
-        // }, 5000);
-
         this.loading = false;
         this.blockedDocument = false;
       })
@@ -120,11 +158,6 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
     await this.horaExtraService.reprovar(this.solicitacoesSelecionadas)
       .then(reponse => {
         this.downloadSolicitacaoPorAprovador();
-        // setTimeout(() => {
-        //   console.log('fechei o timeout')
-        //   this.loading = false;
-        //   this.blockedDocument = false;
-        // }, 5000);
         this.loading = false;
         this.blockedDocument = false;
       })
