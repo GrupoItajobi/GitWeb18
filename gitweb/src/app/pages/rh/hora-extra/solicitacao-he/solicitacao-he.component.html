@@ -44,7 +44,7 @@
           Recusado
         </label>
       </div>
-    </div>  
+    </div>
 
     <form [formGroup]="form" class="flex flex-row">
       <!-- Selecionar solicitações com data inicio-->
@@ -103,7 +103,7 @@
       [tableStyle]="{ 'min-width': '50rem' }"
     >
       <ng-template pTemplate="header">
-        <tr class="w-12">   
+        <tr class="w-12">
           <th style="width: 20rem">
             Nome
             <p-columnFilter
@@ -111,7 +111,7 @@
               field="funcionarioNome"
               placeholder="Search"
             />
-          </th>     
+          </th>
           <!-- <th>Nome</th> -->
           <th>Departamento</th>
           <th>Descrição</th>
@@ -125,22 +125,35 @@
 
       <ng-template pTemplate="body" let-usuario let-rowIndex="rowIndex">
         <tr class="w-12">
-          <td class="col-nome text-align: center">{{ usuario.funcionarioNome }}</td>
+          <td class="col-nome text-align: center">
+            {{ usuario.funcionarioNome }}
+          </td>
           <td class="col-departamento">{{ usuario.departamentoDescricao }}</td>
           <td class="col-descricao">{{ usuario.motivoDescricao }}</td>
           <td class="col-solicitante">{{ usuario.solicitadoPor }}</td>
-          <td class="col-solicitante">{{ aprovadores}} <button class="cursor-pointer" pTooltip="Consulte quem pode aprovar" (click)="visualizaAprovadores(rowIndex)">...</button> </td>           
-          <td class="col-data">{{ usuario.dia | date: 'dd/MM/yyyy' }}</td>
+          <td class="col-solicitante">
+            {{ aprovadores }}
+            @if(visualizaBtnAprovador){
+            <button
+              class="cursor-pointer"
+              pTooltip="Consulte quem pode aprovar"
+              (click)="visualizaAprovadores(rowIndex)"
+            >
+              ...
+            </button>
+            }
+          </td>
+          <td class="col-data">{{ usuario.dia | date : "dd/MM/yyyy" }}</td>
           <td class="col-horas">{{ minutoEmHoras(usuario.minutos) }}</td>
           <td class="col-horas">{{ usuario.observacao }}</td>
           @if(visualizaEdit){
-            <td style="text-align: center">
-              <i
+          <td style="text-align: center">
+            <i
               class="fas fa-edit"
               style="color: orange"
               (click)="edit(usuario)"
-              ></i>
-            </td>
+            ></i>
+          </td>
           }
         </tr>
       </ng-template>
@@ -321,24 +334,19 @@
   [(visible)]="aprovadoresDialogVisible"
   class="max-w-sm text-center"
 >
+  <p-table [value]="aprovadorNomes" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nome</th>
+      </tr>
+    </ng-template>
 
-<p-table
-    [value]="aprovadorNomes"
-    [tableStyle]="{ 'min-width': '50rem' }"
->
-  <ng-template pTemplate="header">
-    <tr>        
-      <th>Nome</th>        
-    </tr>
-  </ng-template>
-
-  <ng-template pTemplate="body" let-nome>
-    <tr>
-      <td class="text-align: center">{{ nome }}</td>      
-    </tr>
-  </ng-template>
-</p-table>
-
+    <ng-template pTemplate="body" let-nome>
+      <tr>
+        <td class="text-align: center">{{ nome }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
 </p-dialog>
 
 <!-- ############################################################## -->

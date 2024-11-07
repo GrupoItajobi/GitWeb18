@@ -73,6 +73,7 @@ export class SolicitacaoHeComponent {
   gravarContinuar: boolean = false;
   loading: boolean = false;
   visualizaEdit: boolean = false;
+  visualizaBtnAprovador: boolean = false;
 
   motivo: any[] = [];
   horas: any[] = [];
@@ -490,8 +491,10 @@ export class SolicitacaoHeComponent {
 
       if (solicitacaoStatus.status == 'R' || solicitacaoStatus.status == 'A') {
         this.visualizaEdit = false;
+        this.visualizaBtnAprovador = false;
       } else {
         this.visualizaEdit = true;
+        this.visualizaBtnAprovador = true;
       }
     }
   }
