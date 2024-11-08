@@ -25,7 +25,10 @@ import { LovFuncionarioSolicitanteHeComponent } from '../lov-funcionario-solicit
 import { SolicitacaoHoraExtraIncluir } from '../../../../models/rh/hora-extra/solicitacao-he-incluir';
 import { FuncionarioPorSolicitanteHe } from '../../../../models/rh/hora-extra/funcionario-por-solicitante-he';
 import { MotivoHoraExtra } from '../../../../models/rh/hora-extra/motivo-hora-extra';
-import { dadosGef, SolicitacaoHoraExtra } from '../../../../models/rh/hora-extra/solicitacao-he';
+import {
+  dadosGef,
+  SolicitacaoHoraExtra,
+} from '../../../../models/rh/hora-extra/solicitacao-he';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePipe } from '@angular/common';
@@ -87,13 +90,12 @@ export class SolicitacaoHeComponent {
 
   indiceSelecionado: number = 0;
 
-
   constructor(
     private formBuilder: FormBuilder,
     private horaExtraService: HoraExtraService,
     private errorHandleService: ErrorHandleService,
     private toastService: ToastService,
-    private renderer: Renderer2 
+    private renderer: Renderer2
   ) {}
 
   ngOnInit() {
@@ -103,12 +105,11 @@ export class SolicitacaoHeComponent {
   }
 
   async init() {
-
-    this.selectedStatus = "S";
+    this.selectedStatus = 'S';
     const solicitacoes = {
       dataInicio: '0001-01-01',
       dataFim: '9999-12-31',
-      status: 'S'
+      status: 'S',
     };
 
     try {
@@ -226,6 +227,8 @@ export class SolicitacaoHeComponent {
   }
 
   async incluir(solicitaHe: SolicitacaoHoraExtraIncluir) {
+
+    console.log(solicitaHe);
     await this.horaExtraService
       .incluir(solicitaHe)
       .then((response) => {
@@ -235,13 +238,7 @@ export class SolicitacaoHeComponent {
       .catch((error) => {
         this.errorHandleService.handle(error);
       });
-  }
-
-  // horaInicio() {
-  //   this.form.patchValue({
-  //     dataInicio: nowString(),
-  //   });
-  // }
+  }  
 
   fecharDialog() {
     this.dialogVisible = false;
@@ -298,17 +295,34 @@ export class SolicitacaoHeComponent {
   }
 
   edit(solicitaHoraExtra: SolicitacaoHoraExtraIncluir) {
-
     this.usuarioEdit = solicitaHoraExtra;
-    this.initForm();
+    let tempo = minutosEmHorasStr(this.usuarioEdit.minutos, 'hh:mm');
 
-    this.form.patchValue({
-      motivoCodigo: solicitaHoraExtra.motivoCodigo
-  });
+    // Buscar o índice do horário na lista de horas
+    const indiceHorario = this.horas.findIndex((hora) => hora.label === tempo);
 
-    this.dialogVisible = true;
-  }
-  
+    // Verificar se o horário está na lista
+    if (indiceHorario !== -1) {
+        const horarioSelecionado = this.horas[indiceHorario];
+        let motivoDescricao: { label: string; value: number }[] = [];
+
+        this.initForm();
+
+        // Verificar se existe motivo e adicionar à lista de motivos
+        if (this.usuarioEdit.motivoCodigo !== undefined) {
+            motivoDescricao.push({ label: String(this.usuarioEdit.motivoDescricao), value: this.usuarioEdit.motivoCodigo });
+             // Atualiza a lista de opções para o dropdown
+        }
+
+        this.form.patchValue({
+            horas: horarioSelecionado,  
+            motivoDescricao: this.usuarioEdit.motivoCodigo  // Atualiza o valor selecionado
+        });
+
+        this.dialogVisible = true;
+    }
+}
+
   //Converte as horas selecionadas para minutos, para salvar no banco
   converterMinutos() {
     let tempo = this.form.value.horas.label;
@@ -460,42 +474,43 @@ export class SolicitacaoHeComponent {
     }
   }
 
-  buscaNomeAprovadores(){
-    this.dadosGefAprovadores = this.solicitacoes  
+  buscaNomeAprovadores() {
+    this.dadosGefAprovadores = this.solicitacoes;
 
     for (let index = 0; index < this.dadosGefAprovadores.length; index++) {
       let dadosAprovadores = this.dadosGefAprovadores[index];
-      
-      if(dadosAprovadores.departamentoGef?.aprovadores == undefined) return;
-      
-      for (let index = 0; index < dadosAprovadores.departamentoGef?.aprovadores.length; index++) {
-        this.aprovadoresNomes = dadosAprovadores.departamentoGef?.aprovadores[index];
-        
+
+      if (dadosAprovadores.departamentoGef?.aprovadores == undefined) return;
+
+      for (
+        let index = 0;
+        index < dadosAprovadores.departamentoGef?.aprovadores.length;
+        index++
+      ) {
+        this.aprovadoresNomes =
+          dadosAprovadores.departamentoGef?.aprovadores[index];
       }
-
     }
-  
-  } 
-
-  visualizaAprovadores(event: any) {
-    const indice = event; 
-    this.aprovadorNomes = []; 
-
-    this.aprovadoresDialogVisible = true;
-  
-    if (indice >= 0 && indice < this.dadosGefAprovadores.length) { 
-      const nomes = this.dadosGefAprovadores[indice];
-      const nome = nomes.departamentoGef?.aprovadores;
-  
-      if (nome) { 
-        const nomesAprovadores = nome.map((aprovador: any) => aprovador.aprovadorNome);
-        this.aprovadorNomes = nomesAprovadores; 
-      } 
-    } 
   }
 
+  visualizaAprovadores(event: any) {
+    const indice = event;
+    this.aprovadorNomes = [];
 
+    this.aprovadoresDialogVisible = true;
 
+    if (indice >= 0 && indice < this.dadosGefAprovadores.length) {
+      const nomes = this.dadosGefAprovadores[indice];
+      const nome = nomes.departamentoGef?.aprovadores;
+
+      if (nome) {
+        const nomesAprovadores = nome.map(
+          (aprovador: any) => aprovador.aprovadorNome
+        );
+        this.aprovadorNomes = nomesAprovadores;
+      }
+    }
+  }
 
   // Verifica se a solicitação está aprovada ou recusada, caso sim, então a variavel recebe um false e o botão editar não aparece para o usuario.
   condicaoEdit() {
