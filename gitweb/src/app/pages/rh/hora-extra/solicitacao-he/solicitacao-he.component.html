@@ -131,7 +131,7 @@
           <td class="col-departamento">{{ usuario.departamentoDescricao }}</td>
           <td class="col-descricao">{{ usuario.motivoDescricao }}</td>
           <td class="col-solicitante">{{ usuario.solicitadoPor }}</td>
-          <td class="col-solicitante">
+          <td class="col-aprovador w-2">
             {{ aprovadores }}
             @if(visualizaBtnAprovador){
             <button
@@ -145,7 +145,7 @@
           </td>
           <td class="col-data">{{ usuario.dia | date : "dd/MM/yyyy" }}</td>
           <td class="col-horas">{{ minutoEmHoras(usuario.minutos) }}</td>
-          <td class="col-horas">{{ usuario.observacao }}</td>
+          <td class="col-observacao">{{ usuario.observacao }}</td>
           @if(visualizaEdit){
           <td style="text-align: center">
             <i

@@ -104,14 +104,39 @@ export class SolicitacaoHeComponent {
   }
 
   async init() {
-    await this.horaExtraService
-      .listarHoraExtra()
-      .then((response) => {
-        this.solicitacoes = response;
-      })
-      .catch((error) => {
-        this.errorHandleService.handle(error);
-      });
+
+    this.selectedStatus = "S";
+    const solicitacoes = {
+      dataInicio: '0001-01-01',
+      dataFim: '9999-12-31',
+      status: 'S'
+    };
+
+    try {
+      const response = await this.horaExtraService.listarHoraExtra(
+        solicitacoes
+      );
+      this.solicitacoes = response;
+
+      this.dataInicio = this.form.controls['dataInicio'].value;
+      this.dataFim = this.form.controls['dataFim'].value;
+      this.buscaNomeAprovadores();
+      this.verificarAprovador();
+      this.condicaoEdit();
+      this.initForm();
+    } catch (error) {
+      this.errorHandleService.handle(error);
+    }
+
+    // await this.horaExtraService
+    //   .listarHoraExtra()
+    //   .then((response) => {
+    //     console.log(response);
+    //     this.solicitacoes = response;
+    //   })
+    //   .catch((error) => {
+    //     this.errorHandleService.handle(error);
+    //   });
 
     await this.horaExtraService
       .buscaMotivo()
@@ -406,7 +431,7 @@ export class SolicitacaoHeComponent {
       return;
     }
 
-    // Verifica se a data inicio é maio que a data final
+    // Verifica se a data inicio é maior que a data final
     if (
       this.form.controls['dataInicio'].value >
       this.form.controls['dataFim'].value
