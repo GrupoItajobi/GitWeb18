@@ -62,9 +62,10 @@ export class SolicitacaoHeComponent {
   dadosGefAprovadores: SolicitacaoHoraExtra[] = [];
   usuarioEdit: SolicitacaoHoraExtra = {};
   buscaMotivoEdit: MotivoHoraExtra = {};
-
-
+  funcionarios: FuncionarioPorSolicitanteHe[] = [];
   aprovadorNomes: any[] = [];
+  horas: any[] = [];
+  motivo: any[] = [];
 
   dialogVisible: boolean = false;
   aprovadoresDialogVisible: boolean = false;
@@ -75,26 +76,24 @@ export class SolicitacaoHeComponent {
   visualizaEdit: boolean = false;
   visualizaBtnAprovador: boolean = false;
 
-  motivo: any[] = [];
-  horas: any[] = [];
   aprovadoresNomes: any;
   dataInicio: any;
   dataFim: any;
   aprovadores: any;
   nomeAprovador: any;
+
   selectedStatus!: string;
   codigoFuncionario: string = '';
 
   indiceSelecionado: number = 0;
 
-  funcionarios: FuncionarioPorSolicitanteHe[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private horaExtraService: HoraExtraService,
     private errorHandleService: ErrorHandleService,
     private toastService: ToastService,
-    private renderer: Renderer2 // private datePipe: DatePipe
+    private renderer: Renderer2 
   ) {}
 
   ngOnInit() {
@@ -117,7 +116,6 @@ export class SolicitacaoHeComponent {
         solicitacoes
       );
       this.solicitacoes = response;
-
       this.dataInicio = this.form.controls['dataInicio'].value;
       this.dataFim = this.form.controls['dataFim'].value;
       this.buscaNomeAprovadores();
@@ -127,16 +125,6 @@ export class SolicitacaoHeComponent {
     } catch (error) {
       this.errorHandleService.handle(error);
     }
-
-    // await this.horaExtraService
-    //   .listarHoraExtra()
-    //   .then((response) => {
-    //     console.log(response);
-    //     this.solicitacoes = response;
-    //   })
-    //   .catch((error) => {
-    //     this.errorHandleService.handle(error);
-    //   });
 
     await this.horaExtraService
       .buscaMotivo()
