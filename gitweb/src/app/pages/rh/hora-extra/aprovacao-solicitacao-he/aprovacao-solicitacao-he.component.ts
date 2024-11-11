@@ -109,12 +109,12 @@ export class AprovacaoSolicitacaoHeComponent implements OnInit {
   loadOptionButtonCard() {
     this.optionsButtonCard = [
       {
-        img: "/assets/layout/img/sistema/aprovado.png",
+        img: "https://gitweb.usinaitajobi.com.br/git-ged/layout/img/sistema/aprovado.png",
         title: "Aprovar",
         returnWhenClicked: "aprovado",
       },
       {
-        img: "/assets/layout/img/sistema/reprovado.png",
+        img: "https://gitweb.usinaitajobi.com.br/git-ged/layout/img/sistema/reprovado.png",
         title: "Reprovar",
         returnWhenClicked: "reprovado",
       },

@@ -12,9 +12,9 @@ import { BadgeModule } from 'primeng/badge';
 })
 export class CaminhaoCarregamentoComponent implements OnInit {
 
-  iconeCaminhaoOK = "/assets/layout/img/frota/caminhao-verde.png";
-  iconeCaminhaoSemOrdem = "/assets/layout/img/frota/caminhao-amarelo.png";
-  iconeCaminhaoBloqueado = "/assets/layout/img/frota/caminhao-vermelho.png";
+  iconeCaminhaoOK = "https://gitweb.usinaitajobi.com.br/git-ged/layout/img/frota/caminhao-verde.png";
+  iconeCaminhaoSemOrdem = "https://gitweb.usinaitajobi.com.br/git-ged/layout/img/frota/caminhao-amarelo.png";
+  iconeCaminhaoBloqueado = "https://gitweb.usinaitajobi.com.br/git-ged/layout/img/frota/caminhao-vermelho.png";
 
   @Output() selecionouCarregamento = new EventEmitter();
 
@@ -99,8 +99,8 @@ export class CaminhaoCarregamentoComponent implements OnInit {
     return this.ciclo.quantidadeVolume
   }
 
-  colorSaldo(){
-    if (this.ciclo.simuladoSaldoEstoque!<0) {
+  colorSaldo() {
+    if (this.ciclo.simuladoSaldoEstoque! < 0) {
       return 'red';
     }
     return 'black'

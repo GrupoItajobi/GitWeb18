@@ -92,14 +92,14 @@ export class ButtonCardComponent implements OnInit, OnChanges {
     this.options = [
       {
         id: 1,
-        img: "/assets/layout/img/sistema/emogiGIt.png",
+        img: "https://gitweb.usinaitajobi.com.br/git-ged/layout/img/sistema/emogiGIt.png",
         title: "Title1",
         clicked: false,
         returnWhenClicked: "option01"
       },
       {
         id: 2,
-        img: "/assets/layout/img/sistema/emogiGIt.png",
+        img: "https://gitweb.usinaitajobi.com.br/git-ged/layout/img/sistema/emogiGIt.png",
         title: "Title2",
         titleDescription: "desc 2",
         clicked: false,

@@ -1,33 +1,33 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MuralService {
-  constructor(
-    private httpClient:HttpClient
-  ) {}
 
-  getImages() :any{
+
+  urlGed: string;
+  constructor(
+    private httpClient: HttpClient
+  ) {
+    this.urlGed = environment.ged;
+  }
+
+  getImages(): any {
     let images = [
       /* PhotoService */
       {
-        // itemImageSrc: 'https://registadeu.com.br/wp-content/uploads/2018/11/Ayrton_Senna.jpg',
-        itemImageSrc: 'assets/layout/img/logo/logo.png',
-        thumbnailImageSrc: 'assets/layout/img/logo/logo.png',
+        itemImageSrc: `${this.urlGed}/layout/img/logo/logo.png`,
+        thumbnailImageSrc: `${this.urlGed}/layout/img/logo/logo.png`,
         alt: 'Grupo Itajobi',
         title: 'Grupo Itajobi'
       },
       {
-        itemImageSrc: 'assets/mural/mes.jpg',
-        thumbnailImageSrc: 'assets/mural/mes.jpg',
+        itemImageSrc: `${this.urlGed}/mural/mes.jpg`,
+        thumbnailImageSrc: `${this.urlGed}/mural/mes.jpg`,
       },
-      {
-        itemImageSrc: 'assets/layout/img/logo/logo.png',
-        thumbnailImageSrc: 'assets/layout/img/logo/logo.png',
-      },
-
 
     ];
     return images;

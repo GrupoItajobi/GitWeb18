@@ -1,37 +1,37 @@
-import { CarregamentoAlterarOrdem } from './../../../../models/carregamento-produto/CarregamentoAlterarOrdem';
-import { CarregamentoESaldo } from './../../../../models/carregamento-produto/CarregamentoESaldo';
-import { CarregamentoFila } from './../../../../models/carregamento-produto/CarregamentoFila';
-import { TemPermissaoService } from '../../../../services/tem-permissao/tem-permissao.service';
-import { CaminhaoCarregamentoComponent } from './../../../../components/equipamentos/caminhao-carregamento/caminhao-carregamento/caminhao-carregamento.component';
+import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { UnidadesComponent } from "../../../../components/unidades/unidades/unidades.component";
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
-import { ToastService } from '../../../../services/toast/toast.service';
-import { ErrorHandleService } from '../../../../services/error-handle/error-handle.service';
-import { CarregamentoProdutoService } from '../../../../services/carregamento-produto/carregamento-produto.service';
-import { UrlService } from '../../../../services/url/url.service';
 import { Router } from '@angular/router';
-import { CarregamentoSaida } from '../../../../models/carregamento-produto/CarregamentoSaida';
-import { BlockUIModule } from 'primeng/blockui';
+
 import { PanelModule } from 'primeng/panel';
+import { BlockUIModule } from 'primeng/blockui';
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { CommonModule, DatePipe } from '@angular/common';
 import { BadgeModule } from 'primeng/badge';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { DragDropModule } from 'primeng/dragdrop';
 import { InputMaskModule } from 'primeng/inputmask';
 import { InputTextModule } from 'primeng/inputtext';
-import { EstoqueProduto } from '../../../../models/producao/estoqueProduto';
-import { TableModule } from 'primeng/table';
+import { MessageService } from 'primeng/api';
 
-// export class CarregamentoProdutoAccess {
-//   public static MAXIMUM_NUMBER = 10;
-// }
+import { CarregamentoSaida } from '../../../../models/carregamento-produto/CarregamentoSaida';
+import { UnidadesComponent } from "../../../../components/unidades/unidades/unidades.component";
+import { EstoqueProduto } from '../../../../models/producao/estoqueProduto';
+import { CarregamentoAlterarOrdem } from './../../../../models/carregamento-produto/CarregamentoAlterarOrdem';
+import { CarregamentoESaldo } from './../../../../models/carregamento-produto/CarregamentoESaldo';
+import { CarregamentoFila } from './../../../../models/carregamento-produto/CarregamentoFila';
+import { CaminhaoCarregamentoComponent } from './../../../../components/equipamentos/caminhao-carregamento/caminhao-carregamento/caminhao-carregamento.component';
+
+import { TemPermissaoService } from '../../../../services/tem-permissao/tem-permissao.service';
+import { ToastService } from '../../../../services/toast/toast.service';
+import { ErrorHandleService } from '../../../../services/error-handle/error-handle.service';
+import { CarregamentoProdutoService } from '../../../../services/carregamento-produto/carregamento-produto.service';
+import { UrlService } from '../../../../services/url/url.service';
+
 
 const tagCaminhaParaFila: string = "tagCaminhaParaFila";
 const tagRecarregar: string = "tagRecarregar";
@@ -58,7 +58,6 @@ const tagRecarregar: string = "tagRecarregar";
     InputMaskModule,
     InputTextModule,
     TableModule,
-    DatePipe,
   ],
   templateUrl: './carregamento-produto.component.html',
   styleUrl: './carregamento-produto.component.scss'
@@ -67,14 +66,14 @@ const tagRecarregar: string = "tagRecarregar";
 
 export class CarregamentoProdutoComponent implements OnInit, OnDestroy {
 
-  iconeCaminhaoOK = "/assets/layout/img/frota/caminhao-verde.png"
-  iconeCaminhaoSemOrdem = "/assets/layout/img/frota/caminhao-amarelo.png"
-  iconeCaminhaoBloqueado = "/assets/layout/img/frota/caminhao-vermelho.png"
+  iconeCaminhaoOK = "https://gitweb.usinaitajobi.com.br/git-ged/layout/img/frota/caminhao-verde.png"
+  iconeCaminhaoSemOrdem = "https://gitweb.usinaitajobi.com.br/git-ged/layout/img/frota/caminhao-amarelo.png"
+  iconeCaminhaoBloqueado = "https://gitweb.usinaitajobi.com.br/git-ged/layout/img/frota/caminhao-vermelho.png"
 
-  iconeInbox = "/assets/layout/img/sistema/inbox.png"
-  iconeDestino = "/assets/layout/img/frota/destino.png"
-  iconeCaminhaoDeCarga = "/assets/layout/img/frota/caminhao-de-carga.png"
-  iconeCarregamento = "/assets/layout/img/frota/carregamento.png"
+  iconeInbox = "https://gitweb.usinaitajobi.com.br/git-ged/layout/img/sistema/inbox.png"
+  iconeDestino = "https://gitweb.usinaitajobi.com.br/git-ged/layout/img/frota/destino.png"
+  iconeCaminhaoDeCarga = "https://gitweb.usinaitajobi.com.br/git-ged/layout/img/frota/caminhao-de-carga.png"
+  iconeCarregamento = "https://gitweb.usinaitajobi.com.br/git-ged/layout/img/frota/carregamento.png"
 
   //todos os carregadmento
   carregamentos?: CarregamentoFila[] = [];
