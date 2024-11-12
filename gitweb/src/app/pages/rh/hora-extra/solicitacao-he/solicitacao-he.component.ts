@@ -68,7 +68,7 @@ export class SolicitacaoHeComponent {
   funcionarios: FuncionarioPorSolicitanteHe[] = [];
   aprovadorNomes: any[] = [];
   horas: any[] = [];
-  motivo: any[] = [];
+  motivos: PadraoDropDown[] = [];
 
   dialogVisible: boolean = false;
   aprovadoresDialogVisible: boolean = false;
@@ -96,12 +96,12 @@ export class SolicitacaoHeComponent {
     private errorHandleService: ErrorHandleService,
     private toastService: ToastService,
     private renderer: Renderer2
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initForm();
-    this.init();
     this.listaHoras();
+    this.init();
   }
 
   async init() {
@@ -117,8 +117,8 @@ export class SolicitacaoHeComponent {
         solicitacoes
       );
       this.solicitacoes = response;
-      this.dataInicio = this.form.controls['dataInicio'].value;
-      this.dataFim = this.form.controls['dataFim'].value;
+      this.dataInicio = this.form.value.dataInicio;
+      this.dataFim = this.form.value.dataFim;
       this.buscaNomeAprovadores();
       this.verificarAprovador();
       this.condicaoEdit();
@@ -140,6 +140,7 @@ export class SolicitacaoHeComponent {
   }
 
   initForm() {
+
     this.form = this.formBuilder.group({
       id: new FormControl(this.usuarioEdit.id),
       version: new FormControl(this.usuarioEdit.version),
@@ -155,7 +156,8 @@ export class SolicitacaoHeComponent {
       departamentoDescricao: new FormControl(
         this.usuarioEdit.departamentoDescricao
       ),
-      motivoCodigo: new FormControl(this.usuarioEdit.motivoCodigo),
+
+      motivoCodigo: new FormControl<string>(this.usuarioEdit.motivoCodigo?.toString()!),
       motivoDescricao: new FormControl(
         this.usuarioEdit.motivoDescricao,
         Validators.required
@@ -173,8 +175,7 @@ export class SolicitacaoHeComponent {
         Validators.required
       ),
     });
-
-    this.form.valueChanges.subscribe((newValue) => {});
+    this.form.valueChanges.subscribe((newValue) => { });
   }
 
   minutoEmHoras(minutos: number): string {
@@ -197,7 +198,8 @@ export class SolicitacaoHeComponent {
       version: this.form.value.version,
       funcionarioCodigo: this.form.value.funcionarioCodigo,
       departamentoCodigo: this.form.value.departamentoCodigo,
-      motivoCodigo: this.indiceSelecionado,
+      motivoCodigo: Number(this.form.value.motivoCodigo),
+      observacao: this.form.value.observacao,
       dia: this.form.value.dataHoraExtra,
       minutos: minutosConvertido,
     };
@@ -228,7 +230,6 @@ export class SolicitacaoHeComponent {
 
   async incluir(solicitaHe: SolicitacaoHoraExtraIncluir) {
 
-    console.log(solicitaHe);
     await this.horaExtraService
       .incluir(solicitaHe)
       .then((response) => {
@@ -238,7 +239,7 @@ export class SolicitacaoHeComponent {
       .catch((error) => {
         this.errorHandleService.handle(error);
       });
-  }  
+  }
 
   fecharDialog() {
     this.dialogVisible = false;
@@ -278,15 +279,20 @@ export class SolicitacaoHeComponent {
   }
 
   async listaMotivos() {
-    let motivoDescricao: { label: string; value: number }[] = [];
+    // let motivoDescricao: { label: string; value: number }[] = [];
 
-    for (let index = 0; index < this.buscaMotivo.length; index++) {
-      let descricao = this.buscaMotivo[index].descricao;
+    // for (let index = 0; index < this.buscaMotivo.length; index++) {
+    //   let descricao = this.buscaMotivo[index].descricao;
 
-      motivoDescricao.push({ label: String(descricao), value: index + 1 });
-    }
+    //   motivoDescricao.push({ label: String(descricao), value: index + 1 });
+    // }
+    // this.motivo = motivoDescricao;
 
-    this.motivo = motivoDescricao;
+    this.motivos = [];
+    this.buscaMotivo.forEach(m => {
+      this.motivos.push({ descricao: m.descricao!, valor: m.id! })
+    });
+
   }
 
   onMotivoSelecionado(event: any) {
@@ -294,34 +300,46 @@ export class SolicitacaoHeComponent {
     return Number(this.indiceSelecionado);
   }
 
+  onChangeMotivo(event: any) {
+    console.log('onChangeMotivo');
+    console.log(event)
+
+    let changedValue = event.value;
+    let domEvent = event.originalEvent;
+    console.log(changedValue);
+    console.log(domEvent);
+    console.log(this.form.value)
+
+  }
   edit(solicitaHoraExtra: SolicitacaoHoraExtraIncluir) {
     this.usuarioEdit = solicitaHoraExtra;
     let tempo = minutosEmHorasStr(this.usuarioEdit.minutos, 'hh:mm');
 
+    console.log(solicitaHoraExtra)
+    console.log(this.usuarioEdit)
     // Buscar o índice do horário na lista de horas
     const indiceHorario = this.horas.findIndex((hora) => hora.label === tempo);
 
     // Verificar se o horário está na lista
     if (indiceHorario !== -1) {
-        const horarioSelecionado = this.horas[indiceHorario];
-        let motivoDescricao: { label: string; value: number }[] = [];
+      const horarioSelecionado = this.horas[indiceHorario];
+      let motivoDescricao: { label: string; value: number }[] = [];
 
-        this.initForm();
+      this.initForm();
+      // Verificar se existe motivo e adicionar à lista de motivos
+      // if (this.usuarioEdit.motivoCodigo !== undefined) {
+      //   motivoDescricao.push({ label: String(this.usuarioEdit.motivoDescricao), value: this.usuarioEdit.motivoCodigo });
+      //   // Atualiza a lista de opções para o dropdown
+      // }
 
-        // Verificar se existe motivo e adicionar à lista de motivos
-        if (this.usuarioEdit.motivoCodigo !== undefined) {
-            motivoDescricao.push({ label: String(this.usuarioEdit.motivoDescricao), value: this.usuarioEdit.motivoCodigo });
-             // Atualiza a lista de opções para o dropdown
-        }
+      this.form.patchValue({
+        horas: horarioSelecionado,
+        // motivoDescricao: this.usuarioEdit.motivoCodigo  // Atualiza o valor selecionado
+      });
 
-        this.form.patchValue({
-            horas: horarioSelecionado,  
-            motivoDescricao: this.usuarioEdit.motivoCodigo  // Atualiza o valor selecionado
-        });
-
-        this.dialogVisible = true;
+      this.dialogVisible = true;
     }
-}
+  }
 
   //Converte as horas selecionadas para minutos, para salvar no banco
   converterMinutos() {
@@ -526,4 +544,10 @@ export class SolicitacaoHeComponent {
       }
     }
   }
+}
+
+
+export interface PadraoDropDown {
+  descricao: string,
+  valor: Number,
 }

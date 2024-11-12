@@ -1,5 +1,5 @@
 export interface MotivoHoraExtra{
-    id?: string,
+    id?: number,
     version?: number,
     descricao?: string
 }

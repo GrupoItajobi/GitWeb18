@@ -1,4 +1,4 @@
-export interface SolicitacaoHoraExtraIncluir{    
+export interface SolicitacaoHoraExtraIncluir{
     id?: string,
     version?: number,
     funcionarioCodigo?: number,
@@ -6,8 +6,7 @@ export interface SolicitacaoHoraExtraIncluir{
     motivoCodigo?: number,
     dia?: Date,
     minutos?: number,
-    observacao?: string, 
-    motivoCod?: number,  
+    observacao?: string,
     quantidadeAprovador?: number
 }
 

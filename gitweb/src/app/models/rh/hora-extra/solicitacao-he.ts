@@ -6,8 +6,7 @@ export interface SolicitacaoHoraExtra{
     departamentoCodigo?: number,
     departamentoDescricao?: string,
     motivoCodigo?: number,
-    motivoCod?: number,
-    motivoDescricao?: string,  
+    motivoDescricao?: string,
     dia?: Date,
     minutos?: number,
     usuarioNome?: string,
@@ -43,4 +42,3 @@ export interface dadosAprovador{
 
 
 
-    
