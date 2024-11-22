@@ -78,6 +78,7 @@ export class SolicitacaoHeComponent {
   loading: boolean = false;
   visualizaEdit: boolean = false;
   visualizaBtnAprovador: boolean = false;
+  visualizaBtnSalvarContinuar: boolean = false;
 
   aprovadoresNomes: any;
   dataInicio: any;
@@ -89,6 +90,8 @@ export class SolicitacaoHeComponent {
   codigoFuncionario: string = '';
 
   indiceSelecionado: number = 0;
+
+  rowIndexEdit: number = -1;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -102,6 +105,7 @@ export class SolicitacaoHeComponent {
     this.initForm();
     this.listaHoras();
     this.init();
+    this.visualizaBtnSalvarContinuar = true;
   }
 
   async init() {
@@ -141,6 +145,7 @@ export class SolicitacaoHeComponent {
 
   initForm() {
 
+
     this.form = this.formBuilder.group({
       id: new FormControl(this.usuarioEdit.id),
       version: new FormControl(this.usuarioEdit.version),
@@ -157,10 +162,9 @@ export class SolicitacaoHeComponent {
         this.usuarioEdit.departamentoDescricao
       ),
 
-      motivoCodigo: new FormControl<string>(this.usuarioEdit.motivoCodigo?.toString()!),
+      motivoCodigo: new FormControl<string>(this.usuarioEdit.motivoCodigo?.toString()!, Validators.required),
       motivoDescricao: new FormControl(
-        this.usuarioEdit.motivoDescricao,
-        Validators.required
+        this.usuarioEdit.motivoDescricao
       ),
       usuarioNome: new FormControl(this.usuarioEdit.usuarioNome),
       observacao: new FormControl(
@@ -175,7 +179,9 @@ export class SolicitacaoHeComponent {
         Validators.required
       ),
     });
+
     this.form.valueChanges.subscribe((newValue) => { });
+    this.visualizaBtnSalvarContinuar = true;
   }
 
   minutoEmHoras(minutos: number): string {
@@ -213,6 +219,7 @@ export class SolicitacaoHeComponent {
     if (this.gravarContinuar == false) {
       this.fecharDialog();
     }
+    
   }
 
   async alterar(solicitaHe: SolicitacaoHoraExtraIncluir) {
@@ -220,6 +227,7 @@ export class SolicitacaoHeComponent {
       .alterar(solicitaHe)
       .then((response) => {
         this.usuarioEdit = response;
+        this.solicitacoes[this.rowIndexEdit] = this.usuarioEdit;
       })
       .catch((error) => {
         this.errorHandleService.handle(error);
@@ -301,43 +309,36 @@ export class SolicitacaoHeComponent {
   }
 
   onChangeMotivo(event: any) {
-    console.log('onChangeMotivo');
-    console.log(event)
-
     let changedValue = event.value;
     let domEvent = event.originalEvent;
-    console.log(changedValue);
-    console.log(domEvent);
-    console.log(this.form.value)
-
   }
-  edit(solicitaHoraExtra: SolicitacaoHoraExtraIncluir) {
-    this.usuarioEdit = solicitaHoraExtra;
+
+  edit(rowIndex: number) {
+
+    this.rowIndexEdit = rowIndex;
+    this.usuarioEdit = this.solicitacoes[rowIndex];
     let tempo = minutosEmHorasStr(this.usuarioEdit.minutos, 'hh:mm');
 
-    console.log(solicitaHoraExtra)
-    console.log(this.usuarioEdit)
+
+
     // Buscar o índice do horário na lista de horas
     const indiceHorario = this.horas.findIndex((hora) => hora.label === tempo);
 
     // Verificar se o horário está na lista
     if (indiceHorario !== -1) {
       const horarioSelecionado = this.horas[indiceHorario];
-      let motivoDescricao: { label: string; value: number }[] = [];
 
       this.initForm();
-      // Verificar se existe motivo e adicionar à lista de motivos
-      // if (this.usuarioEdit.motivoCodigo !== undefined) {
-      //   motivoDescricao.push({ label: String(this.usuarioEdit.motivoDescricao), value: this.usuarioEdit.motivoCodigo });
-      //   // Atualiza a lista de opções para o dropdown
-      // }
+      this.visualizaBtnSalvarContinuar = false;     
 
       this.form.patchValue({
         horas: horarioSelecionado,
-        // motivoDescricao: this.usuarioEdit.motivoCodigo  // Atualiza o valor selecionado
       });
 
+      
+
       this.dialogVisible = true;
+
     }
   }
 

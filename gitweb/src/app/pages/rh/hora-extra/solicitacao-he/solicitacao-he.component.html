@@ -101,9 +101,11 @@
       [paginator]="true"
       [rows]="20"
       [tableStyle]="{ 'min-width': '50rem' }"
+      
     >
       <ng-template pTemplate="header">
         <tr class="w-12">
+          <th></th>
           <th style="width: 20rem">
             Nome
             <p-columnFilter
@@ -125,6 +127,9 @@
 
       <ng-template pTemplate="body" let-usuario let-rowIndex="rowIndex">
         <tr class="w-12">
+          <td class="text-center">
+            {{ rowIndex + 1 }} {{ usuario.funiconarioNome }}
+          </td>
           <td class="col-nome text-align: center">
             {{ usuario.funcionarioNome }}
           </td>
@@ -151,7 +156,7 @@
             <i
               class="fas fa-edit"
               style="color: orange"
-              (click)="edit(usuario)"
+              (click)="edit(rowIndex)"
             ></i>
           </td>
           }
@@ -211,7 +216,6 @@
             placeholder="Escolha o codigo"
             class="flex flex-col w-full mt-1"
           />
-          <!-- optionValue="value" -->
         </div>
       </div>
 
@@ -298,20 +302,23 @@
   <!-- Botões salvar, cancelar e salvar continuar -->
   <ng-template pTemplate="footer">
     <!-- Salvar e continuar -->
-    <p-button
-      title="Salvar e continuar"
-      label="Salvar e continuar"
-      pButton
-      pRipple
-      (click)="salvarContinuar()"
-      pTooltip="Salvar e continuar"
-      class="p-button-success"
-      icon="pi pi-arrow-right"
-      [loading]="saving"
-      [disabled]="!form.valid"
-    ></p-button>
+     @if(this.visualizaBtnSalvarContinuar == true){
 
-    <!-- Salvar -->
+       <p-button
+       title="Salvar e continuar"
+       label="Salvar e continuar"
+       pButton
+       pRipple
+       (click)="salvarContinuar()"
+       pTooltip="Salvar e continuar"
+       class="p-button-success"
+       icon="pi pi-arrow-right"
+       [loading]="saving"
+      [disabled]="!form.valid"
+      ></p-button>
+    }
+      
+      <!-- Salvar -->
     <p-button
       title="Salvar"
       label="Salvar"
