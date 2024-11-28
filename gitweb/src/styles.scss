@@ -130,7 +130,7 @@ body {
   color: var(--white);
 }
 .p-component {
-  font-size: .75rem;
+  font-size: var(--font-size);
 }
 
 p-password,
@@ -326,7 +326,7 @@ button {
 .p-datatable .p-paginator-bottom {
   background: var(--background-body);
   height: 1rem;
-  font-size: var(--font-size);
+  font-size: var(--font-size) !important;
   padding: 0%;
 }
 
@@ -349,7 +349,7 @@ tr:nth-child(odd) {
   background: var(--slate-500);
   width: 1rem !important;
   height: 1rem !important;
-  font-size: var(--font-size);
+  font-size: var(--font-size) !important;
 }
 
 // retira o icone de limpar
@@ -357,7 +357,7 @@ tr:nth-child(odd) {
   background: var(--slate-500);
   width: 0rem !important;
   height: 0rem !important;
-  font-size: var(--font-size);
+  font-size: var(--font-size) !important;
   display: none;
 }
 
@@ -400,7 +400,7 @@ tr:nth-child(odd) {
 .p-dialog-draggable .p-dialog-header {
   color: var(--white);
   height: 1rem;
-  font-size: 10px !important;
+  font-size: var(--font-size) !important;
   background: var(--background-top);
   border-width: 3px 1px 1px 1px;
   box-shadow: 3px 3px 3px grey, 0 0 3px black;
@@ -440,7 +440,7 @@ tr:nth-child(odd) {
 }
 
 .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-  font-size: var(--font-size);
+  font-size: var(--font-size) !important;
   // background: var(--slate-200);
 }
 
@@ -449,7 +449,7 @@ tr:nth-child(odd) {
 .p-tabview .p-tabview-panels {
   font-family: "Roboto", sans-serif;
   font-weight: 100;
-  font-size: var(--font-size);
+  font-size: var(--font-size)!important;
   --webkit-font-smoothing: antialiased;
   padding: 1rem;
   background: var(--background-body) !important;

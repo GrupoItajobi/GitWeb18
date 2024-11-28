@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input} from '@angular/core';
+
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
@@ -9,6 +10,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   templateUrl: './bloquear-tela.component.html',
   styleUrl: './bloquear-tela.component.scss'
 })
-export class BloquearTelaComponent {
+
+export class BloquearTelaComponent  {
   @Input() blockedDocument = false;
 }

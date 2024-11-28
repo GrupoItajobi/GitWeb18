@@ -1,0 +1,10 @@
+.icone, .progress {
+  position: absolute;
+}
+
+.icone {
+  z-index: 0;
+}
+.progress {
+  z-index: 1;
+}

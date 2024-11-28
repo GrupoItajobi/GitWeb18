@@ -1,0 +1,442 @@
+<app-bloquear-tela [blockedDocument]="blockedDocument"></app-bloquear-tela>
+<div class="m-1">
+  <div class="containerCabec1" style="min-height: 3rem">
+    <form [formGroup]="form" class="flex flex-row">
+      <!-- Selecionar solicitações com data inicio-->
+      <div class="flex flex-col mr-2">
+        <label for="dataInicio" class="w-full">Data Início</label>
+        <input id="dataInicio" type="date" class="w-full mt-1 cursor-pointer ng-invalid ng-dirty"
+          formControlName="dataInicio" />
+      </div>
+      <div class="flex flex-col mr-2">
+        <label for="dataFim" class="w-full">Data Fim</label>
+        <input id="dataFim" type="date" class="w-full mt-1 cursor-pointer ng-invalid ng-dirty"
+          formControlName="dataFim" />
+      </div>
+      <div class="flex flex-col mr-2 w-1">
+        <label for="funcionarioCodigo" class="w-full">Funcionário</label>
+        <input id="funcionarioCodigo" type="number" class="w-full mt-1 cursor-pointer ng-invalid ng-dirty text-center"
+          formControlName="funcionarioCodigo" />
+      </div>
+
+      <!-- Botão buscar solicitações-->
+      <div class="content-end text-center m-1">
+        <button class="cursor-pointer" type="button" [disabled]="!form.valid" (click)="buscarDivergencias()">
+          <i class="fas fa-search"></i> Buscar
+        </button>
+      </div>
+    </form>
+
+  </div>
+  <p-tabView [(activeIndex)]="activeIndex">
+    <p-tabPanel header="Resumo GEF">
+      <div>
+        <p-table [value]="resumoPorGef" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="15"
+          dataKey="id">
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th colspan="2" style="text-align: center;">Grupo.Empresa.Filial</th>
+
+              <th colspan="5" class="text-center">Divergência</th>
+              <th colspan="2" rowspan="2" class="text-center">Listar</th>
+            </tr>
+            <tr>
+              <th style="text-align: center; width: 5rem;" pSortableColumn="gef">G.E.F <p-sortIcon field="gef" /></th>
+              <th style="width: 10rem;" pSortableColumn="filialNomeFantasia">Nome <p-sortIcon
+                  field="filialNomeFantasia" /></th>
+
+              <th rowspan="2" style="text-align: center;" pSortableColumn="lista.length">Qtde <p-sortIcon
+                  field="lista.length" /></th>
+              <th colspan="4" style="text-align: center;">Classificação</th>
+
+            </tr>
+            <tr>
+              <th>
+                <p-columnFilter matchMode="contains" style="color: black;" type="text" field="gef"
+                  placeholder="Search by gef" />
+              <th>
+                <p-columnFilter matchMode="contains" style="color: black;" type="text" field="filialNomeFantasia"
+                  placeholder="Search by nome" />
+              </th>
+              <th style="text-align: center;" pSortableColumn="horaExtra">Hora Extra <p-sortIcon field="horaExtra" />
+              </th>
+              <th style="text-align: center;" pSortableColumn="atrasoSaida">AtrasoSaida <p-sortIcon
+                  field="atrasoSaida" /></th>
+              <th style="text-align: center;" pSortableColumn="marcacaoInvalida">Inválida <p-sortIcon
+                  field="marcacaoInvalida" /></th>
+              <th style="text-align: center;" pSortableColumn="falta">Falta <p-sortIcon field="falta" /></th>
+
+              <th style="text-align: center;">Obj.Custo </th>
+              <th style="text-align: center;">Depto </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-resumo let-expanded="expanded">
+            <tr>
+              <td style="width: 5rem; text-align: center;">{{ resumo.gef }} </td>
+              <td style="width: 15rem;">{{resumo.filialNomeFantasia}}</td>
+              <td style="text-align: center;">{{ resumo.lista.length | number:'1.0-0' }}</td>
+              <td style="text-align: center;">{{ resumo.horaExtra | number:'1.0-0'}}</td>
+              <td style="text-align: center;">{{ resumo.atrasoSaida | number:'1.0-0'}}</td>
+              <td style="text-align: center;">{{ resumo.marcacaoInvalida | number:'1.0-0'}}</td>
+              <td style="text-align: center;">{{ resumo.falta | number:'1.0-0'}}</td>
+              <td class="text-center" (click)="selecionouGefPorCusto(resumo)"><i class="fa-solid fa-list-check"
+                  title="Clique para listar"></i></td>
+              <td class="text-center" (click)="selecionouGefPorDepto(resumo)"><i class="fa-solid fa-list-check"
+                  title="Clique para listar"></i></td>
+            </tr>
+          </ng-template>
+
+        </p-table>
+      </div>
+    </p-tabPanel>
+
+    <p-tabPanel header="Obj.Custo" [disabled]="disableObjCusto">
+      <div>
+        <h1>G.E.F.: {{resumoPorGefSelecionado.gef}} - {{resumoPorGefSelecionado.filialNomeFantasia}}</h1>
+      </div>
+      <div>
+        <p-table [value]="resumoPorObjCusto" [tableStyle]="{ 'min-width': '50rem' }" selectionMode="single"
+          [paginator]="true" [rows]="15" [(selection)]="resumoPorObjCustoSelecionado" dataKey="id"
+          (onRowSelect)="onRowSelectObjCusto($event)">
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th colspan="2" style="text-align: center;">Obj.Custo </th>
+              <th colspan="5" style="text-align: center;">Divergência </th>
+              <th rowspan="3" style="text-align: center;">Listar</th>
+            </tr>
+            <tr>
+              <th style="text-align: center;" pSortableColumn="objCustoCodigo">Código <p-sortIcon
+                  field="objCustoCodigo" /></th>
+              <th pSortableColumn="objCustoDescricao">Descrição <p-sortIcon field="objCustoDescricao" /></th>
+
+              <th rowspan="2" style="text-align: center;" pSortableColumn="lista.length">Qtde <p-sortIcon
+                  field="lista.length" /></th>
+              <th colspan="4" style="text-align: center;">Classificação</th>
+
+            </tr>
+            <tr>
+
+              <th style="text-align: center; width: 5rem;">
+                <p-columnFilter matchMode="contains" style="color: black;" type="text" field="objCustoCodigo"
+                  placeholder="Search by Codigo" />
+              <th>
+                <p-columnFilter matchMode="contains" style="color: black;" type="text" field="objCustoDescricao"
+                  placeholder="Search by descrição" />
+              </th>
+              <th style="text-align: center;" pSortableColumn="horaExtra">Hora Extra <p-sortIcon field="horaExtra" />
+              </th>
+              <th style="text-align: center;" pSortableColumn="atrasoSaida">AtrasoSaida <p-sortIcon
+                  field="atrasoSaida" /></th>
+              <th style="text-align: center;" pSortableColumn="marcacaoInvalida">Inválida <p-sortIcon
+                  field="marcacaoInvalida" /></th>
+              <th style="text-align: center;" pSortableColumn="falta">Falta <p-sortIcon field="falta" /></th>
+
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-resumo let-expanded="expanded">
+            <tr [pSelectableRow]="resumo" >
+
+              <td style="width: 5rem; text-align: center; width: 5rem;">{{ resumo.objCustoCodigo }}</td>
+              <td style="width: 15rem;">{{ resumo.objCustoDescricao }}</td>
+              <td style="text-align: center;">{{ resumo.lista.length | number:'1.0-0' }}</td>
+              <td style="text-align: center;">{{ resumo.horaExtra | number:'1.0-0'}}</td>
+              <td style="text-align: center;">{{ resumo.atrasoSaida | number:'1.0-0'}}</td>
+              <td style="text-align: center;">{{ resumo.marcacaoInvalida | number:'1.0-0'}}</td>
+              <td style="text-align: center;">{{ resumo.falta | number:'1.0-0'}}</td>
+              <td class="text-center"><i class="fa-solid fa-list-check" title="Clique para listar"
+                  (click)="classificarResumoPorFuncionario(resumo.lista)"></i></td>
+            </tr>
+          </ng-template>
+
+        </p-table>
+      </div>
+
+    </p-tabPanel>
+
+
+    <p-tabPanel header="Departamento" [disabled]="disableDepto">
+      <div>
+        <h1>G.E.F.: {{resumoPorGefSelecionado.gef}} - {{resumoPorGefSelecionado.filialNomeFantasia}}</h1>
+      </div>
+      <div>
+        <p-table [value]="resumoPorDepto" [tableStyle]="{ 'min-width': '50rem' }" selectionMode="single"
+          [paginator]="true" [rows]="15" [(selection)]="resumoPorDeptoSelecionado" dataKey="id"
+          (onRowSelect)="onRowSelectDepto($event)">
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th colspan="2" style="text-align: center;">Departamento </th>
+              <th colspan="5" style="text-align: center;">Divergência </th>
+              <th rowspan="3" style="text-align: center;">Listar</th>
+            </tr>
+            <tr>
+              <th pSortableColumn="deptoCodigo">Código <p-sortIcon
+                  field="deptoCodigo" /></th>
+              <th pSortableColumn="deptoDescricao">Descrição <p-sortIcon field="deptoDescricao" /></th>
+
+              <th rowspan="2" style="text-align: center;" pSortableColumn="lista.length">Qtde <p-sortIcon
+                  field="lista.length" /></th>
+              <th colspan="4" style="text-align: center;">Classificação</th>
+
+            </tr>
+            <tr>
+
+              <th style="text-align: center; width: 5rem;">
+                <p-columnFilter matchMode="contains" style="color: black;" type="text" field="deptoCodigo"
+                  placeholder="Search by Codigo" />
+              <th>
+                <p-columnFilter matchMode="contains" style="color: black;" type="text" field="deptoDescricao"
+                  placeholder="Search by descrição" />
+              </th>
+              <th style="text-align: center;" pSortableColumn="horaExtra">Hora Extra <p-sortIcon field="horaExtra" />
+              </th>
+              <th style="text-align: center;" pSortableColumn="atrasoSaida">AtrasoSaida <p-sortIcon
+                  field="atrasoSaida" /></th>
+              <th style="text-align: center;" pSortableColumn="marcacaoInvalida">Inválida <p-sortIcon
+                  field="marcacaoInvalida" /></th>
+              <th style="text-align: center;" pSortableColumn="falta">Falta <p-sortIcon field="falta" /></th>
+
+            </tr>
+          </ng-template>
+
+
+          <ng-template pTemplate="body" let-resumo let-expanded="expanded">
+            <tr [pSelectableRow]="resumo">
+
+              <td style="width: 5rem; text-align: center;">{{ resumo.deptoCodigo }}</td>
+              <td style="width: 15rem;">{{ resumo.deptoDescricao }}</td>
+              <td style="text-align: center;">{{ resumo.lista.length | number:'1.0-0' }}</td>
+              <td style="text-align: center;">{{ resumo.horaExtra | number:'1.0-0'}}</td>
+              <td style="text-align: center;">{{ resumo.atrasoSaida | number:'1.0-0'}}</td>
+              <td style="text-align: center;">{{ resumo.marcacaoInvalida | number:'1.0-0'}}</td>
+              <td style="text-align: center;">{{ resumo.falta | number:'1.0-0'}}</td>
+              <td class="text-center"><i class="fa-solid fa-list-check" title="Clique para listar"
+                  (click)="classificarResumoPorFuncionario(resumo.lista)"></i></td>
+            </tr>
+          </ng-template>
+
+        </p-table>
+      </div>
+
+    </p-tabPanel>
+
+
+    <p-tabPanel header="Funcionario">
+      <div>
+        <h1>G.E.F.: {{resumoPorGefSelecionado.gef}} - {{resumoPorGefSelecionado.filialNomeFantasia}}</h1>
+      </div>
+      <div>
+        @if(resumoPorObjCustoSelecionado.objCustoCodigo) {
+        <h1>Objeto Custo: {{resumoPorObjCustoSelecionado.objCustoCodigo}} -
+          {{resumoPorObjCustoSelecionado.objCustoDescricao}}</h1>
+        }@else if(resumoPorDeptoSelecionado.deptoCodigo) {
+        <h1>Depto: {{resumoPorDeptoSelecionado.deptoCodigo}} - {{resumoPorDeptoSelecionado.deptoDescricao}}</h1>
+        }
+      </div>
+      <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
+
+        <div class="flex flex-row gap-1">
+          <div style="width: 55%">
+            <p-table [value]="resumoPorFuncionario" selectionMode="single" [paginator]="true" [rows]="15"
+              [(selection)]="resumoPorFuncionarioSelecionado" dataKey="id"
+              (onRowSelect)="onRowSelectFuncionario($event)">
+
+              <ng-template pTemplate="header">
+                <tr style="font-size: .6rem;">
+                  <th colspan="2" style="text-align: center;">Funcionário </th>
+                  <th colspan="5" style="text-align: center;">Divergência </th>
+                  <th rowspan="3" style="text-align: center;">Listar</th>
+                </tr>
+                <tr style="font-size: .6rem;">
+                  <th pSortableColumn="funcionarioCodigo"> Código<p-sortIcon
+                      field="funcionarioCodigo" /></th>
+                  <th pSortableColumn="funcionarioNome">Nome <p-sortIcon field="funcionarioNome" /></th>
+
+                  <th rowspan="2" style="text-align: center;" pSortableColumn="lista.length">Qtde <p-sortIcon
+                      field="lista.length" /></th>
+                  <th colspan="4" style="text-align: center;">Classificação</th>
+
+                </tr>
+                <tr style="font-size: .6rem;">
+                  <th style="text-align: center; width: 5rem;">
+                    <p-columnFilter matchMode="contains" style="color: black;" type="text" field="funcionarioCodigo"
+                      placeholder="Search by Codigo" />
+                  <th>
+                    <p-columnFilter matchMode="contains" style="color: black;" type="text" field="funcionarioNome"
+                      placeholder="Search by Nome" />
+                  </th>
+                  <th style="text-align: center;" pSortableColumn="horaExtra">Hora Extra <p-sortIcon field="horaExtra" />
+                  </th>
+                  <th style="text-align: center;" pSortableColumn="atrasoSaida">AtrasoSaida <p-sortIcon
+                      field="atrasoSaida" /></th>
+                  <th style="text-align: center;" pSortableColumn="marcacaoInvalida">Inválida <p-sortIcon
+                      field="marcacaoInvalida" /></th>
+                  <th style="text-align: center;" pSortableColumn="falta">Falta <p-sortIcon field="falta" /></th>
+
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-resumo let-expanded="expanded">
+                <tr [pSelectableRow]="resumo" style="font-size: .6rem;">
+
+                  <td style="width: 5rem; text-align: center;">{{ resumo.funcionarioCodigo }}</td>
+                  <td>{{ resumo.funcionarioNome }}</td>
+                  <td style="text-align: center;">{{ resumo.lista.length | number:'1.0-0' }}</td>
+                  <td style="text-align: center;">{{ resumo.horaExtra | number:'1.0-0'}}</td>
+                  <td style="text-align: center;">{{ resumo.atrasoSaida | number:'1.0-0'}}</td>
+                  <td style="text-align: center;">{{ resumo.marcacaoInvalida | number:'1.0-0'}}</td>
+                  <td style="text-align: center;">{{ resumo.falta | number:'1.0-0'}}</td>
+                  <td class="text-center"><i class="fa-solid fa-list-check" title="Clique para listar"
+                      (click)="listar(resumo.lista)"></i></td>
+                </tr>
+              </ng-template>
+
+            </p-table>
+          </div>
+
+          <div style="width: 40%">
+
+            <p-table [value]="eventosPorData" selectionMode="multiple" [paginator]="true" [rows]="31"
+              [(selection)]="eventoPontosSelecionado" dataKey="id">
+
+              <ng-template pTemplate="header">
+                <tr style="font-size: .5rem; ">
+                  <th rowspan="2" colspan="2" style="width: 6rem; text-align: center;" pSortableColumn="dataReferencia">
+                    Data<p-sortIcon field="dataReferencia" /></th>
+                  <th colspan="2" style="text-align: center;">Eventos</th>
+                  <th rowspan="2" style="width: 10rem;">Pontos</th>
+                </tr>
+                <tr style="font-size: .5rem; text-align: center;">
+                  <th style="width: 2rem; text-align: center;">Código</th>
+                  <th style="width: 10rem; text-align: center;">Descrição</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-evento let-expanded="expanded">
+                <tr [pSelectableRow]="evento" style="font-size: .5rem;">
+                  <td style="text-align: center;">
+                    {{ evento.dataReferencia! | date:'dd/MM/yyyy' }}
+                  </td>
+                  <td style="text-align: center;">
+                    {{ evento.dataReferencia! | date:'E' }}
+                  </td>
+                  <td style="text-align: center;">
+                    {{evento.eventoCodigo}}
+                  </td>
+                  <td>
+                    {{evento.eventoDescricao}}
+                  </td>
+                  <td>
+                    {{evento.pontos}}
+                  </td>
+                </tr>
+              </ng-template>
+
+            </p-table>
+          </div>
+        </div>
+      </ng-template>
+
+    </p-tabPanel>
+
+    <p-tabPanel header="" [disabled]="true">
+      <div>
+        <h1>G.E.F.: {{resumoPorGefSelecionado.gef}} - {{resumoPorGefSelecionado.filialNomeFantasia}}</h1>
+      </div>
+      @if(resumoPorObjCustoSelecionado.objCustoCodigo) {
+      <h1>Objeto Custo: {{resumoPorObjCustoSelecionado.objCustoCodigo}} -
+        {{resumoPorObjCustoSelecionado.objCustoDescricao}}</h1>
+      }@else if(resumoPorDeptoSelecionado.deptoCodigo) {
+      <h1>Depto: {{resumoPorDeptoSelecionado.deptoCodigo}} - {{resumoPorDeptoSelecionado.deptoDescricao}}</h1>
+      }
+      <div>
+        <h1>Funcionário: {{resumoPorFuncionarioSelecionado.funcionarioCodigo}} -
+          {{resumoPorFuncionarioSelecionado.funcionarioNome}}</h1>
+      </div>
+      <div>
+        <p-table [value]="eventosPorData" [tableStyle]="{ 'min-width': '50rem' }" selectionMode="multiple"
+          [paginator]="true" [rows]="31" [(selection)]="eventoPontosSelecionado" dataKey="id">
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="dataReferencia">DataRef <p-sortIcon field="dataReferencia" /></th>
+              <th>Eventos</th>
+              <th>Descrição</th>
+              <th>Pontos</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-evento let-expanded="expanded">
+            <tr [pSelectableRow]="evento">
+              <td>
+                <!-- <p-button type="button" pRipple [pRowToggler]="evento" [text]="true" [rounded]="true" [plain]="true"
+                  [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" /> -->
+                {{ evento.dataReferencia! | date:'dd/MM/yyyy' }} - {{ evento.dataReferencia! | date:'E' }}
+              </td>
+              <td>
+                {{evento.eventoCodigo}}
+              </td>
+              <td>
+                {{evento.eventoDescricao}}
+              </td>
+              <td>
+                <!-- {{evento.importacoes.length}} -->
+                {{evento.pontos}}
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="rowexpansion" let-evento>
+            <tr>
+              <td colspan="2">
+                <p-table [value]="evento.eventos" dataKey="sequencia">
+                  <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="id">Código <p-sortIcon field="price" /></th>
+              <th pSortableColumn="id">Descrição <p-sortIcon field="price" /></th>
+
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-evento>
+            <tr>
+              <td>{{ evento.eventoCodigo }}</td>
+              <td>{{ evento.eventoDescricao }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="6">Lista vazia</td>
+            </tr>
+          </ng-template>
+        </p-table>
+        </td>
+        <td>
+          <p-table [value]="evento.importacoes" dataKey="sequencia">
+            <ng-template pTemplate="header">
+              <tr>
+                <th pSortableColumn="sequencia">Seq <p-sortIcon field="sequencia" /></th>
+                <th pSortableColumn="dataPonto">Data <p-sortIcon field="dataPonto" /></th>
+                <th pSortableColumn="relogioCodigo">Relógio <p-sortIcon field="relogioCodigo" /></th>
+
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-importacao>
+              <tr>
+                <td>{{ importacao.sequencia }}</td>
+                <td>{{ importacao.dataPonto | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td>{{ importacao.relogioCodigo }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="3">There are no order for this product yet.</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </td>
+        </tr>
+        </ng-template>
+        </p-table>
+      </div>
+
+    </p-tabPanel>
+  </p-tabView>
+</div>

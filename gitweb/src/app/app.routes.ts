@@ -18,6 +18,7 @@ import { RotacaoMoendaComponent } from './pages/industria/coi/moenda/rotacao-moe
 import { PainelProducaoComponent } from './pages/industria/painel/painel-producao/painel-producao.component';
 import { PainelAprovacaoComponent } from './pages/painel/painel-aprovacao/painel-aprovacao.component';
 import { AprovacaoSolicitacaoHeComponent } from './pages/rh/hora-extra/aprovacao-solicitacao-he/aprovacao-solicitacao-he.component';
+import { DivergenciaPontoDpComponent } from './pages/rh/folha/eventos/divergencia-ponto-dp/divergencia-ponto-dp.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -36,6 +37,8 @@ export const routes: Routes = [
 
   { path: "rh/hora-extra/solicitacao-he", component: SolicitacaoHeComponent, canActivate: [GuardService] },
   { path: "rh/hora-extra/aprovacao-solicitacao-he", component: AprovacaoSolicitacaoHeComponent, canActivate: [GuardService] },
+
+  { path: "rh/folha/eventos/divergencia-ponto-dp", component: DivergenciaPontoDpComponent, canActivate: [GuardService] },
 
 
   { path: "industria/rotacao-moenda/rotacao-moenda", component: RotacaoMoendaComponent, canActivate: [GuardService] },
