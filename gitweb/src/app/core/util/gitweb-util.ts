@@ -1,4 +1,3 @@
-export { initcap, initLower, nowString, minutosEmHorasStr, dividir, dateToString, padLeft };
 
 // Primeira letra em maiusculo e restante minuscula de cada palavra separa pelo caracter passado
 function initcap(texto: string, init: number = 0, caracter: string = ' '): string {
@@ -31,13 +30,13 @@ function nowString(): string {
   return date + ' ' + time;
 }
 
-function dateToString(data: Date, retornaHoraCompleta:boolean=true): string {
+function dateToString(data: Date, retornaHoraCompleta: boolean = true): string {
   if (data) {
     let date_Object = new Date(data);
     let date: string = (date_Object).toISOString().substring(0, 10)
     let time: string = (date_Object).toTimeString().substring(0, 8);
     if (retornaHoraCompleta) {
-       return date + ' ' + time;
+      return date + ' ' + time;
     }
     return date;
   }
@@ -62,17 +61,32 @@ function minutosEmHorasStr(minutos: number = 0, mask: string = "hm"): string {
   let miTexto: string = mi.toString();
   let result: string = "";
 
-  if (mask=="hm") {
+  if (mask == "hm") {
     result = hr + "h: " + miTexto.padStart(2, '0') + "m";
-  } else if (mask=="hh:mm"){
-    result = padLeft(hr.toString(), "0", 2)+":" + padLeft(mi.toString(), "0", 2);
+  } else if (mask == "hh:mm") {
+    result = padLeft(hr.toString(), "0", 2) + ":" + padLeft(mi.toString(), "0", 2);
   }
   return result;
 }
 
-function padLeft(text:string, padChar:string, size:number): string {
+function padLeft(text: string, padChar: string, size: number): string {
 
-    while (text.length < size) text = padChar + text;
-    return text;
+  while (text.length < size) text = padChar + text;
+  return text;
 }
 
+function horaDecimalEmHorasStr(valor: number, mask: string = "hm"): string {
+
+  if (!valor) {
+    return "";
+  }
+  let valorInteiro = Math.trunc(valor)
+  let valorDecimal = valor - valorInteiro;
+
+  let minutos = (valorInteiro * 60) + (valorDecimal * 60)
+
+  return minutosEmHorasStr(minutos, mask);
+}
+
+
+export { initcap, initLower, nowString, minutosEmHorasStr, dividir, dateToString, padLeft,horaDecimalEmHorasStr };

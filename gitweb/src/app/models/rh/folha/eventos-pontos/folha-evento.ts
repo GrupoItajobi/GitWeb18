@@ -6,4 +6,5 @@ export interface FolhaEvento {
   ehFalta?: string,
   eventoCodigo?: number,
   eventoDescricao?: string,
+  referencia?:number,
 }

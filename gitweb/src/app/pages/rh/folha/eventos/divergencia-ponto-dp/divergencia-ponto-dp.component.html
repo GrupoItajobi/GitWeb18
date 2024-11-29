@@ -28,11 +28,13 @@
     </form>
 
   </div>
+
   <p-tabView [(activeIndex)]="activeIndex">
     <p-tabPanel header="Resumo GEF">
       <div>
         <p-table [value]="resumoPorGef" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="15"
-          dataKey="id">
+          dataKey="id" selectionMode="single" [(selection)]="resumoPorGefSelecionadoAux"
+          (onRowSelect)="onRowSelectGef($event)">
 
           <ng-template pTemplate="header">
             <tr>
@@ -72,7 +74,7 @@
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-resumo let-expanded="expanded">
-            <tr>
+            <tr [pSelectableRow]="resumo">
               <td style="width: 5rem; text-align: center;">{{ resumo.gef }} </td>
               <td style="width: 15rem;">{{resumo.filialNomeFantasia}}</td>
               <td style="text-align: center;">{{ resumo.lista.length | number:'1.0-0' }}</td>
@@ -93,12 +95,14 @@
 
     <p-tabPanel header="Obj.Custo" [disabled]="disableObjCusto">
       <div>
-        <h1>G.E.F.: {{resumoPorGefSelecionado.gef}} - {{resumoPorGefSelecionado.filialNomeFantasia}}</h1>
+        @if(resumoPorGefSelecionado) {
+        <h1>G.E.F.: {{resumoPorGefSelecionado!.gef!}} - {{resumoPorGefSelecionado!.filialNomeFantasia!}}</h1>
+        }
       </div>
       <div>
-        <p-table [value]="resumoPorObjCusto" [tableStyle]="{ 'min-width': '50rem' }" selectionMode="single"
-          [paginator]="true" [rows]="15" [(selection)]="resumoPorObjCustoSelecionado" dataKey="id"
-          (onRowSelect)="onRowSelectObjCusto($event)">
+        <p-table [value]="resumoPorObjCusto" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="15"
+          selectionMode="single" [(selection)]="resumoPorObjCustoSelecionado" dataKey="id"
+          (onRowSelect)="onRowSelectObjCusto($event)" (onRowUnselect)="onRowUnselectObjCusto($event)">
 
           <ng-template pTemplate="header">
             <tr>
@@ -136,7 +140,7 @@
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-resumo let-expanded="expanded">
-            <tr [pSelectableRow]="resumo" >
+            <tr [pSelectableRow]="resumo">
 
               <td style="width: 5rem; text-align: center; width: 5rem;">{{ resumo.objCustoCodigo }}</td>
               <td style="width: 15rem;">{{ resumo.objCustoDescricao }}</td>
@@ -158,12 +162,14 @@
 
     <p-tabPanel header="Departamento" [disabled]="disableDepto">
       <div>
-        <h1>G.E.F.: {{resumoPorGefSelecionado.gef}} - {{resumoPorGefSelecionado.filialNomeFantasia}}</h1>
+        @if(resumoPorGefSelecionado) {
+        <h1>G.E.F.: {{resumoPorGefSelecionado!.gef!}} - {{resumoPorGefSelecionado!.filialNomeFantasia!}}</h1>
+        }
       </div>
       <div>
         <p-table [value]="resumoPorDepto" [tableStyle]="{ 'min-width': '50rem' }" selectionMode="single"
           [paginator]="true" [rows]="15" [(selection)]="resumoPorDeptoSelecionado" dataKey="id"
-          (onRowSelect)="onRowSelectDepto($event)">
+          (onRowSelect)="onRowSelectDepto($event)" (onRowUnselect)="onRowUnselectDepto($event)">
 
           <ng-template pTemplate="header">
             <tr>
@@ -172,8 +178,7 @@
               <th rowspan="3" style="text-align: center;">Listar</th>
             </tr>
             <tr>
-              <th pSortableColumn="deptoCodigo">Código <p-sortIcon
-                  field="deptoCodigo" /></th>
+              <th pSortableColumn="deptoCodigo">Código <p-sortIcon field="deptoCodigo" /></th>
               <th pSortableColumn="deptoDescricao">Descrição <p-sortIcon field="deptoDescricao" /></th>
 
               <th rowspan="2" style="text-align: center;" pSortableColumn="lista.length">Qtde <p-sortIcon
@@ -225,14 +230,17 @@
 
     <p-tabPanel header="Funcionario">
       <div>
-        <h1>G.E.F.: {{resumoPorGefSelecionado.gef}} - {{resumoPorGefSelecionado.filialNomeFantasia}}</h1>
+        @if(resumoPorGefSelecionado) {
+        <h1>G.E.F.: {{resumoPorGefSelecionado!.gef!}} - {{resumoPorGefSelecionado!.filialNomeFantasia!}}</h1>
+        }
       </div>
+
       <div>
-        @if(resumoPorObjCustoSelecionado.objCustoCodigo) {
-        <h1>Objeto Custo: {{resumoPorObjCustoSelecionado.objCustoCodigo}} -
-          {{resumoPorObjCustoSelecionado.objCustoDescricao}}</h1>
-        }@else if(resumoPorDeptoSelecionado.deptoCodigo) {
-        <h1>Depto: {{resumoPorDeptoSelecionado.deptoCodigo}} - {{resumoPorDeptoSelecionado.deptoDescricao}}</h1>
+        @if(resumoPorObjCustoSelecionado! && resumoPorObjCustoSelecionado!.objCustoCodigo!) {
+        <h1>Objeto Custo: [{{resumoPorObjCustoSelecionado!.objCustoCodigo!}}] -
+          {{resumoPorObjCustoSelecionado!.objCustoDescricao!}}</h1>
+        }@else if(resumoPorDeptoSelecionado! && resumoPorDeptoSelecionado!.deptoCodigo!) {
+        <h1>Depto: {{resumoPorDeptoSelecionado!.deptoCodigo!}} - {{resumoPorDeptoSelecionado.deptoDescricao!}}</h1>
         }
       </div>
       <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
@@ -241,7 +249,7 @@
           <div style="width: 55%">
             <p-table [value]="resumoPorFuncionario" selectionMode="single" [paginator]="true" [rows]="15"
               [(selection)]="resumoPorFuncionarioSelecionado" dataKey="id"
-              (onRowSelect)="onRowSelectFuncionario($event)">
+              (onRowSelect)="onRowSelectFuncionario($event)" (onRowUnselect)="onRowUnselectFuncionario($event)">
 
               <ng-template pTemplate="header">
                 <tr style="font-size: .6rem;">
@@ -250,8 +258,7 @@
                   <th rowspan="3" style="text-align: center;">Listar</th>
                 </tr>
                 <tr style="font-size: .6rem;">
-                  <th pSortableColumn="funcionarioCodigo"> Código<p-sortIcon
-                      field="funcionarioCodigo" /></th>
+                  <th pSortableColumn="funcionarioCodigo"> Código<p-sortIcon field="funcionarioCodigo" /></th>
                   <th pSortableColumn="funcionarioNome">Nome <p-sortIcon field="funcionarioNome" /></th>
 
                   <th rowspan="2" style="text-align: center;" pSortableColumn="lista.length">Qtde <p-sortIcon
@@ -267,7 +274,8 @@
                     <p-columnFilter matchMode="contains" style="color: black;" type="text" field="funcionarioNome"
                       placeholder="Search by Nome" />
                   </th>
-                  <th style="text-align: center;" pSortableColumn="horaExtra">Hora Extra <p-sortIcon field="horaExtra" />
+                  <th style="text-align: center;" pSortableColumn="horaExtra">Hora Extra <p-sortIcon
+                      field="horaExtra" />
                   </th>
                   <th style="text-align: center;" pSortableColumn="atrasoSaida">AtrasoSaida <p-sortIcon
                       field="atrasoSaida" /></th>
@@ -295,38 +303,58 @@
             </p-table>
           </div>
 
-          <div style="width: 40%">
+          <div style="width: 43%">
 
-            <p-table [value]="eventosPorData" selectionMode="multiple" [paginator]="true" [rows]="31"
+            <p-table [value]="eventosPorData" selectionMode="multiple"
               [(selection)]="eventoPontosSelecionado" dataKey="id">
 
               <ng-template pTemplate="header">
                 <tr style="font-size: .5rem; ">
-                  <th rowspan="2" colspan="2" style="width: 6rem; text-align: center;" pSortableColumn="dataReferencia">
+                  <th rowspan="3" colspan="2" style="width: 6rem; text-align: center;" pSortableColumn="dataReferencia">
                     Data<p-sortIcon field="dataReferencia" /></th>
-                  <th colspan="2" style="text-align: center;">Eventos</th>
-                  <th rowspan="2" style="width: 10rem;">Pontos</th>
+                  <th colspan="4" style="text-align: center;">Eventos</th>
+                  <th rowspan="3" style="text-align: center;">Pontos</th>
                 </tr>
-                <tr style="font-size: .5rem; text-align: center;">
+                <tr style="font-size: .5rem;">
                   <th style="width: 2rem; text-align: center;">Código</th>
-                  <th style="width: 10rem; text-align: center;">Descrição</th>
+                  <th >Descrição</th>
+                  <th colspan="2" style="width: 2rem; text-align: center;">Total</th>
+                </tr>
+                <tr style="font-size: .5rem;">
+                  <th style="width: 6rem; text-align: center;">
+                    <p-columnFilter matchMode="contains" style="color: black;" type="text" field="eventoCodigo"
+                      placeholder="Search by Codigo" />
+                  </th>
+                  <th style="width: 15rem;">
+                    <p-columnFilter matchMode="contains" style="color: black;" type="text" field="eventoDescricao"
+                      placeholder="Search by Descricao" />
+                  </th>
+                  <th style="width: 2rem; text-align: center;">Dec.</th>
+                  <th style="width: 2rem; text-align: center;">Hora</th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-evento let-expanded="expanded">
                 <tr [pSelectableRow]="evento" style="font-size: .5rem;">
                   <td style="text-align: center;">
-                    {{ evento.dataReferencia! | date:'dd/MM/yyyy' }}
+                    {{ evento.dataAuxiliar! | date:'E' }}
                   </td>
                   <td style="text-align: center;">
-                    {{ evento.dataReferencia! | date:'E' }}
+                    {{ evento.dataReferencia! | date:'dd/MM/yyyy' }}
                   </td>
+
                   <td style="text-align: center;">
                     {{evento.eventoCodigo}}
                   </td>
-                  <td>
+                  <td style="width: 15rem;">
                     {{evento.eventoDescricao}}
                   </td>
-                  <td>
+                  <td style="text-align: center;">
+                    {{evento.referencia}}
+                  </td>
+                  <td style="text-align: center;">
+                    {{evento.referenciaStr}}
+                  </td>
+                  <td style="width: 15rem;">
                     {{evento.pontos}}
                   </td>
                 </tr>
@@ -339,104 +367,6 @@
 
     </p-tabPanel>
 
-    <p-tabPanel header="" [disabled]="true">
-      <div>
-        <h1>G.E.F.: {{resumoPorGefSelecionado.gef}} - {{resumoPorGefSelecionado.filialNomeFantasia}}</h1>
-      </div>
-      @if(resumoPorObjCustoSelecionado.objCustoCodigo) {
-      <h1>Objeto Custo: {{resumoPorObjCustoSelecionado.objCustoCodigo}} -
-        {{resumoPorObjCustoSelecionado.objCustoDescricao}}</h1>
-      }@else if(resumoPorDeptoSelecionado.deptoCodigo) {
-      <h1>Depto: {{resumoPorDeptoSelecionado.deptoCodigo}} - {{resumoPorDeptoSelecionado.deptoDescricao}}</h1>
-      }
-      <div>
-        <h1>Funcionário: {{resumoPorFuncionarioSelecionado.funcionarioCodigo}} -
-          {{resumoPorFuncionarioSelecionado.funcionarioNome}}</h1>
-      </div>
-      <div>
-        <p-table [value]="eventosPorData" [tableStyle]="{ 'min-width': '50rem' }" selectionMode="multiple"
-          [paginator]="true" [rows]="31" [(selection)]="eventoPontosSelecionado" dataKey="id">
 
-          <ng-template pTemplate="header">
-            <tr>
-              <th pSortableColumn="dataReferencia">DataRef <p-sortIcon field="dataReferencia" /></th>
-              <th>Eventos</th>
-              <th>Descrição</th>
-              <th>Pontos</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-evento let-expanded="expanded">
-            <tr [pSelectableRow]="evento">
-              <td>
-                <!-- <p-button type="button" pRipple [pRowToggler]="evento" [text]="true" [rounded]="true" [plain]="true"
-                  [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" /> -->
-                {{ evento.dataReferencia! | date:'dd/MM/yyyy' }} - {{ evento.dataReferencia! | date:'E' }}
-              </td>
-              <td>
-                {{evento.eventoCodigo}}
-              </td>
-              <td>
-                {{evento.eventoDescricao}}
-              </td>
-              <td>
-                <!-- {{evento.importacoes.length}} -->
-                {{evento.pontos}}
-              </td>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="rowexpansion" let-evento>
-            <tr>
-              <td colspan="2">
-                <p-table [value]="evento.eventos" dataKey="sequencia">
-                  <ng-template pTemplate="header">
-            <tr>
-              <th pSortableColumn="id">Código <p-sortIcon field="price" /></th>
-              <th pSortableColumn="id">Descrição <p-sortIcon field="price" /></th>
-
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-evento>
-            <tr>
-              <td>{{ evento.eventoCodigo }}</td>
-              <td>{{ evento.eventoDescricao }}</td>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="emptymessage">
-            <tr>
-              <td colspan="6">Lista vazia</td>
-            </tr>
-          </ng-template>
-        </p-table>
-        </td>
-        <td>
-          <p-table [value]="evento.importacoes" dataKey="sequencia">
-            <ng-template pTemplate="header">
-              <tr>
-                <th pSortableColumn="sequencia">Seq <p-sortIcon field="sequencia" /></th>
-                <th pSortableColumn="dataPonto">Data <p-sortIcon field="dataPonto" /></th>
-                <th pSortableColumn="relogioCodigo">Relógio <p-sortIcon field="relogioCodigo" /></th>
-
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-importacao>
-              <tr>
-                <td>{{ importacao.sequencia }}</td>
-                <td>{{ importacao.dataPonto | date:'dd/MM/yyyy HH:mm' }}</td>
-                <td>{{ importacao.relogioCodigo }}</td>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage">
-              <tr>
-                <td colspan="3">There are no order for this product yet.</td>
-              </tr>
-            </ng-template>
-          </p-table>
-        </td>
-        </tr>
-        </ng-template>
-        </p-table>
-      </div>
-
-    </p-tabPanel>
   </p-tabView>
 </div>

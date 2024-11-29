@@ -16,20 +16,26 @@ export class FolhaEventosService {
   }
 
 
-  async listarDivergencias(dataInicio: Date, dataFim: Date, funcionarioCodigo: number): Promise<FolhaEventoPonto[]> {
-    const headers = new HttpHeaders().append(
-      'Content-Type',
-      'application/json'
+  async listarDivergencias(dataInicio: Date, dataFim: Date, funcionarioCodigo: number, tagAcesso: string="teste"): Promise<FolhaEventoPonto[]> {
+    let headers = new HttpHeaders().append(
+      'Content-Type','application/json'
     );
+    // headers = headers.append(
+    //   'tagApplication',tagAcesso
+    // )
 
     let params = new HttpParams()
-      .set('dataInicio', dateToString(dataInicio,false))
-      .set('dataFim', dateToString(dataFim,false));
+      .set('dataDe', dateToString(dataInicio, false))
+      .set('dataAte', dateToString(dataFim, false))
+      .set('listarEventosFolha', 'S')
+      .set('listarEventosAprovacao', 'S')
+      .set('listarPontos', 'N')
 
     if (funcionarioCodigo) {
       params = params.append('funcionarioCodigo', funcionarioCodigo)
     }
 
+    const body: string = JSON.stringify("TESTE")
     return await firstValueFrom(
       this.http.get<FolhaEventoPonto[]>(
         `${this.url}/dp/divergencia`, { params, headers }

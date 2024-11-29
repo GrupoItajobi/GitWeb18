@@ -12,6 +12,8 @@ import { ErrorHandleService } from '../../../../../services/error-handle/error-h
 import { FolhaEventoPonto } from '../../../../../models/rh/folha/eventos-pontos/folha-evento-divergencia';
 import { ButtonModule } from 'primeng/button';
 import { BloquearTelaComponent } from "../../../../../components/bloquear-tela/bloquear-tela.component";
+import { horaDecimalEmHorasStr } from '../../../../../core/util/gitweb-util';
+import { UrlService } from '../../../../../services/url/url.service';
 
 const ACTIVE_GEF: number = 0;
 const ACTIVE_OBJ_CUSTO: number = 1;
@@ -42,6 +44,7 @@ export class DivergenciaPontoDpComponent {
 
   resumoPorGef: ResumoPorGef[] = [];
   resumoPorGefSelecionado: ResumoPorGef = {} as ResumoPorGef;
+  resumoPorGefSelecionadoAux: ResumoPorGef = {} as ResumoPorGef;
 
   resumoPorObjCusto: ResumoPorGef[] = [];
   resumoPorObjCustoSelecionado: ResumoPorGef = {} as ResumoPorGef;
@@ -65,14 +68,16 @@ export class DivergenciaPontoDpComponent {
     private errorHandleService: ErrorHandleService,
     private toastService: ToastService,
     private folhaService: FolhaEventosService,
+    private urlService: UrlService,
   ) { }
 
   ngOnInit() {
+    console.log(this.urlService.listaTags())
     this.initForm();
   }
 
   async buscarDivergencias() {
-    this.blockedDocument=true;
+    this.blockedDocument = true;
     this.limparResumoGef();
     this.activeIndex = ACTIVE_GEF;
     await this.folhaService.listarDivergencias(
@@ -81,10 +86,10 @@ export class DivergenciaPontoDpComponent {
       this.form.value.funcionarioCodigo)
       .then(result => {
         this.classificarResumoPorGef(result);
-        this.blockedDocument=false;
+        this.blockedDocument = false;
       })
       .catch(error => {
-        this.blockedDocument=false;
+        this.blockedDocument = false;
         this.errorHandleService.handle(error);
       });
   }
@@ -96,19 +101,23 @@ export class DivergenciaPontoDpComponent {
     this.eventosPorData = [];
     let data: Date;
     this.eventoPontos.forEach(e => {
-      let evento: EventosPorData = {};
-      evento.id = evento.dataReferencia + ":" + evento.eventoCodigo
-      if (!data || data != e.dataReferencia) {
-        evento.dataReferencia = e.dataReferencia;
-        evento.pontos = e.pontos;
-        data = e.dataReferencia!;
-      }
 
       e.eventos?.forEach(ev => {
+        let evento: EventosPorData = {};
+        evento.id = evento.dataReferencia + ":" + evento.eventoCodigo
+        evento.dataReferencia = e.dataReferencia;
+        if (!data || data != e.dataReferencia) {
+          evento.dataAuxiliar = e.dataReferencia;
+          data = e.dataReferencia!;
+        }
+        evento.pontos = e.pontos;
         evento.eventoCodigo = ev.eventoCodigo;
         evento.eventoDescricao = ev.eventoDescricao;
+        evento.referencia = ev.referencia
+        evento.referenciaStr = horaDecimalEmHorasStr(ev.referencia!, "hh:mm")
+        this.eventosPorData.push(evento);
       })
-      this.eventosPorData.push(evento);
+
 
     });
   }
@@ -139,27 +148,32 @@ export class DivergenciaPontoDpComponent {
   }
 
   limparEvento() {
-    this.eventosPorData=[];
+    this.eventosPorData = [];
     this.eventoPontos = [];
     this.eventoPontosSelecionado = {} as ResumoPorGef;
   }
 
   selecionouGefPorCusto(event: any) {
+    console.log('selecionouGefPorCusto')
     this.disableObjCusto = false;
     this.disableDepto = true;
     this.limparResumoDepto();
     this.limparResumoOjbCusto();
     this.resumoPorGefSelecionado = event;
-    this.classificarResumoPorObjCusto(event.lista);
+    console.log('gef: ' + this.resumoPorGefSelecionado.gef + " - " + this.resumoPorGefSelecionado.filialNomeFantasia)
+
+    this.classificarResumoPorObjCusto(this.resumoPorGefSelecionado.lista);
   }
 
   selecionouGefPorDepto(event: any) {
+    console.log('selecionouGefPorDepto')
     this.disableObjCusto = true;
     this.disableDepto = false;
     this.limparResumoDepto();
     this.limparResumoOjbCusto();
     this.resumoPorGefSelecionado = event;
-    this.classificarResumoPorDepto(event.lista);
+    console.log('gef: ' + this.resumoPorGefSelecionado.gef + " - " + this.resumoPorGefSelecionado.filialNomeFantasia)
+    this.classificarResumoPorDepto(this.resumoPorGefSelecionado.lista);
   }
 
   classificarResumoPorGef(eventos: FolhaEventoPonto[]) {
@@ -189,8 +203,8 @@ export class DivergenciaPontoDpComponent {
   classificarResumo(eventos: FolhaEventoPonto[], usarKey: string): ResumoPorGef[] {
     let map = new Map<string, ResumoPorGef>();
 
-    eventos.forEach(t => {
 
+    eventos.forEach(t => {
       let resumo: ResumoPorGef = {} as ResumoPorGef;
       resumo.lista = [] as FolhaEventoPonto[];
       resumo.horaExtra = 0
@@ -225,16 +239,16 @@ export class DivergenciaPontoDpComponent {
 
       t.eventos?.forEach(e => {
         if (e.ehHoraExtra! == 'S') {
-          horaExtra = 1;
+          horaExtra++;
         }
         if (e.ehMarcacaoInvalida! == 'S') {
-          marcacaoInvalida = 1;
+          marcacaoInvalida++;
         }
         if (e.ehAtrasoSaida! == 'S') {
-          atrasoSaida = 1;
+          atrasoSaida++;
         }
         if (e.ehFalta! == 'S') {
-          falta = 1;
+          falta++;
         }
       })
 
@@ -280,16 +294,30 @@ export class DivergenciaPontoDpComponent {
   }
 
   onRowSelectGef(event: any) {
-    this.classificarResumoPorObjCusto(event.data.lista);
+    // this.classificarResumoPorObjCusto(event.data.lista);
   }
+
   onRowSelectObjCusto(event: any) {
     this.classificarResumoPorFuncionario(event.data.lista);
   }
+  onRowUnselectObjCusto(event: any) {
+    this.limparResumoFuncionario();
+  }
+
+
   onRowSelectDepto(event: any) {
     this.classificarResumoPorFuncionario(event.data.lista);
   }
+  onRowUnselectDepto(event: any) {
+    this.limparResumoFuncionario();
+  }
+
+
   onRowSelectFuncionario(event: any) {
     this.listar(event.data.lista);
+  }
+  onRowUnselectFuncionario(event: any) {
+    this.limparEvento()
   }
 
 }
@@ -301,20 +329,26 @@ interface ResumoPorGef {
   objCustoCodigo?: number,
   objCustoDescricao?: string
   deptoCodigo?: number,
-  deptoDescricao?: string
-  funcionarioCodigo?: number
-  funcionarioNome: string
+  deptoDescricao?: string,
+  cargoCodigo?: number,
+  cargoDescricao?: string
+  funcionarioCodigo?: number,
+  funcionarioNome: string,
   horaExtra: number,
   marcacaoInvalida: number;
   atrasoSaida: number,
   falta: number,
   lista: FolhaEventoPonto[],
+  listaAprovacao: FolhaEventoPonto[],
 }
 
 interface EventosPorData {
   id?: string,
   dataReferencia?: Date,
+  dataAuxiliar?: Date
   pontos?: string,
   eventoCodigo?: number,
   eventoDescricao?: string,
+  referencia?: number,
+  referenciaStr?: string,
 }
