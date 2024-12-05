@@ -600,18 +600,25 @@ export class CarregamentoProdutoComponent implements OnInit, OnDestroy {
     this.crud = "C";
     if (this.tagDragStart == tagCaminhaParaFila) {
 
-      this.stopRefresh();
-      this.carregamentoEdicao = {} as CarregamentoFila;
-      this.carregamentoEdicao = {
-        ue: this.ue,
-        produto: this.produtoSelecionado,
-        tipoVenda: 'MI'
+      console.log('opçãoProduto: ' + this.produtoSelecionado)
+      if (this.produtoSelecionado) {
+        console.log('entrei')
+
+        this.stopRefresh();
+        this.carregamentoEdicao = {} as CarregamentoFila;
+        this.carregamentoEdicao = {
+          ue: this.ue,
+          produto: this.produtoSelecionado,
+          tipoVenda: 'MI'
+        }
+
+        this.initFormAddCarregamento();
+
+        this.disableButtonSave = true;
+        this.visibleCreateOrdem = true;
+      } else {
+        this.toastMessageService.showInfoMsg("Selecionar o Produto!");
       }
-
-      this.initFormAddCarregamento();
-
-      this.disableButtonSave = true;
-      this.visibleCreateOrdem = true;
     } else {
       this.toastMessageService.showInfoMsg("Tag não pode ser movido aqui!");
     }
