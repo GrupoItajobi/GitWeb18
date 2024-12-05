@@ -1,3 +1,4 @@
+import { FilterDivergencia } from './../../../../../models/rh/folha/eventos-pontos/filter-divergencia';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component } from '@angular/core';
@@ -67,7 +68,7 @@ export class DivergenciaPontoDpComponent {
     private formBuilder: FormBuilder,
     private errorHandleService: ErrorHandleService,
     private toastService: ToastService,
-    private folhaService: FolhaEventosService,
+    private folhaEventosService: FolhaEventosService,
     private urlService: UrlService,
   ) { }
 
@@ -80,7 +81,7 @@ export class DivergenciaPontoDpComponent {
     this.blockedDocument = true;
     this.limparResumoGef();
     this.activeIndex = ACTIVE_GEF;
-    await this.folhaService.listarDivergencias(
+    await this.folhaEventosService.listarDivergencias(
       this.form.value.dataInicio,
       this.form.value.dataFim,
       this.form.value.funcionarioCodigo)
@@ -280,7 +281,25 @@ export class DivergenciaPontoDpComponent {
     return resumoRetorno;
   }
 
+  async gerarSnapshotObjCusto(resumo: ResumoPorGef) {
+    console.log('gerarSnapshotObjCusto: ' + resumo.objCustoCodigo);
+    let filter: FilterDivergencia = {} as FilterDivergencia;
+    filter.objCustoCodigo = resumo.objCustoCodigo;
+    filter.dataDe = this.form.value.dataInicio;
+    filter.dataAte = this.form.value.dataFim;
+    filter.gef = resumo.gef;
 
+    this.blockedDocument = true;
+    await this.folhaEventosService.gerarDivergencias(filter)
+      .then(response => {
+        this.blockedDocument = false;
+        this.toastService.showSuccessMsg('Gerado!');
+      })
+      .catch(error => {
+        this.blockedDocument = false;
+        this.errorHandleService.handle(error);
+      });
+  }
 
   initForm() {
 
