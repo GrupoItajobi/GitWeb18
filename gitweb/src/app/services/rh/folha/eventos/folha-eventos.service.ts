@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { dateToString } from '../../../../core/util/gitweb-util';
 import { FolhaEventoPonto } from '../../../../models/rh/folha/eventos-pontos/folha-evento-divergencia';
+import { FilterDivergencia } from '../../../../models/rh/folha/eventos-pontos/filter-divergencia';
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +17,9 @@ export class FolhaEventosService {
   }
 
 
-  async listarDivergencias(dataInicio: Date, dataFim: Date, funcionarioCodigo: number, tagAcesso: string="teste"): Promise<FolhaEventoPonto[]> {
+  async listarDivergencias(dataInicio: Date, dataFim: Date, funcionarioCodigo: number, tagAcesso: string = "teste"): Promise<FolhaEventoPonto[]> {
     let headers = new HttpHeaders().append(
-      'Content-Type','application/json'
+      'Content-Type', 'application/json'
     );
     // headers = headers.append(
     //   'tagApplication',tagAcesso
@@ -49,4 +50,26 @@ export class FolhaEventosService {
       });
   }
 
+
+  async gerarDivergencias(filter: FilterDivergencia): Promise<any> {
+    let headers = new HttpHeaders().append(
+      'Content-Type', 'application/json'
+    );
+
+    const body = JSON.stringify(filter);
+
+    console.log(body);
+
+
+    return await firstValueFrom(
+      this.http.post<any[]>(
+        `${this.url}/dp/gerarDivergencias`, body, { headers })
+    )
+      .then(response => {
+        return response;
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
+  }
 }
