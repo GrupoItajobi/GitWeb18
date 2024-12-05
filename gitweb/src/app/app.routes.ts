@@ -19,6 +19,7 @@ import { PainelProducaoComponent } from './pages/industria/painel/painel-produca
 import { PainelAprovacaoComponent } from './pages/painel/painel-aprovacao/painel-aprovacao.component';
 import { AprovacaoSolicitacaoHeComponent } from './pages/rh/hora-extra/aprovacao-solicitacao-he/aprovacao-solicitacao-he.component';
 import { DivergenciaPontoDpComponent } from './pages/rh/folha/eventos/divergencia-ponto-dp/divergencia-ponto-dp.component';
+import { MoagemSafraComponent } from './pages/agricola/planejamento/safra/moagem-safra.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -34,7 +35,8 @@ export const routes: Routes = [
   { path: "faturamento/checklist", component: CheckListComponent, canActivate: [GuardService] },
 
   { path: "agricola/alocacao/caminhao-frente", component: AlocacaoCaminhaoComponent, canActivate: [GuardService] },
-
+  { path: "agricola/planejamento/moagem-safra", component: MoagemSafraComponent},
+ 
   { path: "rh/hora-extra/solicitacao-he", component: SolicitacaoHeComponent, canActivate: [GuardService] },
   { path: "rh/hora-extra/aprovacao-solicitacao-he", component: AprovacaoSolicitacaoHeComponent, canActivate: [GuardService] },
 
