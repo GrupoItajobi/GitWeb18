@@ -1,7 +1,7 @@
 import { FilterDivergencia } from './../../../../../models/rh/folha/eventos-pontos/filter-divergencia';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { TableModule } from 'primeng/table';
 import { TabViewModule } from 'primeng/tabview';
@@ -15,6 +15,7 @@ import { ButtonModule } from 'primeng/button';
 import { BloquearTelaComponent } from "../../../../../components/bloquear-tela/bloquear-tela.component";
 import { horaDecimalEmHorasStr } from '../../../../../core/util/gitweb-util';
 import { UrlService } from '../../../../../services/url/url.service';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 const ACTIVE_GEF: number = 0;
 const ACTIVE_OBJ_CUSTO: number = 1;
@@ -33,11 +34,13 @@ const ACTIVE_EVENTOS: number = 4;
     TabViewModule,
     ButtonModule,
     BloquearTelaComponent,
+    SelectButtonModule,
   ],
   templateUrl: './divergencia-ponto-dp.component.html',
   styleUrl: './divergencia-ponto-dp.component.scss'
 })
-export class DivergenciaPontoDpComponent {
+export class DivergenciaPontoDpComponent implements OnInit {
+  blockedDocument: boolean = false;
   form!: FormGroup;
   mapFolhaEventoPonto = new Map<string, FolhaEventoPonto>();
   eventoPontos: FolhaEventoPonto[] = [];
@@ -62,7 +65,10 @@ export class DivergenciaPontoDpComponent {
   disableDepto: boolean = false;
   disableObjCusto: boolean = false;
 
-  blockedDocument: boolean = false;
+
+
+  tipoConsultaOptions: any[] = [{ 'label': 'Folha', 'value': 'F' }, { 'label': 'Apuração', 'value': 'A' }];
+  tipoConsultaOptionsSel = new FormControl('F');
 
   constructor(
     private formBuilder: FormBuilder,
@@ -75,16 +81,23 @@ export class DivergenciaPontoDpComponent {
   ngOnInit() {
     console.log(this.urlService.listaTags())
     this.initForm();
+    this.init();
+  }
+
+  init() {
+    this.limparResumoGef();
+    this.activeIndex = ACTIVE_GEF;
   }
 
   async buscarDivergencias() {
     this.blockedDocument = true;
-    this.limparResumoGef();
-    this.activeIndex = ACTIVE_GEF;
+
+
     await this.folhaEventosService.listarDivergencias(
       this.form.value.dataInicio,
       this.form.value.dataFim,
-      this.form.value.funcionarioCodigo)
+      this.form.value.funcionarioCodigo,
+      this.tipoConsultaOptionsSel.value!)
       .then(result => {
         this.classificarResumoPorGef(result);
         this.blockedDocument = false;
@@ -95,7 +108,38 @@ export class DivergenciaPontoDpComponent {
       });
   }
 
+  onChangeTipoConsulta() {
+    this.init();
+  }
+
   listar(divergencias: any) {
+    this.eventoPontos = divergencias;
+    // this.activeIndex = ACTIVE_EVENTOS;
+
+    this.eventosPorData = [];
+    let data: Date;
+    this.eventoPontos.forEach(e => {
+
+      e.eventos?.forEach(ev => {
+        let evento: EventosPorData = {};
+        evento.id = evento.dataReferencia + ":" + evento.eventoCodigo
+        evento.dataReferencia = e.dataReferencia;
+        if (!data || data != e.dataReferencia) {
+          evento.dataAuxiliar = e.dataReferencia;
+          data = e.dataReferencia!;
+        }
+        evento.pontos = e.pontos;
+        evento.eventoCodigo = ev.eventoCodigo;
+        evento.eventoDescricao = ev.eventoDescricao;
+        evento.referencia = ev.referencia
+        evento.referenciaStr = horaDecimalEmHorasStr(ev.referencia!, "hh:mm")
+        this.eventosPorData.push(evento);
+      })
+
+
+    });
+  }
+  listarAprovacoes(divergencias: any) {
     this.eventoPontos = divergencias;
     // this.activeIndex = ACTIVE_EVENTOS;
 
@@ -204,7 +248,7 @@ export class DivergenciaPontoDpComponent {
   classificarResumo(eventos: FolhaEventoPonto[], usarKey: string): ResumoPorGef[] {
     let map = new Map<string, ResumoPorGef>();
 
-
+console.log(eventos)
     eventos.forEach(t => {
       let resumo: ResumoPorGef = {} as ResumoPorGef;
       resumo.lista = [] as FolhaEventoPonto[];
@@ -212,6 +256,8 @@ export class DivergenciaPontoDpComponent {
       resumo.marcacaoInvalida = 0;
       resumo.atrasoSaida = 0;
       resumo.falta = 0;
+      resumo.aprovacaoDp=0;
+      resumo.aprovacaoResponsavel=0;
 
       let key!: any;
 
@@ -237,8 +283,16 @@ export class DivergenciaPontoDpComponent {
       let marcacaoInvalida: number = 0;
       let atrasoSaida: number = 0;
       let falta: number = 0;
+      let aprovacaoDp: number = 0;
+      let aprovacaoResponsavel: number = 0;
 
       t.eventos?.forEach(e => {
+        if (e.aprovacaoNivel == 1) {
+          aprovacaoDp++;
+        } else if (e.aprovacaoNivel == 2) {
+          aprovacaoResponsavel++;
+        }
+
         if (e.ehHoraExtra! == 'S') {
           horaExtra++;
         }
@@ -253,6 +307,7 @@ export class DivergenciaPontoDpComponent {
         }
       })
 
+
       resumo.gef = t.gef!;
       resumo.filialNomeFantasia = t.filialNomeFantasia!;
       resumo.funcionarioCodigo = t.funcionarioCodigo!;
@@ -264,10 +319,12 @@ export class DivergenciaPontoDpComponent {
       resumo.deptoCodigo = t.deptoCodigo!;
       resumo.deptoDescricao = t.deptoDescricao!;
 
-      resumo.horaExtra! += horaExtra;
-      resumo.marcacaoInvalida! += marcacaoInvalida;
-      resumo.atrasoSaida! += atrasoSaida;
-      resumo.falta! += falta;
+      resumo.horaExtra += horaExtra;
+      resumo.marcacaoInvalida += marcacaoInvalida;
+      resumo.atrasoSaida += atrasoSaida;
+      resumo.falta += falta;
+      resumo.aprovacaoResponsavel += aprovacaoResponsavel
+      resumo.aprovacaoDp += aprovacaoDp;
 
       resumo.lista?.push(t);
       map.set(key, resumo);
@@ -357,8 +414,9 @@ interface ResumoPorGef {
   marcacaoInvalida: number;
   atrasoSaida: number,
   falta: number,
+  aprovacaoDp: number,
+  aprovacaoResponsavel: number,
   lista: FolhaEventoPonto[],
-  listaAprovacao: FolhaEventoPonto[],
 }
 
 interface EventosPorData {

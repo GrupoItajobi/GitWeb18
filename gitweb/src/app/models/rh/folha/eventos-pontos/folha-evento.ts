@@ -7,4 +7,5 @@ export interface FolhaEvento {
   eventoCodigo?: number,
   eventoDescricao?: string,
   referencia?:number,
+  aprovacaoNivel?:number,
 }

@@ -20,5 +20,4 @@ export interface FolhaEventoPonto {
   referencia?: number,
   importacoes?: RelogioPonto[],
   eventos?: FolhaEvento[],
-  eventosAprovacoes?: FolhaEvento[],
 }
