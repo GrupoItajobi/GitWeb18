@@ -71,8 +71,10 @@
 </p-table>
 
 
-  <form [formGroup]="form">
+@if(visible){
 
+  <form [formGroup]="form">
+    
     <div class="card flex justify-content-center">
       <p-dialog header="Edit Profile" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
         <div class="flex align-items-center gap-3 mb-3">
@@ -92,7 +94,8 @@
           <p-button title="Salvar" label="Salvar" pButton pRipple (click)="salvar()" pTooltip="Salvar"
           class="p-button-success" icon="pi pi-save"></p-button>
         </div>  
-
+        
       </p-dialog>
     </div>
   </form>
+}

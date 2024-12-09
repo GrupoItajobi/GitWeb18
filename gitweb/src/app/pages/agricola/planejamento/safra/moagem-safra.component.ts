@@ -14,6 +14,7 @@ import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 import { ButtonModule } from 'primeng/button';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 
 
@@ -39,7 +40,7 @@ export class MoagemSafraComponent {
   codGrupoEmpresa: number = 0;
   nomeEmpresa!: string;
 
-  rowIndexEdit: number = -1;
+  rowIndexEdit: number = 0;
 
   unidade!: string;
   visible: boolean = false;
@@ -47,7 +48,8 @@ export class MoagemSafraComponent {
   constructor(
     private formBuilder: FormBuilder,
     private moagemSafraService: MoagemSafraService,
-    private errorHandleService: ErrorHandleService
+    private errorHandleService: ErrorHandleService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -173,7 +175,10 @@ async salvar(){
   try {
     const response = await this.moagemSafraService.alterar(dadosSalvar.id, this.form.controls['toneladasMoagem'].value);
 
-    console.log(response, "@$#@#$@#$@#$@#$@#$@#$@#$@#$@#$@#$@#$@#$@#$@#$@#$@#$@#$@#$@#$@#$@$@#$@#$");
+    this.planejamentoMetaMoagemDia[this.rowIndexEdit] = response    
+    this.visible = false;
+    this.toastService.showSuccessMsg('Alteração efetuada com sucesso!');
+
   } catch (error) {
     this.errorHandleService.handle(error);
   }
