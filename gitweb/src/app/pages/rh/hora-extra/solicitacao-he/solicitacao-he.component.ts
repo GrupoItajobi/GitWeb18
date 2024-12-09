@@ -84,7 +84,7 @@ export class SolicitacaoHeComponent {
   dataInicio: any;
   dataFim: any;
   aprovadores: any;
-  nomeAprovador: any;
+  nomeAprovador: any; 
 
   selectedStatus!: string;
   codigoFuncionario: string = '';

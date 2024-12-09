@@ -1,54 +1,98 @@
 <app-unidades (selecionouUnidade)="selecionouUnidade($event)"></app-unidades>
 
-<form [formGroup]="form" class="flex flex-row justify-center items-center gap-4 mb-3 mt-3">
+<form
+  [formGroup]="form"
+  class="flex flex-row justify-center items-center gap-4 mb-3 mt-3"
+>
+  <div class="flex flex-col">
+    <label for="dataHoraInicio" class="w-full text-center">Data Início</label>
+    <input
+      id="dataHoraInicio"
+      type="date"
+      class="w-full mt-1 cursor-pointer"
+      formControlName="dataInicio"
+    />
+  </div>
 
-    <div class="flex flex-col">
-      <label for="dataHoraInicio" class="w-full text-center">Data Início</label>
-      <input
-        id="dataHoraInicio"
-        type="date"
-        class="w-full mt-1 cursor-pointer"
-        formControlName="dataInicio"
-      />
-    </div>
-  
-    <div class="flex flex-col">
-      <label for="dataHoraFim" class="w-full text-center">Data Fim</label>   
-      <input id="dataHoraFim" type="date" class="w-full mt-1 cursor-pointer ng-invalid ng-dirty"
-          formControlName="dataHoraFim" />
-    </div>
+  <div class="flex flex-col">
+    <label for="dataHoraFim" class="w-full text-center">Data Fim</label>
+    <input
+      id="dataHoraFim"
+      type="date"
+      class="w-full mt-1 cursor-pointer ng-invalid ng-dirty"
+      formControlName="dataHoraFim" 
+    />
+  </div>
+
+  @if(planejamentoMetaMoagemDia.length >= 1){
+    <button class="flex flex-col mt-3 cursor-pointer" (click)="selecionouUnidade(unidade)">Buscar</button>
+  }
 </form>
 
 <p-table
-[value]="planejamentoMetaMoagemDia"
-[tableStyle]="{ 'min-width': '50rem' }"
-[paginator]="true"
-[rows]="20"
-[tableStyle]="{ 'min-width': '50rem' }"
+  [value]="planejamentoMetaMoagemDia"
+  [tableStyle]="{ 'min-width': '15rem' }"
+  [paginator]="true"
+  [rows]="20"
+  [tableStyle]="{ 'min-width': '30rem' }"
 >
-
-<ng-template pTemplate="header">
-    <tr class="w-12">     
-      <th>Data moagem</th>
-      <th>Cod. empresa</th>
-      <th>Cod. filial</th>
-      <th>Cod. grupo</th>
-      <th>Peso</th>     
+  <ng-template pTemplate="header">
+    <tr class="w-12">
+      <th style="width: 10rem">Data moagem</th>
+      <th style="width: 10rem">G.E.F</th>
+      <th style="width: 10rem">Tonelada</th>
+      <th style="width: 1rem">Edit</th>
     </tr>
   </ng-template>
 
-  <ng-template pTemplate="body" let-planejamentoMetaMoagemDia let-rowIndex="rowIndex">
-    <tr class="w-12">            
-      <td>{{ planejamentoMetaMoagemDia.dataMoagem }}</td>
-      <td>{{ planejamentoMetaMoagemDia.empresaCodigo }}</td>
-      <td>{{ planejamentoMetaMoagemDia.filialCodigo }}</td>
-      <td>{{ planejamentoMetaMoagemDia.grupoEmpresaCodigo }}</td>
+  <ng-template
+    pTemplate="body"
+    let-planejamentoMetaMoagemDia
+    let-rowIndex="rowIndex"
+  >
+    <tr>
+        <td>{{ planejamentoMetaMoagemDia.dataMoagem | date:'dd/MM/yyyy' }}</td>
+      <td>
+        {{
+          planejamentoMetaMoagemDia.grupoEmpresaCodigo + "-" + planejamentoMetaMoagemDia.empresaCodigo + "-" + planejamentoMetaMoagemDia.filialCodigo + ' ' + this.nomeEmpresa
+        }}
+      </td>
       <td>{{ planejamentoMetaMoagemDia.tonelada }}</td>
+      <td style="text-align: center">
+        <i
+          class="fas fa-edit"
+          style="color: orange"
+          (click)="edit(rowIndex)"
+          
+        ></i>
+      </td>
     </tr>
   </ng-template>
 </p-table>
-  
 
 
+  <form [formGroup]="form">
 
+    <div class="card flex justify-content-center">
+      <p-dialog header="Edit Profile" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="dataMoagem" class="font-semibold w-6rem" >Data Moagem</label>
+          <input pInputText id="dataMoagem" type="date" class="flex-auto" autocomplete="off" formControlName="dataMoagem"/>
+        </div>
+        <div class="flex align-items-center gap-3 mb-3">
+          <label for="gef" class="font-semibold w-6rem">Gef</label>
+          <input pInputText id="gef" class="flex-auto" autocomplete="off" formControlName="gefMoagem" type="text" readonly/>
+        </div>
+        <div class="flex align-items-center gap-3 mb-5">
+          <label for="toneladas" class="font-semibold w-6rem">Toneladas</label>
+          <input pInputText id="toneladas" class="flex-auto" autocomplete="off" formControlName="toneladasMoagem" />
+        </div>
+        
+        <div class="flex justify-content-end">
+          <p-button title="Salvar" label="Salvar" pButton pRipple (click)="salvar()" pTooltip="Salvar"
+          class="p-button-success" icon="pi pi-save"></p-button>
+        </div>  
 
+      </p-dialog>
+    </div>
+  </form>

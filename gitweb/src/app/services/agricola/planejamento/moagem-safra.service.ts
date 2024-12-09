@@ -12,24 +12,24 @@ export class MoagemSafraService {
   url2: string;
 
   constructor(private http: HttpClient) {
-    this.url = environment.apiUrl + 'GIt-api/agr/plan/safra/corrigirTonelada/';
+    this.url = environment.apiUrl + 'GIt-api/agr/plan/safra/corrigirTonelada';
     this.url2 = environment.apiUrl + 'GIt-api/agr/plan/safra';
   }
 
   async alterar(
-    moagemDia: PlanejamentoMetaMoagemDia
+    id: string, tonelada: number
   ): Promise<PlanejamentoMetaMoagemDia> {
     const headers = new HttpHeaders().append(
       'Content-Type',
       'application/json'
     );
 
-    const body = JSON.stringify(moagemDia);
+    const body = JSON.stringify(id);
 
     return await firstValueFrom(
       this.http.put<PlanejamentoMetaMoagemDia>(
-        `${this.url}/${moagemDia.id}`,
-        body,
+        `${this.url}/${id}`,
+        tonelada,
         { headers }
       )
     )
@@ -40,7 +40,7 @@ export class MoagemSafraService {
       .catch((erro) => {
         return Promise.reject(erro);
       });
-  }
+  } 
 
   async busca(enviaDados: any): Promise<PlanejamentoMetaMoagemDia[]> {
     const headers = new HttpHeaders().append(
@@ -57,8 +57,6 @@ export class MoagemSafraService {
           filialCodigo: enviaDados.codFilial,
           de: enviaDados.dataInicio,
           ate: enviaDados.dataFim        
-
-            //GIt-api/agr/plan/safra?grupoEmpresaCodigo=1&empresaCodigo=1&filialCodigo=1&de=2024-10-01&ate=2024-10-31
         },
       })     
     )
