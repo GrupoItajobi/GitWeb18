@@ -34,7 +34,6 @@ export class MoagemSafraService {
       )
     )
       .then((data) => {
-        console.log(data);
         return data;
       })
       .catch((erro) => {
@@ -61,7 +60,6 @@ export class MoagemSafraService {
       })     
     )
       .then((response) => {
-        console.log(response);
         return response;
       })
       .catch((error) => {
