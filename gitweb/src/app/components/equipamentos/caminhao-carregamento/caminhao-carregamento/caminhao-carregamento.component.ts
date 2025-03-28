@@ -159,7 +159,7 @@ export class CaminhaoCarregamentoComponent implements OnInit {
     dadosMsg = this.limparNumero(dadosMsg);
     console.log(dadosMsg);
     this.dadosEnvioMsg = {
-      text: '*USINA ITAJOBI* \nCaro motorista, sua ordem de carregamento está pronta. Por favor, dirija-se ao Núcleo Fiscal para prosseguir com o carregamento.',
+      text: '*USINA ITAJOBI* \nCaro motorista, por favor, dirija-se ao Núcleo Fiscal.',
       number: dadosMsg,
     };
 
