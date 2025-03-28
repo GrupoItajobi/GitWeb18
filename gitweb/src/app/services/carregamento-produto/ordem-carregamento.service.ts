@@ -30,10 +30,12 @@ export class OrdemCarregamentoService {
     return await firstValueFrom(
       this.http.get<OrdemDeCarregamento[]>(`${this.url}`, { headers, params }))
       .then(response => {
+        console.log(response);
         let data: OrdemDeCarregamento[] = response;
         return data;
       })
       .catch(error => {
+        console.log(error);
         let data: OrdemDeCarregamento[] = [];
         return Promise.reject(error);
       });

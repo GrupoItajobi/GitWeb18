@@ -1,145 +1,256 @@
 <div class="card-container" pDraggable>
-
   <a class="card card-allocation flex flex-column">
-    <div class="min-w-40 flex flex-row align-items-center justify-content-between bg-slate-500">
-      <span style="font-size: .7rem;"><p-badge [style]="{'width': '2rem'}" value="{{posicao}}" severity="info"></p-badge>
+    <div
+      class="min-w-40 flex flex-row align-items-center justify-content-between bg-slate-500"
+    >
+      <span style="font-size: 0.7rem"
+        ><p-badge
+          [style]="{ width: '2rem' }"
+          value="{{ posicao }}"
+          severity="info"
+        ></p-badge>
       </span>
-      <span class="font-extrabold">{{ciclo.nrOrdemRetirada |number:'6.0'}}</span>
+      <span class="font-extrabold">{{
+        ciclo.nrOrdemRetirada | number : "6.0"
+      }}</span>
 
       @if(ciclo.tipoVenda=='ME') {
       <span>
-        <i class="fa-solid fa-earth-americas" style="font-size: 1rem; color: orange" title="Mercado Externo"></i>
+        <i
+          class="fa-solid fa-earth-americas"
+          style="font-size: 1rem; color: orange"
+          title="Mercado Externo"
+        ></i>
       </span>
-      }@else {<span></span>}
-
-      @if(ciclo.simuladoSaldoEstoque!<0) { <span><i class="pi pi-thumbs-down-fill"
-          style="font-size: 1rem; color: rgb(239, 84, 6)" title="Estoque Insuficiente"></i>
-        </span>
-        }
-
+      }@else {<span></span>} @if(ciclo.simuladoSaldoEstoque!<0) {
+      <span
+        ><i
+          class="pi pi-thumbs-down-fill"
+          style="font-size: 1rem; color: rgb(239, 84, 6)"
+          title="Estoque Insuficiente"
+        ></i>
+      </span>
+      }
     </div>
     @if (ciclo.checkpoint?.match('Carregamento')) {
-    <div class="min-w-40 text-center flex flex-col" style="font-size: .7rem;">
-      @if(ciclo!.sequencia) {
-        @if(ciclo!.sequencia==1) {
-          <span class="font-extrabold">Carregamento: {{ciclo.sequencia}}</span>
-        }@else {
-        <span class="font-extrabold bg-orange-300">Carregamento: {{ciclo.sequencia}}</span>
-        }
+    <div class="min-w-40 text-center flex flex-col" style="font-size: 0.7rem">
+      @if(ciclo!.sequencia) { @if(ciclo!.sequencia==1) {
+      <span class="font-extrabold">Carregamento: {{ ciclo.sequencia }}</span>
+      }@else {
+      <span class="font-extrabold bg-orange-300"
+        >Carregamento: {{ ciclo.sequencia }}</span
+      >
+      } } @if (ciclo.pontoDeCarregamentoDescricao ) {
+      <span>Local: {{ ciclo.pontoDeCarregamentoDescricao }}</span>
+      <span
+        >Eqp: {{ ciclo.tipoEqpDescricao }} [{{
+          ciclo.quantidadeEquipamentos
+        }}]</span
+      >
       }
-      @if (ciclo.pontoDeCarregamentoDescricao ) {
-      <span>Local: {{ciclo.pontoDeCarregamentoDescricao}}</span>
-      <span>Eqp: {{ciclo.tipoEqpDescricao}} [{{ciclo.quantidadeEquipamentos}}]</span>
-      }
-
     </div>
     }
 
-    <div style="text-align: left;">
-      <ul style="list-style-type: none ">
+    <div style="text-align: left">
+      <ul style="list-style-type: none">
         <li>
-          <span style="font-size: .5rem; max-width: 150px; color: black;
-    word-break: break-all"><i class="pi pi-users"
-              style="font-size: 1rem"></i>{{truncarTexto(ciclo.clienteNome!)}}</span>
+          <span
+            style="
+              font-size: 0.5rem;
+              max-width: 150px;
+              color: black;
+              word-break: break-all;
+            "
+            ><i class="pi pi-users" style="font-size: 1rem"></i
+            >{{ truncarTexto(ciclo.clienteNome!) }}</span
+          >
         </li>
         <li>
-          <span style="font-size: .5rem; max-width: 150px; color: black;
-    word-break: break-all"><i class="pi pi-user"
-              style="font-size: 1rem"></i>{{truncarTexto(ciclo.motoristaNome!)}}</span>
+          <span
+            style="
+              font-size: 0.5rem;
+              max-width: 150px;
+              color: black;
+              word-break: break-all;
+            "
+            ><i class="pi pi-user" style="font-size: 1rem"></i
+            >{{ truncarTexto(ciclo.motoristaNome!) }}</span
+          >
         </li>
 
-        <li><span style="font-size: .5rem; max-width: 100px; color: black;
-        word-break: break-all"><i class="pi pi-truck"
-              style="font-size: 1rem"></i>{{truncarTexto(retornarTransportadora())}}</span></li>
+        <li>
+          <span
+            style="
+              font-size: 0.5rem;
+              max-width: 100px;
+              color: black;
+              word-break: break-all;
+            "
+            ><i class="pi pi-truck" style="font-size: 1rem"></i
+            >{{ truncarTexto(retornarTransportadora()) }}</span
+          >
+        </li>
       </ul>
     </div>
 
-
     <div class="flex flex-row flex-wrap">
       <div class="flex align-items-center justify-content-center">
-        <img title="" src="{{icone()}}" width="40px;" />
+        <img title="" src="{{ icone() }}" width="40px;" />
       </div>
 
       @if(temPermissaoParaEditar) {
-      <div class="flex align-items-center justify-content-center" (click)="editarOrdem()" title="Editar">
-        <i class="pi pi-file-edit" style="color:  rgb(150, 75, 6);  font-size: 1.0rem; padding-left: 5px;"></i>
+      <div
+        class="flex align-items-center justify-content-center"
+        (click)="editarOrdem()"
+        title="Editar"
+      >
+        <i
+          class="pi pi-file-edit"
+          style="color: rgb(150, 75, 6); font-size: 1rem; padding-left: 5px"
+        ></i>
       </div>
-      <div class="flex align-items-center justify-content-center" (click)="editarCiclo()" title="Ciclo">
-        <i class="pi pi-history" style="color:  rgb(150, 75, 6);  font-size: 1.0rem; padding-left: 5px;"></i>
+      <div
+        class="flex align-items-center justify-content-center"
+        (click)="editarCiclo()"
+        title="Ciclo"
+      >
+        <i
+          class="pi pi-history"
+          style="color: rgb(150, 75, 6); font-size: 1rem; padding-left: 5px"
+        ></i>
       </div>
-      }
-      @if(temPermissaoParaBloquear) {
-      <div class="flex align-items-center justify-content-center" (click)="editarBloqueio()" title="Bloqueio">
-        <i class="pi pi-stop-circle" style="color:  rgb(152, 3, 3);  font-size: 1.0rem; padding-left: 5px;"></i>
+      } @if(temPermissaoParaBloquear) {
+      <div
+        class="flex align-items-center justify-content-center"
+        (click)="editarBloqueio()"
+        title="Bloqueio"
+      >
+        <i
+          class="pi pi-stop-circle"
+          style="color: rgb(152, 3, 3); font-size: 1rem; padding-left: 5px"
+        ></i>
       </div>
       }
 
+      <!-- ICONE PARA ENVIAR MENSAGEM AO MOTORISTA -->
+      <!-- @if(this.ciclo.nrOrdemRetirada){ -->
+
+      <div
+        class="flex align-items-center justify-content-center"
+        (click)="showDialog()"
+        title="Chamar para balança"
+      >
+        <i
+          class="fa-brands fa-whatsapp"
+          style="color: rgb(3, 152, 15); font-size: 1rem; padding-left: 5px"
+        ></i>
+      </div>
+      <!-- } -->
     </div>
 
-    <span style="font-size: .7rem;">Placa {{ciclo.caminhaoPlaca!}}</span>
-    <div style="text-align: left;">
-      <ul style="list-style-type: none ">
+    <span style="font-size: 0.7rem">Placa {{ ciclo.caminhaoPlaca! }}</span>
+    <div style="text-align: left">
+      <ul style="list-style-type: none">
         <li>
-          <span style="font-size: .55rem; font-weight: bold; color: black;">
+          <span style="font-size: 0.55rem; font-weight: bold; color: black">
             <i class="pi pi-shopping-cart" style="font-size: 1rem"></i>
-            {{quantidadeVolume()|number:'1.2-2'}} [{{ciclo.unidade}}]
+            {{ quantidadeVolume() | number : "1.2-2" }} [{{ ciclo.unidade }}]
           </span>
           @if(ciclo.nrNotaFiscal) {
-          <span style="font-size: .55rem; font-weight: bold; color: black;">
-            - NF: {{ciclo.nrNotaFiscal!|number:'1.0-0'}}
+          <span style="font-size: 0.55rem; font-weight: bold; color: black">
+            - NF: {{ ciclo.nrNotaFiscal! | number : "1.0-0" }}
           </span>
           } @else {
-          <span style="font-size: .55rem; font-weight: bold;" [style.color]="colorSaldo()">
-            - Saldo: {{ ciclo.simuladoSaldoEstoque! |number:'1.2-2'}}
+          <span
+            style="font-size: 0.55rem; font-weight: bold"
+            [style.color]="colorSaldo()"
+          >
+            - Saldo: {{ ciclo.simuladoSaldoEstoque! | number : "1.2-2" }}
           </span>
           }
         </li>
         <li>
-          <span style="font-size: .45rem; color: black;">
-            {{truncarTexto(retornarProduto(),40)}}
+          <span style="font-size: 0.45rem; color: black">
+            {{ truncarTexto(retornarProduto(), 40) }}
           </span>
         </li>
 
         @if (ciclo.temperatura) {
-        <li><span style="font-size: 1rem;  color: black;"><i class="pi pi-sun"
-              style="font-size: .70rem "></i>{{ciclo.temperatura}}</span></li>
+        <li>
+          <span style="font-size: 1rem; color: black"
+            ><i class="pi pi-sun" style="font-size: 0.7rem"></i
+            >{{ ciclo.temperatura }}</span
+          >
+        </li>
         }
-        <li><span title="Tempo na Etapa Atual" style="font-size: .5rem; font-weight: bold; color: rgb(150, 75, 6); "><i
-              class="pi pi-clock" style="font-size: .7rem"></i>{{ciclo.filaTempo!}}</span></li>
+        <li>
+          <span
+            title="Tempo na Etapa Atual"
+            style="font-size: 0.5rem; font-weight: bold; color: rgb(150, 75, 6)"
+            ><i class="pi pi-clock" style="font-size: 0.7rem"></i
+            >{{ ciclo.filaTempo! }}</span
+          >
+        </li>
       </ul>
 
       @if(infoFull) {
       <div class="flex align-items-center justify-content-center">
-        <i class="pi pi-sort-numeric-up" style="font-size: .75rem"></i>
-        <span style="font-size: 0.5rem; color: black;">{{ciclo.filaSequencia}}</span>
+        <i class="pi pi-sort-numeric-up" style="font-size: 0.75rem"></i>
+        <span style="font-size: 0.5rem; color: black">{{
+          ciclo.filaSequencia
+        }}</span>
       </div>
-      <div style="text-align: left;">
-
-        <ul style="list-style-type: none ">
-          <li> <span style="font-size: .65rem; color: rgb(26, 25, 25); ">
-              <i class="pi pi-cart-plus" style="font-size: .75rem"></i>Pedido: {{ciclo.nrPedido |
-              number:'1.0-0'}}</span></li>
-          <li> <span style="font-size: .65rem; color: rgb(26, 25, 25);">Obs: {{ciclo.nrContratoOrigem}}</span></li>
-
+      <div style="text-align: left">
+        <ul style="list-style-type: none">
+          <li>
+            <span style="font-size: 0.65rem; color: rgb(26, 25, 25)">
+              <i class="pi pi-cart-plus" style="font-size: 0.75rem"></i>Pedido:
+              {{ ciclo.nrPedido | number : "1.0-0" }}</span
+            >
+          </li>
+          <li>
+            <span style="font-size: 0.65rem; color: rgb(26, 25, 25)"
+              >Obs: {{ ciclo.nrContratoOrigem }}</span
+            >
+          </li>
         </ul>
-        <ul style="list-style-type: none ">
+        <ul style="list-style-type: none">
           <li>
             <div class="flex flex-col">
-              <span style="font-size: .65rem; font-weight: bold; color: rgb(150, 75, 6); ">
-                <i class="pi pi-clock" style="font-size: .75rem; color: black;"></i>Chegada</span>
+              <span
+                style="
+                  font-size: 0.65rem;
+                  font-weight: bold;
+                  color: rgb(150, 75, 6);
+                "
+              >
+                <i
+                  class="pi pi-clock"
+                  style="font-size: 0.75rem; color: black"
+                ></i
+                >Chegada</span
+              >
 
-              <label style="font-size: .5rem; color: black;">Desde {{ciclo.chegadaData}}</label>
-              <label style="font-size: .5rem; color: black;">Tempo {{ciclo.chegadaTempo}}</label>
+              <label style="font-size: 0.5rem; color: black"
+                >Desde {{ ciclo.chegadaData }}</label
+              >
+              <label style="font-size: 0.5rem; color: black"
+                >Tempo {{ ciclo.chegadaTempo }}</label
+              >
             </div>
           </li>
-
         </ul>
-
       </div>
-      <div class="flex align-items-center justify-content-center" title="Editar">
+      <div
+        class="flex align-items-center justify-content-center"
+        title="Editar"
+      >
         @if(temPermissaoParaExcluir) {
-        <i class="pi pi-trash" style="color:  rgb(150, 75, 6);  font-size: 1.5rem; padding-left: 5px;"
-          (click)="fecharCiclo()"></i>
+        <i
+          class="pi pi-trash"
+          style="color: rgb(150, 75, 6); font-size: 1.5rem; padding-left: 5px"
+          (click)="fecharCiclo()"
+        ></i>
         }
       </div>
 
@@ -147,3 +258,51 @@
     </div>
   </a>
 </div>
+
+<!-- Dialog para cadastrar e enviar msg para o motorista -->
+<form [formGroup]="form">
+  <div class="flex justify-content-center">
+    <p-dialog
+      header="Enviar mensagem motorista"
+      [modal]="true"
+      [(visible)]="visible"
+    >
+      <div class="flex align-items-center mb-2">
+        <label for="whatsapp" class="font-semibold w-6rem">Whatsapp: </label>
+        <input
+          pInputText
+          id="whatsapp"
+          type="text"
+          class="flex-auto"
+          autocomplete="off"
+          formControlName="whatsapp"
+          placeholder="(DDD) 99999-9999"
+        />
+      </div>
+
+      <div class="flex justify-content-end">
+        <p-button
+          title="Enviar"
+          label="Enviar"
+          (onClick)="chamarMotorista()"
+          pButton
+          pRipple
+          pTooltip="Enviar"
+          class="p-button-success"
+          icon="pi pi-save"
+        ></p-button>
+
+        <p-button
+          title="Fechar"
+          label="Cancelar"
+          (onClick)="fecharDialog()"
+          pButton
+          pRipple
+          pTooltip="Cancelar"
+          class="p-button-secondary"
+          icon="pi pi-arrow-right"
+        ></p-button>
+      </div>
+    </p-dialog>
+  </div>
+</form>

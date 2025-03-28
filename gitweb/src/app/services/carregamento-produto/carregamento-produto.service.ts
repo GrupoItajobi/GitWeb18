@@ -6,6 +6,7 @@ import { CarregamentoFila } from '../../models/carregamento-produto/Carregamento
 import { CarregamentoSaida } from '../../models/carregamento-produto/CarregamentoSaida';
 import { CarregamentoESaldo } from '../../models/carregamento-produto/CarregamentoESaldo';
 import { CarregamentoAlterarOrdem } from '../../models/carregamento-produto/CarregamentoAlterarOrdem';
+import { ChamaParaPesar } from '../../models/carregamento-produto/ChamaParaPesar';
 
 @Injectable({
   providedIn: 'root'
@@ -121,5 +122,33 @@ export class CarregamentoProdutoService {
         return erro;
       });
   }
+
+  //TESTE PARA CHAMAR O CAMINHÃO PARA PESAR
+  
+  async chamarParaBalanca(dadosEnvioMsg: ChamaParaPesar) {
+    const headers = new HttpHeaders({
+      'apikey': 'a1u6O3bepZfwyQH', 
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+  
+    try {
+      const response = await firstValueFrom(
+        this.http.post<CarregamentoFila>(
+          'http://apiwhatsapp.usinaitajobi.com.br:8080/message/sendText/ITAJOBI',
+          dadosEnvioMsg,
+          { headers }
+        )
+      );
+      console.log("✅ API respondeu com sucesso:", response);
+      return response;
+    } catch (error: any) {
+      console.error("❌ Erro ao enviar requisição:", error);
+      throw new Error(error?.message || 'Erro desconhecido');
+    }
+  }
+
+  
+
 }
 
