@@ -198,6 +198,8 @@ export class CaminhaoCarregamentoComponent implements OnInit {
     if (valor.length > 11) {
       valor = valor.slice(1);
     }
+
+    console.log(valor, "@#@#@#@#@#@#@#");
     return (valor = '55' + valor);
   }
 }
