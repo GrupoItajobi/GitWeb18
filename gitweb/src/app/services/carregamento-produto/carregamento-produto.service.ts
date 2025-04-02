@@ -127,15 +127,20 @@ export class CarregamentoProdutoService {
   
   async chamarParaBalanca(dadosEnvioMsg: ChamaParaPesar) {
     const headers = new HttpHeaders({
-      'apikey': 'a1u6O3bepZfwyQH', 
+      'apikey': '1tIbUV7K3Y6DhWFbgw', 
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     });
   
+    // a1u6O3bepZfwyQH
+    // 1tIbUV7K3Y6DhWFbgw 
+
     try {
       const response = await firstValueFrom(
         this.http.post<CarregamentoFila>(
-          'http://apiwhatsapp.usinaitajobi.com.br:8080/message/sendText/ITAJOBI',
+          // 'http://apiwhatsapp.usinaitajobi.com.br:8080/message/sendText/ITAJOBI',
+          //'https://192.168.100.50:8080/message/sendText/EvoItajobi',
+          'https://evolution.centroalcool.com.br/message/sendText/EvoItajobi',
           dadosEnvioMsg,
           { headers }
         )

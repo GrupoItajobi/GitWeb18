@@ -155,9 +155,7 @@ export class CaminhaoCarregamentoComponent implements OnInit {
 
     let dadosMsg = this.form.value.whatsapp.toString();
 
-    console.log(dadosMsg);
     dadosMsg = this.limparNumero(dadosMsg);
-    console.log(dadosMsg);
     this.dadosEnvioMsg = {
       text: '*USINA ITAJOBI* \nCaro motorista, por favor, dirija-se ao Núcleo Fiscal.',
       number: dadosMsg,
